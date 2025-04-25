@@ -1,0 +1,186 @@
+﻿@{
+    Layout = null;
+
+    // Model oluşturma - Normalde bu Controller'dan gelmeli
+    var jobs = new List<dynamic>
+    {
+        new { Id = 1, Title = "Web Sitesi Tasarımı", Category = "Web Tasarım", Price = "$500", Bids = 12, DaysLeft = 5, Image = "https://via.placeholder.com/300x150?text=Web+Tasarım" },
+        new { Id = 2, Title = "Mobil Uygulama Geliştirme", Category = "Yazılım", Price = "$1200", Bids = 8, DaysLeft = 7, Image = "https://via.placeholder.com/300x150?text=Mobil+Uygulama" },
+        new { Id = 3, Title = "Logo Tasarımı", Category = "Grafik Tasarım", Price = "$150", Bids = 20, DaysLeft = 3, Image = "https://via.placeholder.com/300x150?text=Logo+Tasarımı" },
+        new { Id = 4, Title = "SEO Uyumlu Makale Yazımı", Category = "İçerik Yazarlığı", Price = "$50", Bids = 15, DaysLeft = 2, Image = "https://via.placeholder.com/300x150?text=Makale+Yazımı" },
+        new { Id = 5, Title = "E-ticaret Sitesi", Category = "Web Tasarım", Price = "$800", Bids = 10, DaysLeft = 10, Image = "https://via.placeholder.com/300x150?text=E-ticaret" },
+        new { Id = 6, Title = "Veritabanı Optimizasyonu", Category = "Yazılım", Price = "$600", Bids = 5, DaysLeft = 4, Image = "https://via.placeholder.com/300x150?text=Veritabanı" },
+        new { Id = 7, Title = "Broşür Tasarımı", Category = "Grafik Tasarım", Price = "$120", Bids = 18, DaysLeft = 6, Image = "https://via.placeholder.com/300x150?text=Broşür" },
+        new { Id = 8, Title = "Ürün Açıklamaları", Category = "İçerik Yazarlığı", Price = "$30", Bids = 25, DaysLeft = 1, Image = "https://via.placeholder.com/300x150?text=Ürün+Açıklamaları" },
+        new { Id = 9, Title = "WordPress Site Kurulumu", Category = "Web Tasarım", Price = "$250", Bids = 14, DaysLeft = 3, Image = "https://via.placeholder.com/300x150?text=WordPress" },
+        new { Id = 10, Title = "Python Script Yazımı", Category = "Yazılım", Price = "$300", Bids = 7, DaysLeft = 5, Image = "https://via.placeholder.com/300x150?text=Python" },
+        new { Id = 11, Title = "Sosyal Medya Görselleri", Category = "Grafik Tasarım", Price = "$90", Bids = 22, DaysLeft = 4, Image = "https://via.placeholder.com/300x150?text=Sosyal+Medya" },
+        new { Id = 12, Title = "Blog Yazıları", Category = "İçerik Yazarlığı", Price = "$20", Bids = 30, DaysLeft = 2, Image = "https://via.placeholder.com/300x150?text=Blog" },
+        new { Id = 13, Title = "Responsive Tasarım", Category = "Web Tasarım", Price = "$400", Bids = 9, DaysLeft = 7, Image = "https://via.placeholder.com/300x150?text=Responsive" },
+        new { Id = 14, Title = "API Entegrasyonu", Category = "Yazılım", Price = "$550", Bids = 6, DaysLeft = 5, Image = "https://via.placeholder.com/300x150?text=API" },
+        new { Id = 15, Title = "Kartvizit Tasarımı", Category = "Grafik Tasarım", Price = "$80", Bids = 17, DaysLeft = 3, Image = "https://via.placeholder.com/300x150?text=Kartvizit" },
+        new { Id = 16, Title = "Çeviri Hizmeti", Category = "İçerik Yazarlığı", Price = "$15", Bids = 28, DaysLeft = 1, Image = "https://via.placeholder.com/300x150?text=Çeviri" },
+        new { Id = 17, Title = "PHP Geliştirme", Category = "Yazılım", Price = "$450", Bids = 11, DaysLeft = 6, Image = "https://via.placeholder.com/300x150?text=PHP" },
+        new { Id = 18, Title = "UI/UX Tasarım", Category = "Web Tasarım", Price = "$700", Bids = 8, DaysLeft = 8, Image = "https://via.placeholder.com/300x150?text=UI/UX" },
+        new { Id = 19, Title = "Animasyon Tasarımı", Category = "Grafik Tasarım", Price = "$350", Bids = 13, DaysLeft = 4, Image = "https://via.placeholder.com/300x150?text=Animasyon" },
+        new { Id = 20, Title = "Teknik Dokümantasyon", Category = "İçerik Yazarlığı", Price = "$75", Bids = 9, DaysLeft = 5, Image = "https://via.placeholder.com/300x150?text=Dokümantasyon" }
+    };
+
+    var categories = jobs.Select(j => j.Category).Distinct().ToList();
+    var selectedCategory = ViewBag.SelectedCategory as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Projects</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .card-img-top {
+            object-fit: cover;
+        }
+
+        .card {
+            border-radius: var(--radius-lg);
+        }
+    </style>
+</head>
+<body>
+    <div class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Featured Projects</h2>
+                <p class="text-muted">Explore work from our top-rated freelancers</p>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <!-- Project Card 1 -->
+                <div class="col">
+                    <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
+                        <div class="position-relative overflow-hidden" style="height: 200px;">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Web Design Project">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
+                                    <i class="fas fa-star me-1"></i> Featured
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">E-commerce Website Redesign</h5>
+                                <span class="text-success fw-bold">$2,500</span>
+                            </div>
+                            <p class="card-text text-muted small mb-3">Modern redesign for fashion retailer with improved UX and mobile responsiveness.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
+                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
+                                    <span class="small">Sarah Johnson</span>
+                                </div>
+                                <span class="badge bg-primary bg-opacity-10 text-primary">Web Design</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <span class="text-muted small"><i class="fas fa-clock me-1"></i> 2 days ago</span>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="col">
+                    <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
+                        <div class="position-relative overflow-hidden" style="height: 200px;">
+                            <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Mobile App Project">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-info bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
+                                    <i class="fas fa-bolt me-1"></i> Urgent
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">Fitness Mobile App</h5>
+                                <span class="text-success fw-bold">$4,200</span>
+                            </div>
+                            <p class="card-text text-muted small mb-3">iOS/Android app with workout tracking, nutrition planning and progress analytics.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
+                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
+                                    <span class="small">Mike Rodriguez</span>
+                                </div>
+                                <span class="badge bg-info bg-opacity-10 text-info">Mobile App</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <span class="text-muted small"><i class="fas fa-clock me-1"></i> 1 week ago</span>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="col">
+                    <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
+                        <div class="position-relative overflow-hidden" style="height: 200px;">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Branding Project">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-warning bg-opacity-90 text-dark px-3 py-2" style="border-radius: 50px;">
+                                    <i class="fas fa-gem me-1"></i> Premium
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">Complete Brand Identity</h5>
+                                <span class="text-success fw-bold">$3,800</span>
+                            </div>
+                            <p class="card-text text-muted small mb-3">Full branding package including logo, style guide, and marketing materials.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
+                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
+                                    <span class="small">Emma Wilson</span>
+                                </div>
+                                <span class="badge bg-warning bg-opacity-10 text-warning">Branding</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <span class="text-muted small"><i class="fas fa-clock me-1"></i> 3 days ago</span>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="#" class="btn btn-outline-primary px-4">
+                    View All Projects <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

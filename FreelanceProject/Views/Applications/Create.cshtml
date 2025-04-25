@@ -1,0 +1,284 @@
+﻿@{
+    ViewData["Title"] = "İş Başvuru Formu";
+}
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --primary-light: #e6e9f9;
+        --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        --hover-gradient: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+    }
+
+    .application-card {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+    }
+
+    .application-header {
+        background: var(--primary-gradient);
+        padding: 1.5rem;
+        text-align: center;
+        color: white;
+    }
+
+        .application-header h3 {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+    .job-title {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+
+    .application-body {
+        padding: 2rem;
+        background-color: #f8f9fa;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2b2d42;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .required-field::after {
+        content: "*";
+        color: #e74c3c;
+        margin-left: 4px;
+    }
+
+    .form-control, .form-select, .form-file-input {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+        }
+
+    .upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+    .upload-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .file-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 1rem;
+    }
+
+    .btn-apply {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.25);
+        font-size: 1rem;
+    }
+
+        .btn-apply:hover {
+            background: var(--hover-gradient);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.35);
+        }
+
+    .privacy-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .form-note {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card application-card">
+                <div class="application-header">
+                    <h3><i class="fas fa-briefcase me-2"></i>İŞ BAŞVURU FORMU</h3>
+                    <div class="job-title">Pozisyon: Frontend Developer</div>
+                </div>
+                <div class="application-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <!-- Hidden Fields -->
+                        <input type="hidden" name="JobId" value="12345">
+
+                        <!-- Personal Information Section -->
+                        <h5 class="mb-4 border-bottom pb-2"><i class="fas fa-user-circle me-2"></i>Kişisel Bilgiler</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="FirstName" class="form-label required-field">Adınız</label>
+                                <input type="text" class="form-control" id="FirstName" name="FirstName" required>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="LastName" class="form-label required-field">Soyadınız</label>
+                                <input type="text" class="form-control" id="LastName" name="LastName" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="Email" class="form-label required-field">E-posta Adresiniz</label>
+                                <input type="email" class="form-control" id="Email" name="Email" required>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="Phone" class="form-label required-field">Telefon Numaranız</label>
+                                <input type="tel" class="form-control" id="Phone" name="Phone" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="LinkedIn" class="form-label">LinkedIn Profiliniz (Opsiyonel)</label>
+                            <input type="url" class="form-control" id="LinkedIn" name="LinkedIn" placeholder="https://linkedin.com/in/örnek">
+                        </div>
+
+                        <!-- CV Upload Section -->
+                        <h5 class="mb-4 border-bottom pb-2"><i class="fas fa-file-alt me-2"></i>CV ve Belgeler</h5>
+
+                        <div class="mb-4">
+                            <label class="form-label required-field">CV Yükleme</label>
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h6>CV'nizi sürükleyip bırakın veya <span class="text-primary">göz atın</span></h6>
+                                <p class="form-note">PDF, DOC veya DOCX formatları kabul edilmektedir (Max. 5MB)</p>
+                                <input type="file" id="CVFile" name="CVFile" class="d-none" accept=".pdf,.doc,.docx" required>
+                                <div id="fileName" class="file-info d-none"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="CoverLetter" class="form-label">Ön Yazı (Opsiyonel)</label>
+                            <textarea class="form-control" id="CoverLetter" name="CoverLetter" rows="4" placeholder="Kendiniz ve bu pozisyon için neden uygun olduğunuz hakkında kısa bir açıklama..."></textarea>
+                        </div>
+
+                        <!-- Additional Questions -->
+                        <h5 class="mb-4 border-bottom pb-2"><i class="fas fa-question-circle me-2"></i>Ek Bilgiler</h5>
+
+                        <div class="mb-4">
+                            <label for="Experience" class="form-label required-field">Bu pozisyonda ne kadar deneyiminiz var?</label>
+                            <select class="form-select" id="Experience" name="Experience" required>
+                                <option value="" selected disabled>Seçiniz</option>
+                                <option value="0-1">0-1 Yıl</option>
+                                <option value="1-3">1-3 Yıl</option>
+                                <option value="3-5">3-5 Yıl</option>
+                                <option value="5+">5+ Yıl</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="Availability" class="form-label required-field">Ne zaman başlayabilirsiniz?</label>
+                            <select class="form-select" id="Availability" name="Availability" required>
+                                <option value="" selected disabled>Seçiniz</option>
+                                <option value="Immediately">Hemen</option>
+                                <option value="1Month">1 Ay İçinde</option>
+                                <option value="3Months">3 Ay İçinde</option>
+                                <option value="Negotiable">Görüşülebilir</option>
+                            </select>
+                        </div>
+
+                        <!-- Privacy and Submission -->
+                        <div class="mb-4 form-check">
+                            <input class="form-check-input" type="checkbox" id="PrivacyAgreement" required>
+                            <label class="form-check-label" for="PrivacyAgreement">
+                                <a href="#" class="text-primary">Gizlilik Politikasını</a> okudum ve kabul ediyorum
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-apply py-3">
+                                <i class="fas fa-paper-plane me-2"></i> BAŞVURUYU GÖNDER
+                            </button>
+                        </div>
+
+                        <p class="privacy-text mt-3 text-center">
+                            Bilgileriniz güvende! CV'niz yalnızca bu iş başvurusu için kullanılacaktır.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dosya yükleme alanı için JavaScript
+    document.getElementById('uploadArea').addEventListener('click', function () {
+        document.getElementById('CVFile').click();
+    });
+
+    document.getElementById('CVFile').addEventListener('change', function (e) {
+        const fileNameDiv = document.getElementById('fileName');
+        if (this.files.length > 0) {
+            fileNameDiv.textContent = 'Seçilen dosya: ' + this.files[0].name;
+            fileNameDiv.classList.remove('d-none');
+            document.getElementById('uploadArea').style.borderColor = '#4361ee';
+            document.getElementById('uploadArea').style.backgroundColor = 'rgba(67, 97, 238, 0.05)';
+        } else {
+            fileNameDiv.classList.add('d-none');
+        }
+    });
+
+    // Sürükle bırak fonksiyonelliği
+    const uploadArea = document.getElementById('uploadArea');
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#4361ee';
+        uploadArea.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#dee2e6';
+        uploadArea.style.backgroundColor = '#f8f9fa';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#dee2e6';
+        uploadArea.style.backgroundColor = '#f8f9fa';
+
+        if (e.dataTransfer.files.length) {
+            document.getElementById('CVFile').files = e.dataTransfer.files;
+            const fileNameDiv = document.getElementById('fileName');
+            fileNameDiv.textContent = 'Seçilen dosya: ' + e.dataTransfer.files[0].name;
+            fileNameDiv.classList.remove('d-none');
+        }
+    });
+</script>

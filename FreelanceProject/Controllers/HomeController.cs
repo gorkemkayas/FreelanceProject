@@ -22,6 +22,13 @@ public class HomeController : Controller
     {
         return View();
     }
+    public IActionResult Index2()
+    {
+        var selectedCategory = HttpContext.Request.Query["category"].ToString();
+        ViewBag.SelectedCategory = selectedCategory;
+        return View();
+    }
+   
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
