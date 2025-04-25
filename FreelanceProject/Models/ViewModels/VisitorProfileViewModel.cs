@@ -4,7 +4,7 @@ namespace FreelanceProject.Models.ViewModels
 {
     public class VisitorProfileViewModel
     {
-        public string UserName { get; set; }
+        public string UserName { get; set; } = null!;
 
         [Required]
         public string Name { get; set; } = null!;

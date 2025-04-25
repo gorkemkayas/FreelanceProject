@@ -212,4 +212,39 @@ footer {
             color: #4361ee;
         }
 
+.custom-alert {
+    position: fixed;
+    top: 65px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1050;
+}
 
+.alert-danger {
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    color: white;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: white;
+}
+
+.custom-alert i {
+    font-size: 22px;
+}
+
+.show-alert {
+    opacity: 1;
+    transform: translateY(0);
+}

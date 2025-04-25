@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FreelanceProject.CustomValidators;
+using System.ComponentModel.DataAnnotations;
 
 namespace FreelanceProject.Models.ViewModels
 {
@@ -6,26 +7,29 @@ namespace FreelanceProject.Models.ViewModels
     {
         [Required(ErrorMessage = "Fill in the 'Name' field.")]
         [Display(Name = "Name")]
-        public string Name { get; set; }
+        [StringCheck]
+        public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Fill in the 'Surname' field.")]
         [Display(Name = "Surname")]
-        public string Surname { get; set; }
+        [StringCheck]
+        public string Surname { get; set; } = null!;
 
 
         [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         [Required(ErrorMessage = "Fill in the 'Email' field.")]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        [EmailFormCheck]
+        public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = "Fill in the 'Password' field.")]
         [Display(Name = "Password")]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
 
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
         [Required(ErrorMessage = "Fill in the 'Confirm Password' field.")]
         [Display(Name = "Confirm Password")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } = null!;
 
         [Required(ErrorMessage = "Fill in the 'Birthdate' field.")]
         [Display(Name = "Birtdate")]

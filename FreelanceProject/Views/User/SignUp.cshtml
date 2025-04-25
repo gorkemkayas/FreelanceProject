@@ -8,9 +8,12 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        showAlertSuccess('successAlert');
+        showAlertError('errorAlert');
+
+    </script>
 }
-
-
 
 @* <div id="errorAlert" class="custom-alert alert-danger">
     <i class="fa-solid fa-xmark"></i> Kullanıcı oluşturulamadı.
@@ -57,7 +60,7 @@ else if (TempData["Failed"] != null)
                                     <div class="form-floating mb-2">
                                         <input asp-for="Name" class="form-control border-0 border-bottom rounded-3" placeholder="Your Workplace">
                                         <label asp-for="Name" class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="Name"></span>
+                                        <span class="text-danger mt-2 fs-6" asp-validation-for="Name"></span>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -152,7 +155,8 @@ else if (TempData["Failed"] != null)
                                 <!-- Birthdate Field -->
                                 <div class="col-12">
                                     <div class="form-floating mb-2">
-                                        <input asp-for="BirthDate" type="date" class="form-control border-0 border-bottom rounded-3">
+                                        <input asp-for="BirthDate" type="date" class="form-control border-0 border-bottom rounded-3" max="@DateTime.Today.AddYears(-18).ToString("yyyy-MM-dd")"
+                                               required>
                                         <label asp-for="BirthDate" class="form-label"></label>
                                         <span class="text-danger mt-2" asp-validation-for="BirthDate"></span>
                                     </div>
@@ -215,33 +219,3 @@ else if (TempData["Failed"] != null)
         </div>
     </div>
 </section>
-
-<script>
-    function showAlertSuccess(alertId) {
-        var alertBox = document.getElementById(alertId);
-        if (alertBox) {
-            alertBox.classList.add("show-alert");
-            setTimeout(() => {
-                alertBox.classList.remove("show-alert");
-
-                // Yönlendirme işlemi
-                window.location.href = '/user/signin';
-
-            }, 3000); // 3 saniye sonra kaybolur
-        }
-    }
-
-    function showAlertError(alertId) {
-        var alertBox = document.getElementById(alertId);
-        if (alertBox) {
-            alertBox.classList.add("show-alert");
-            setTimeout(() => {
-                alertBox.classList.remove("show-alert");
-            }, 3000); // 3 saniye sonra kaybolur
-        }
-    }
-
-    // Örnek: Alertleri açmak için
-    showAlertSuccess('successAlert'); // Başarılı mesajı göster
-    showAlertError('errorAlert'); // Başarısız mesajı göster
-</script>
