@@ -1,0 +1,425 @@
+﻿﻿@{
+    ViewData["Title"] = "Profile";
+    Layout = "_ProfileLayout";
+}
+
+@model VisitorProfileViewModel
+
+@* @if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+} *@
+
+@* <div class="ad-left-full">
+    <video class="ad-video" autoplay loop muted playsinline>
+        <source src="~/img/AdLeft.webm" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+<div class="ad-right-full">
+    <video class="ad-video" autoplay loop muted playsinline>
+        <source src="~/img/AdRight.webm" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div> *@
+
+@* <!-- Sol Reklam Alanı -->
+<div class="ad-left">
+    <!-- Video reklamı buraya gelecek -->
+    <video class="ad-video" autoplay loop muted playsinline>
+        <source src="~/img/AdLeft.webm" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<!-- Sağ Reklam Alanı -->
+<div class="ad-right">
+    <!-- Video reklamı buraya gelecek -->
+    <video class="ad-video" autoplay loop muted playsinline>
+        <source src="~/img/AdRight.webm" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div> *@
+
+<section class="h-100 gradient-custom-2">
+
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center">
+            <div class="col col-lg-9 col-xl-0">
+                <div class="card shadow-lg">
+                    <!-- Profile Header -->
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
+                        <!-- Cover Image -->
+                        <div class="w-100 h-100 position-absolute">
+                            <img src=@(string.IsNullOrEmpty(Model.CoverImagePicture) ? "/img/defaultCoverPicture.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.CoverImagePicture}")
+                                 alt="Cover Image"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;" />
+                        </div>
+
+                        <!-- Profile Picture and Basic Info -->
+                        <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
+                            <img src=@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.ProfilePicture}")
+                                 alt="Profile Picture"
+                                 class="img-fluid img-thumbnail mt-4 mb-2 "
+                                 style="width: 175px; height: 175px; " />
+                        </div>
+                    </div>
+                    @if (ViewBag.IsOwner != null && ViewBag.IsOwner == true)
+                    {
+
+                        <button type="button" class="btn btn-dark" style="border-radius:0%" data-toggle="modal" data-target="#editProfileModal">
+                            Edit Profile
+                        </button>
+
+                        <!-- Modal -->
+
+                        <partial name="_EditProfileModalPartial" />
+                    }
+
+
+
+                    <!-- Profile Stats and Buttons -->
+                    <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
+                        <div class="d-flex flex-column" style="position: relative; bottom: 20px; left: 30px; top:0px">
+                            <h3 class="mb-1 align-content-center">@Model.Name @Model.Surname <i class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h3>
+                            <p class="mb-2 text-muted">@Model.Title</p>
+                            <small class="text-muted ">@Model.Country</small>
+                        </div>
+                        <div class="d-flex justify-content-end text-center py-1 text-body align-items-center">
+                            <div class="px-3">
+                                <p class="mb-1 h4">@Model.FollowersCount</p>
+                                <p class="small text-muted mb-0">Followers</p>
+                            </div>
+                            <div class="px-3">
+                                <p class="mb-1 h4">@Model.FollowingCount</p>
+                                <p class="small text-muted mb-0">Following</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container mt-2 d-flex justify-content-between align-items-center">
+                        <div class="ms-1">
+                            <div class="d-flex ms-4 ps-2 align-content-center flex-column">
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Lives in:</p><p class="text-muted">@(Model.Address ?? "No Information")</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Born on:</p><p class="text-muted">@Model.BirthDate.ToString("MMMM d, yyyy")</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Member since:</p><p class="text-muted">@Model.RegisteredDate.ToString("MMMM d, yyyy")</p></div>
+                            </div>
+                        </div>
+
+                        <div class="me-3 mb-auto pe-2" style="height:100%">
+                            @if (string.IsNullOrEmpty(Model.WorkingAt))
+                            {
+                                <div class="d-flex align-content-center">
+                                    <img src="/img/defaultWorkingLogo.jpg" class="me-2" style="height:20px;width:20px" /><p class="text-muted"> No Information</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center">
+
+                                    <img src=@(string.IsNullOrEmpty(Model.WorkingAtLogo) ? "/img/defaultWorkingLogo.jpg" : $"/img/userPhotos/{@Model.UserName}/{@Model.WorkingAtLogo}") class="me-2" style="height:20px;width:20px" />
+                                    @Model.WorkingAt
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <hr class="" style="margin-top:25px" />
+                    <div class="container d-flex justify-content-around align-items-center">
+                        @await Component.InvokeAsync("SocialMedia", new { UserName = Model.UserName })
+                    </div>
+                    <hr class="" style="margin-top:15px" />
+                    <!-- About Section -->
+                    @if (Model.Bio != null)
+                    {
+                        <div class="card-body p-4 text-black">
+                            <div class="mb-3">
+                                <h4 class="fw-bold ms-4 mb-3">About</h4>
+                                <div class="px-4">
+                                    <div class="row mt-4">
+                                        <!-- Left Column -->
+                                        <div class="col-md-12">
+                                            <p style="white-space: pre-wrap;">
+                                                @Model.Bio
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="m-0" style="margin-top:10px" />
+                    }
+                    @if (Model is ExtendedProfileViewModel extendedProfileViewModel)
+                    {
+
+                        <div class="card-body p-2 text-black">
+                            <!-- Security Information -->
+                            <div class="mb-2">
+                                <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                                <div class="d-flex mt-2 justify-content-around">
+
+                                    <div class="p-1">
+                                        <p class="mb-0 "><strong>Two-Factor Authentication:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                    </div>
+                                    <div class="p-1">
+                                        <p class="mb-0 "><strong>Email Confirmed:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.EmailConfirmed ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                    </div>
+                                    <div class="p-1">
+                                        <p class="mb-0 "><strong>Lockout:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.LockoutEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="" style="margin-top:10px" />
+                        <div class="card-body py-0 mt-0 text-black">
+                            <!-- Contact Information -->
+                            <div class="mb-2 ms-4">
+                                <h5 class="mb-1 mt-4 ms-2 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                                <div class="d-flex justify-content-around">
+
+                                    <div class="py-1 me-5 d-flex align-content-center">
+                                        <strong class="pe-2 ms-2">Email Address:</strong>
+                                        <p>@extendedProfileViewModel.EmailAddress</p>
+                                    </div>
+                                    <div class="py-1 me-5 d-flex align-content-center">
+                                        <strong class="pe-2">Phone Number:</strong>
+                                        @if (string.IsNullOrEmpty(extendedProfileViewModel.PhoneNumber))
+                                        {
+                                            <p class="text-muted">No Information</p>
+                                        }
+                                        else
+                                        {
+                                            <p>@extendedProfileViewModel.PhoneNumber</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="" style="margin-top:10px" />
+                    }
+
+                    <div class="card-body p-4 text-black">
+                        <!-- Featured Posts Section -->
+                        <div class="mb-2">
+                            <h4 class="fw-bold ms-4 mb-3">Featured Posts</h4>
+                            <div class="row g-3 px-2">
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
+                                             alt="Post Image"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
+                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
+                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3  rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
+                                             alt="Post Image"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">Another post title</h5>
+                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
+                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card-body p-4 text-black">
+                        <!-- Recent Posts Section -->
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="fw-bold ms-4 mb-0">Recent Posts</h4>
+                                <a href="#!" class="text-muted text-decoration-none pe-4">Show all</a>
+                            </div>
+                            <div class="row g-3 px-2">
+                                <!-- Post 1 -->
+                                <div class="col-md-6">
+                                    <div class="p-3  rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
+                                             alt="Post Image 1"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
+                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
+                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
+                                    </div>
+                                </div>
+
+                                <!-- Post 2 -->
+                                <div class="col-md-6">
+                                    <div class="p-3  rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
+                                             alt="Post Image 2"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">Another post title</h5>
+                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
+                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card-body p-0 text-black">
+                        <!-- New Stats Section -->
+                        <div class="">
+                            <div class="p-0">
+                                <div class="row text-center d-flex">
+                                    <div class="col-md-4">
+                                        <p class="mb-1 h6">@Model.PostCount</p>
+                                        <p class="small text-muted mb-0">Posts</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="mb-1 h6">@Model.CommentCount</p>
+                                        <p class="small text-muted mb-0">Comments</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <p class="mb-1 h6">@Model.LikeCount</p>
+                                        <p class="small text-muted mb-0">Total Likes</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="" />
+
+                    <div class="card-body box mb-2 px-4 text-black">
+                        <!-- Comments Section -->
+                        <div class="mb-2">
+                            <h4 class="fw-bold ms-4 mb-4">Recent Comments</h4>
+                            <div class="px-4 mt-4 d-flex justify-content-center flex-column  align-items-center">
+                                <div class="d-flex">
+
+                                    <p class="mb-3"><i>"Great post!"</i> - John Doe</p> <img class="ms-2" src="/img/profile3.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                </div>
+                                <div class="d-flex">
+
+                                    <p class="mb-3"><i>"Very insightful."</i> - Jane Smith</p> <img class="ms-2" src="/img/profile2.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                </div>
+                                <div class="d-flex">
+                                    <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p> <img class="ms-2" src="/img/profile1.jpg" style="height:20px;width:20px;border-radius:50%" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- JavaScript Kodu -->
+@section Scripts {
+    <script>
+        // Genel URL doğrulama fonksiyonu
+        function validateUrl(inputId, errorId,buttonId) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+            const saveChangesElement = document.getElementById(buttonId);
+
+            inputElement.addEventListener('input', function () {
+                const inputValue = this.value;
+
+                // Eğer input boşsa veya null ise hata gösterme
+                if (!inputValue || inputValue.trim().length === 0) {
+                    errorElement.style.display = 'none';
+                    this.classList.remove('is-invalid');
+                    saveChangesElement.style.display = 'block';
+                    return; // Fonksiyondan çık
+                }
+
+                // Eğer input doluysa ve "https://" ile başlamıyorsa hata göster
+                if (!inputValue.startsWith('https://')) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
+                } else {
+                    errorElement.style.display = 'none';
+                    this.classList.remove('is-invalid');
+                    saveChangesElement.style.display = 'block';
+                }
+            });
+        }
+
+
+        // Her bir input alanı için fonksiyonu çağırın
+        validateUrl('githubInput', 'githubError','saveChangesButton');
+        validateUrl('linkedinInput', 'linkedinError','saveChangesButton');
+        validateUrl('mediumInput', 'mediumError','saveChangesButton');
+        validateUrl('xInput', 'xError','saveChangesButton');
+        validateUrl('youtubeInput', 'youtubeError','saveChangesButton');
+        validateUrl('personalWebInput', 'personalWebError','saveChangesButton');
+
+        // Name, Surname Validasyonu
+        function validateNameSurname(inputId, errorId,buttonId) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+            const saveChangesElement = document.getElementById(buttonId);
+
+            inputElement.addEventListener('input', function () {
+                const inputValue = this.value;
+
+                // Eğer input boşsa veya null ise hata gösterme
+                if (!inputValue || inputValue.trim().length === 0) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
+                    return; // Fonksiyondan çık
+                } else {
+                    errorElement.style.display = 'none';
+                    saveChangesElement.style.display = 'block';
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        validateNameSurname('nameInput','nameError','saveChangesButton');
+        validateNameSurname('surnameInput','surnameError','saveChangesButton');
+
+        function validateEmail(inputId, errorId, buttonId) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+            const saveChangesElement = document.getElementById(buttonId);
+
+            inputElement.addEventListener('input', function () {
+                const inputValue = this.value;
+
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/; // JavaScript regex syntax'ı
+
+                if (!inputValue || inputValue.trim().length === 0) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
+                } else if (!emailRegex.test(inputValue)) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
+                } else {
+                    errorElement.style.display = 'none';
+                    saveChangesElement.style.display = 'block';
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        // Sayfa yüklendiğinde validasyonu başlat
+        document.addEventListener('DOMContentLoaded', function () {
+            validateEmail('emailInput', 'emailError', 'saveChangesButton');
+        });
+
+
+    </script>
+}

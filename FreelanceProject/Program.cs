@@ -1,7 +1,14 @@
+using FreelanceProject.Data;
+using FreelanceProject.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<FreelanceDbContext>(options => { options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon")); });
+builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<FreelanceDbContext>();
 
 var app = builder.Build();
 

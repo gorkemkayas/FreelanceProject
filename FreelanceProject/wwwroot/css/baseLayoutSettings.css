@@ -1,0 +1,215 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.lacquer-regular {
+    font-family: "Lacquer", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+    --text-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+    --hover-gradient: linear-gradient(135deg, #3a0ca3, #4361ee);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+body {
+    background-color: #f8fafc;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+/* Premium White Header with Gradient Text */
+header {
+    background-color: white;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.brand-text {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    background: var(--text-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+}
+
+    .brand-text::after {
+        content: 'Project';
+        position: absolute;
+        top: -6px;
+        right: -24px;
+        font-size: 0.6rem;
+        background: var(--text-gradient);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        -webkit-text-fill-color: white;
+    }
+
+.nav-link {
+    color: #64748b !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+    .nav-link.active, .nav-link:hover {
+        color: #1e293b !important;
+    }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+/* Premium Search */
+.search-box {
+    background-color: #f1f5f9;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    width: 240px;
+}
+
+    .search-box:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        background-color: white;
+        width: 280px;
+    }
+
+/* Premium Profile Dropdown */
+.profile-img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    color: #475569;
+    display: flex;
+    align-items: center;
+}
+
+    .dropdown-item i {
+        width: 20px;
+        margin-right: 10px;
+        color: #94a3b8;
+    }
+
+    .dropdown-item:hover, .dropdown-item:focus {
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+
+        .dropdown-item:hover i {
+            color: #4361ee;
+        }
+
+/* Premium Button */
+.btn-premium {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(67, 97, 238, 0.2);
+}
+
+    .btn-premium:hover {
+        background: var(--hover-gradient);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+/* Premium Footer */
+footer {
+    background-color: white;
+    border-top: 1px solid #f1f5f9;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+    .footer-links a {
+        color: #64748b;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .footer-links a:hover {
+            color: #4361ee;
+        }
+
+

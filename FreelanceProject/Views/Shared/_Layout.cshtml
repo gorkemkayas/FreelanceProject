@@ -3,44 +3,159 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FreelanceProject</title>
+    <title>@ViewData["Title"] - FreelancePro</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/baseLayoutSettings.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FreelanceProject.styles.css" asp-append-version="true" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Manrope:wght@700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FreelanceProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <header class="py-2">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <!-- Premium Logo -->
+                <a href="/" class="d-flex align-items-center text-decoration-none me-4">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                        <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="url(#paint0_linear)" />
+                        <path d="M21.5 12.5L16 8L10.5 12.5V19.5L16 24L21.5 19.5V12.5Z" fill="white" />
+                        <path d="M16 16L13.5 14V18L16 16Z" fill="white" />
+                        <path d="M16 16L18.5 14V18L16 16Z" fill="white" />
+                        <defs>
+                            <linearGradient id="paint0_linear" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4361EE" />
+                                <stop offset="1" stop-color="#3A0CA3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="brand-text lacquer-regular">Freelance</span>
+                </a>
+
+                <!-- Premium Navigation -->
+                <ul class="nav d-none d-lg-flex me-auto">
+                    <li><a href="#" class="nav-link active">Dashboard</a></li>
+                    <li><a href="#" class="nav-link">Projects</a></li>
+                    <li><a href="#" class="nav-link">Talents</a></li>
+                    <li><a href="#" class="nav-link">Messages</a></li>
+                    <li><a href="#" class="nav-link">Analytics</a></li>
+                </ul>
+
+                <!-- Premium Search -->
+                <div class="d-flex align-items-center ms-auto ms-lg-0">
+                    <div class="position-relative me-2 d-none d-md-block">
+                        <i class="fas fa-search position-absolute ps-1" style="left: 1px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                        <input type="search" class="search-box ps-4 ps-lg-4" placeholder="Search projects, clients...">
+                    </div>
+
+                    <!-- Premium Notifications -->
+                    <button class="btn btn-link position-relative me-2 text-muted p-1">
+                        <i class="fas fa-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            3
+                        </span>
+                    </button>
+
+                    <!-- Premium Profile -->
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="user" class="profile-img rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-wallet"></i> Billing</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Premium CTA Button -->
+                    <button class="btn btn-premium ms-3 d-none d-lg-block">
+                        New Project
+                    </button>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer>
         <div class="container">
-            &copy; 2025 - FreelanceProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <a href="/" class="d-flex align-items-center text-decoration-none mb-3">
+                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                            <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="url(#paint0_linear)" />
+                            <path d="M21.5 12.5L16 8L10.5 12.5V19.5L16 24L21.5 19.5V12.5Z" fill="white" />
+                            <path d="M16 16L13.5 14V18L16 16Z" fill="white" />
+                            <path d="M16 16L18.5 14V18L16 16Z" fill="white" />
+                        </svg>
+                        <span class="brand-text" style="font-size: 1.5rem;">Freelance</span>
+                    </a>
+                    <p class="text-muted">The premium platform connecting top talent with visionary clients worldwide.</p>
+                </div>
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <h5 class="mb-3">Company</h5>
+                    <div class="d-flex flex-column footer-links">
+                        <a href="#">About</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Press</a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <h5 class="mb-3">Resources</h5>
+                    <div class="d-flex flex-column footer-links">
+                        <a href="#">Help Center</a>
+                        <a href="#">Guides</a>
+                        <a href="#">Community</a>
+                        <a href="#">Events</a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <h5 class="mb-3">Legal</h5>
+                    <div class="d-flex flex-column footer-links">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Cookie Policy</a>
+                        <a href="#">Licenses</a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5 class="mb-3">Follow Us</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <span class="text-muted mb-2 mb-md-0">&copy; 2025 FreelancePro. All rights reserved.</span>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-muted"><i class="fab fa-cc-visa fa-lg"></i></a>
+                    <a href="#" class="text-muted"><i class="fab fa-cc-mastercard fa-lg"></i></a>
+                    <a href="#" class="text-muted"><i class="fab fa-cc-paypal fa-lg"></i></a>
+                    <a href="#" class="text-muted"><i class="fab fa-cc-apple-pay fa-lg"></i></a>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
