@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="~/css/baseLayoutSettings.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FreelanceProject.styles.css" asp-append-version="true" />
 
+    <script src="~/js/showAlertSuccess.js"></script>
+    <script src="~/js/showAlertSuccessNoDirect.js"></script>
+    <script src="~/js/showAlertSuccessToIndex.js"></script>
+    <script src="~/js/showAlertError.js"></script>
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -62,24 +67,39 @@
                         </span>
                     </button>
 
-                    <!-- Premium Profile -->
-                    <div class="dropdown">
-                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="user" class="profile-img rounded-circle">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-wallet"></i> Billing</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
-                        </ul>
-                    </div>
 
-                    <!-- Premium CTA Button -->
-                    <button class="btn btn-premium ms-3 d-none d-lg-block">
-                        New Project
-                    </button>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+                        <!-- Premium Profile -->
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="user" class="profile-img rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-wallet"></i> Billing</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
+                            </ul>
+                        </div>
+                        <!-- Premium CTA Button -->
+                        <button class="btn btn-premium ms-3 d-none d-lg-block">
+                            New Project
+                        </button>
+                    }
+                    else
+                    {
+
+                        <!-- Premium CTA Button -->
+                        <a class="btn text-white btn-premium ms-3 d-none d-lg-block" asp-controller="User" asp-action="SignUp">
+                            Sign Up
+                        </a>
+                        <a class="btn text-white btn-premium ms-1 d-none d-lg-block" asp-controller="User" asp-action="SignIn">
+                            Sign In
+                        </a>
+                    }
                 </div>
             </div>
         </div>

@@ -2,6 +2,26 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
+@section Scripts {
+    <script>
+        showAlertSuccessNoDirect('successAlert');
+        showAlertError('errorAlert');
+    </script>
+}
 <main class="pb-5">
     <!-- Hero Section -->
     <section class="py-5 text-center">
