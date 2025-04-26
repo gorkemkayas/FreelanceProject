@@ -10,10 +10,12 @@ namespace FreelanceProject.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, UserManager<AppUser> userManager)
         {
             _userService = userService;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -79,8 +81,30 @@ namespace FreelanceProject.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile(string? userName)
         {
+            if(string.IsNullOrEmpty(userName))
+            {
+                TempData["Error"] = "User not found!";
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            var visitedUser = await _userManager.FindByNameAsync(userName);
+
+            if (visitedUser == null)
+            {
+                TempData["Error"] = "User not found!";
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == visitedUser)
+            {
+                ViewBag.IsCurrentUser = true;
+
+                // extendedviewmodel'i elde edip dön
+            }
+
+            // visitorviewmodel'i elde edip dön
             return View();
         }
     }

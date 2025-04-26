@@ -1,9 +1,9 @@
 ﻿using FreelanceProject.Data.Entities;
-using FreelanceProject.Data;
 using Microsoft.AspNetCore.Identity;
 using FreelanceProject.Services.Abstract;
 using FreelanceProject.Services.Concrete;
 using FreelanceProject.Localizations;
+using FreelanceProject.Data.Context;
 
 namespace FreelanceProject.Extensions
 {

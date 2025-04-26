@@ -1,4 +1,4 @@
-using FreelanceProject.Data;
+using FreelanceProject.Data.Context;
 using FreelanceProject.Data.Entities;
 using FreelanceProject.Extensions;
 using FreelanceProject.Services.Abstract;
