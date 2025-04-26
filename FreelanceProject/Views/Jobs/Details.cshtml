@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Project Details";
+}
+
+<main class="py-5">
+    <!-- Project Details Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="position-relative overflow-hidden" style="height: 400px;">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Project Image">
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title fw-bold mb-3">E-commerce Website Redesign</h3>
+                            <p class="text-muted mb-4">Modern redesign for a fashion retailer with improved UX and mobile responsiveness.</p>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
+                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
+                                    <span class="small">Sarah Johnson</span>
+                                </div>
+                                <span class="badge bg-primary bg-opacity-10 text-primary">Web Design</span>
+                            </div>
+
+                            <h5 class="fw-bold mb-2">Project Budget</h5>
+                            <p class="text-muted mb-3">$2,500</p>
+
+                            <h5 class="fw-bold mb-2">Project Description</h5>
+                            <p class="text-muted mb-4">A complete redesign of the e-commerce website focusing on a modern, mobile-friendly user interface and better navigation to enhance the shopping experience.</p>
+
+                            <h5 class="fw-bold mb-2">Skills Required</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check-circle me-2"></i> HTML/CSS</li>
+                                <li><i class="fas fa-check-circle me-2"></i> JavaScript</li>
+                                <li><i class="fas fa-check-circle me-2"></i> UX/UI Design</li>
+                                <li><i class="fas fa-check-circle me-2"></i> React</li>
+                                <li><i class="fas fa-check-circle me-2"></i> Shopify</li>
+                            </ul>
+
+                            <h5 class="fw-bold mb-2">Project Timeline</h5>
+                            <p class="text-muted mb-3">Estimated Completion: 2 weeks</p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button class="btn btn-primary btn-lg px-4">
+                                    <i class="fas fa-rocket me-2"></i> Apply Project
+                                </button>
+                                <button class="btn btn-outline-primary btn-lg px-4">
+                                    <i class="fas fa-comment-dots me-2"></i> Contact Freelancer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar (Project Details) -->
+                <div class="col-lg-4">
+                    <div class="sticky-sidebar">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="fw-bold mb-3">Project Overview</h5>
+                                <ul class="list-unstyled mb-3">
+                                    <li><i class="fas fa-calendar-alt me-2"></i><strong>Start Date:</strong> May 1, 2025</li>
+                                    <li><i class="fas fa-clock me-2"></i><strong>Duration:</strong> 2 Weeks</li>
+                                    <li><i class="fas fa-money-bill-wave me-2"></i><strong>Budget:</strong> $2,500</li>
+                                </ul>
+
+                                <h5 class="fw-bold mb-3">Similar Projects</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="#" class="text-decoration-none">Mobile App UI/UX Design</a></li>
+                                    <li><a href="#" class="text-decoration-none">E-commerce Development</a></li>
+                                    <li><a href="#" class="text-decoration-none">Website Speed Optimization</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom CSS -->
+                <style>
+                    .sticky-sidebar {
+                        position: -webkit-sticky;
+                        position: sticky;
+                        top: 30px; /* Distance from the top */
+                        max-height: calc(100vh - 30px); /* Ensures the sidebar doesn’t exceed the viewport height */
+                        overflow-y: auto; /* Allows scrolling if the content overflows */
+                        z-index: 100; /* Ensures sidebar stays above other content */
+                    }
+
+                        /* Optional: You can add padding or margin if you want some space around the sidebar */
+                        .sticky-sidebar .card-body {
+                            padding: 15px;
+                        }
+                </style>
+            </div>
+        </div>
+    </section>
+</main>
