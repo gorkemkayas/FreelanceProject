@@ -4,6 +4,10 @@ using FreelanceProject.Services.Abstract;
 using FreelanceProject.Services.Concrete;
 using FreelanceProject.Localizations;
 using FreelanceProject.Data.Context;
+using FreelanceProject.CustomMethods.Abstract;
+using FreelanceProject.CustomMethods.Concrete;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace FreelanceProject.Extensions
 {
@@ -25,14 +29,30 @@ namespace FreelanceProject.Extensions
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
             }).AddErrorDescriber<LocalizationIdentityErrorDescriber>()
-                .AddEntityFrameworkStores<FreelanceDbContext>();
+              .AddEntityFrameworkStores<FreelanceDbContext>()
+              .AddDefaultTokenProviders();
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(1);
+            });
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(5);
+            });
         }
 
         public static void AddServicesWithExtension(this IServiceCollection services)
         {
             services.AddScoped<UserManager<AppUser>>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<SignInManager<AppUser>>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IUrlGenerator, UrlGenerator>();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
         }
     }
 }

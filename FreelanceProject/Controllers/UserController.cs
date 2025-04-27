@@ -1,21 +1,30 @@
-﻿using FreelanceProject.Data.Entities;
+﻿using FreelanceProject.CustomMethods.Abstract;
+using FreelanceProject.Data.Entities;
 using FreelanceProject.Extensions;
 using FreelanceProject.Models.ViewModels;
 using FreelanceProject.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using Microsoft.Identity.Client;
 
 namespace FreelanceProject.Controllers
 {
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
+        private readonly IUrlGenerator _urlGenerator;
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public UserController(IUserService userService, UserManager<AppUser> userManager)
+        public UserController(IUserService userService, IEmailService emailService, IUrlGenerator urlGenerator, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userService = userService;
+            _emailService = emailService;
+            _urlGenerator = urlGenerator;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -63,7 +72,7 @@ namespace FreelanceProject.Controllers
 
             var result = await _userService.CreateUserAsync(request);
 
-            if(!result.IsSuccess)
+            if (!result.IsSuccess)
             {
                 ModelState.AddModelErrorList(result.Errors);
                 return View();
@@ -71,7 +80,12 @@ namespace FreelanceProject.Controllers
 
             TempData["Succeed"] = "The user created successfully!";
 
-            return RedirectToAction(nameof(HomeController.SignIn),"User");
+            var token = await _userService.GenerateEmailConfirmationTokenAsync(result.Data!);
+            var confirmationLink = _urlGenerator.GenerateEmailConfirmationUrl(result.Data!, token);
+
+            await _emailService.SendEmailConfirmationEmailAsync(result.Data!.Email!, confirmationLink);
+
+            return RedirectToAction("ConfirmEmail","User");
         }
 
         public async Task<IActionResult> SignOut()
@@ -83,29 +97,134 @@ namespace FreelanceProject.Controllers
 
         public async Task<IActionResult> Profile(string? userName)
         {
-            if(string.IsNullOrEmpty(userName))
-            {
-                TempData["Error"] = "User not found!";
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-            var visitedUser = await _userManager.FindByNameAsync(userName);
+            //if(string.IsNullOrEmpty(userName))
+            //{
+            //    TempData["Error"] = "User not found!";
+            //    return RedirectToAction(nameof(HomeController.Index), "Home");
+            //}
+            //var visitedUser = await _userService.FindByNameAsync(userName);
 
-            if (visitedUser == null)
-            {
-                TempData["Error"] = "User not found!";
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-            var currentUser = await _userManager.GetUserAsync(User);
+            //if (visitedUser == null)
+            //{
+            //    TempData["Error"] = "User not found!";
+            //    return RedirectToAction(nameof(HomeController.Index), "Home");
+            //}
+            //var currentUser = await _userManager.GetUserAsync(User);
 
-            if (currentUser == visitedUser)
-            {
-                ViewBag.IsCurrentUser = true;
+            //if (currentUser == visitedUser)
+            //{
+            //    ViewBag.IsCurrentUser = true;
 
-                // extendedviewmodel'i elde edip dön
-            }
+            //    // extendedviewmodel'i elde edip dön
+            //}
 
             // visitorviewmodel'i elde edip dön
             return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+            var user = await _userService.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("Email", "User not found!");
+                return View(request);
+            }
+
+            var resetToken = await _userService.GeneratePasswordResetTokenAsync(user);
+
+            var resetPasswordLink = _urlGenerator.GenerateResetPasswordUrl(user, resetToken);
+
+            await _emailService.SendForgetPasswordEmailAsync(user.Email!, resetPasswordLink);
+
+            TempData["Succeed"] = "Reset password link has been sent to your email!";
+            return View(request);
+        }
+
+        public IActionResult ResetPassword(string userId, string token)
+        {
+            TempData["UserId"] = userId;
+            TempData["Token"] = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Please fill the areas correctly.");
+                return View(request);
+            }
+            var token = TempData["Token"]?.ToString();
+            var userId = TempData["UserId"]?.ToString();
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userId))
+            {
+                ModelState.AddModelError(string.Empty, "Token or UserId is null");
+                return View(request);
+            }
+
+            var result = await _userService.ResetPasswordAsync(request.NewPassword, userId, token);
+
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelErrorList(result.Errors);
+                return View(request);
+            }
+
+            TempData["Succeed"] = "Password reset successfully!";
+            var user = await _userManager.FindByIdAsync(userId);
+
+            await _userManager.UpdateSecurityStampAsync(user!);
+
+            return RedirectToAction(nameof(HomeController.SignIn), "User");
+
+
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmEmail(string? userId, string? token)
+        {
+            if(string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return View();
+            }
+            ViewBag.UserId = userId;
+            ViewBag.Token = token;
+            return View(new ConfirmEmailViewModel() { UserId = userId, Token = token});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel request)
+        {
+            var result = await _userService.ConfirmEmailAsync(request);
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelErrorList(result.Errors);
+                return View(request);
+            }
+            TempData["Succeed"] = "Email confirmed successfully!";
+
+            return RedirectToAction(nameof(UserController.SignIn));
+            
+            //confirm edildiyse confirmEmail sayfasında 'basarıyla dogrulandı' mesajı ver
+            //confirm edilmediyse 'dogrulama hatası' mesajı ver
+            // yönlendirme olmadan girildiyse hata sayfasına yönlendir
         }
     }
 }
