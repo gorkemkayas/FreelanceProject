@@ -66,5 +66,10 @@ namespace FreelanceProject.Controllers
         {
             return View();
         }
+
+        public IActionResult EmployerJobs()  
+        {
+            return View();
+        }
     }
 }

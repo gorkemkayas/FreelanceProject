@@ -11,5 +11,7 @@ namespace FreelanceProject.Data.Entities
         public string DurationUnit { get; set; }
         public DateTime StartDate { get; set; }
         public string Skills { get; set; } // Virgülle ayrılmış string (HTML/CSS, JavaScript gibi)
+        public string EmployerId { get; set; }  // İşverenin UserId'si
+
     }
 }
