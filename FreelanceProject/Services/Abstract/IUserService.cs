@@ -8,7 +8,16 @@ namespace FreelanceProject.Services.Abstract
     {
         Task<ServiceResult<AppUser>> CreateUserAsync(SignUpViewModel request);
         Task<ServiceResult<AppUser>> SignInAsync(SignInViewModel request);
+
+        Task<ServiceResult<AppUser>> ResetPasswordAsync(string newPassword, string userId, string token);
+
+        Task<string> GeneratePasswordResetTokenAsync(AppUser user);
+        Task<string> GenerateEmailConfirmationTokenAsync(AppUser user);
+
+        Task<AppUser>? FindByEmailAsync(string email);
         Task SignOutAsync();
+
+        Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request);
 
     }
 }

@@ -4,6 +4,7 @@ using FreelanceProject.Services.Abstract;
 using FreelanceProject.Utilities;
 using static FreelanceProject.CustomMethods.CustomMethods;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace FreelanceProject.Services.Concrete
 {
@@ -16,6 +17,33 @@ namespace FreelanceProject.Services.Concrete
         {
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        public async Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request)
+        {
+            if (string.IsNullOrEmpty(request.UserId) || string.IsNullOrEmpty(request.Token))
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError> { new IdentityError() { Code = "ModelEmpty", Description = "Request cannot be null" } }
+                };
+            }
+            var user = await _userManager.FindByIdAsync(request.UserId);
+
+            var result = await _userManager.ConfirmEmailAsync(user!, request.Token);
+            if (!result.Succeeded)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = result.Errors.ToList()
+                };
+            }
+            return new ServiceResult<AppUser>()
+            {
+                IsSuccess = true
+            };
         }
 
         public async Task<ServiceResult<AppUser>> CreateUserAsync(SignUpViewModel request)
@@ -51,10 +79,55 @@ namespace FreelanceProject.Services.Concrete
 
             return new ServiceResult<AppUser>()
             {
-                IsSuccess = true
+                IsSuccess = true,
+                Data = await _userManager.FindByEmailAsync(request.Email)
             };
         }
 
+        public async Task<AppUser>? FindByEmailAsync(string email)
+        {
+            var result = await _userManager.FindByEmailAsync(email);
+            return result;
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(AppUser user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return token;
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(AppUser user)
+        {
+            var token =  await _userManager.GeneratePasswordResetTokenAsync(user);
+            return token;
+        }
+
+        public async Task<ServiceResult<AppUser>> ResetPasswordAsync(string newPassword, string userId,string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user is null)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError() { Code = "UserNotFound", Description = "User not found" } }
+                };
+            }
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if(!result.Succeeded)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = result.Errors.ToList()
+                };
+            }
+            return new ServiceResult<AppUser>()
+            {
+                IsSuccess = true
+            };
+        }
         public async Task<ServiceResult<AppUser>> SignInAsync(SignInViewModel request)
         {
             if(request is null)

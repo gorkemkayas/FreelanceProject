@@ -1,0 +1,121 @@
+﻿﻿@{
+    Layout = "_SignInUp";
+    ViewData["Title"] = "Confirm Email";
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+@model ConfirmEmailViewModel
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+@if(Model != null)
+{
+@if (!string.IsNullOrEmpty(Model.UserId) && !string.IsNullOrEmpty(Model.Token))
+{
+    <form id="confirmationForm" action="@Url.Action("ConfirmEmail", "User")" method="post" style="display:none;">
+        <input type="hidden" name="UserId" value="@Model.UserId" />
+        <input type="hidden" name="Token" value="@Model.Token" />
+        @Html.AntiForgeryToken() <!-- CSRF güvenliği için AntiForgery token -->
+    </form>
+
+    <script>
+        // Sayfa yüklendikten sonra formu otomatik olarak gönder
+        window.onload = function () {
+        // Eğer userId ve token boş değilse formu gönder
+        if ('@Model.UserId' && '@Model.Token') {
+        setTimeout(function () {
+                    document.getElementById('confirmationForm').submit();
+                }, 3000);
+            }
+        };
+    </script>
+}
+    
+}
+
+<section class="py-3 py-md-4 py-xl-6 d-flex justify-content-center align-items-center" style="margin-top:10rem">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex flex-column justify-items-center">
+                @if(Model != null)
+                {
+                    <lottie-player class="mx-auto" src="/animations/EmailConfirmedAnimation.json"
+                                   background="transparent"
+                                   speed="1"
+                                   style="width: 300px; height: 300px;"
+                                   loop
+                                   autoplay>
+                    </lottie-player>
+                    <div class="mb-4 text-center">
+
+                        <h2 class=" fw-bold text-center text-gradient">Your account has been activated!</h2>
+                        <br />
+                        <p class="text-center text-muted m-0">You are being directed to the login page...</p>
+                    </div>
+                }
+                else
+                {
+                    
+
+                    <lottie-player class="mx-auto" src="/animations/EmailSentAnimation.json"
+                                   background="transparent"
+                                   speed="1"
+                                   style="width: 300px; height: 300px;"
+                                   loop
+                                   autoplay>
+                    </lottie-player>
+                    <div class="mb-4 text-center">
+
+                        <h2 class=" fw-bold text-center text-gradient">Email verification link has been sent to your email.</h2>
+                        <br />
+                        <p class="text-center text-muted m-0">Click on the link in your email address to activate your account.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function showAlertSuccess(alertId) {
+        var alertBox = document.getElementById(alertId);
+        if (alertBox) {
+            alertBox.classList.add("show-alert");
+            setTimeout(() => {
+                alertBox.classList.remove("show-alert");
+
+                // Yönlendirme işlemi
+                // window.location.href = '/user/signin';
+
+            }, 3000); // 3 saniye sonra kaybolur
+        }
+    }
+
+    function showAlertError(alertId) {
+        var alertBox = document.getElementById(alertId);
+        if (alertBox) {
+            alertBox.classList.add("show-alert");
+            setTimeout(() => {
+                alertBox.classList.remove("show-alert");
+            }, 3000); // 3 saniye sonra kaybolur
+        }
+    }
+
+    // Örnek: Alertleri açmak için
+    showAlertSuccess('successAlert'); // Başarılı mesajı göster
+    showAlertError('errorAlert'); // Başarısız mesajı göster
+</script>
