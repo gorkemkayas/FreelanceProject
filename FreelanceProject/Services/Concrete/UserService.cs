@@ -19,6 +19,11 @@ namespace FreelanceProject.Services.Concrete
             _signInManager = signInManager;
         }
 
+        public bool CheckEmailConfirmed(AppUser user)
+        {
+            return user.EmailConfirmed;
+        }
+
         public async Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request)
         {
             if (string.IsNullOrEmpty(request.UserId) || string.IsNullOrEmpty(request.Token))
@@ -147,6 +152,16 @@ namespace FreelanceProject.Services.Concrete
                 {
                     IsSuccess = false,
                     Errors = new List<IdentityError> { new IdentityError() { Code = "UserNotFound", Description = "User not found" } }
+                };
+            }
+            var checkEmailConfirmed = CheckEmailConfirmed(user);
+
+            if(!checkEmailConfirmed)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError> { new IdentityError() { Code = "EmailNotConfirmed", Description = "Email not confirmed" } }
                 };
             }
 

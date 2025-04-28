@@ -4,13 +4,14 @@ using FreelanceProject.Extensions;
 using FreelanceProject.Models.ViewModels;
 using FreelanceProject.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Identity.Client;
 
 namespace FreelanceProject.Controllers
 {
-    public class UserController : Controller
+    public partial class UserController : Controller
     {
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
@@ -50,6 +51,12 @@ namespace FreelanceProject.Controllers
             if (!result.IsSuccess)
             {
                 ModelState.AddModelErrorList(result.Errors);
+                if(result.Errors.Any(x => x.Code == "EmailNotConfirmed"))
+                {
+                    TempData["Error"] = "Please confirm your email address!";
+                    TempData["EmailNotConfirmed"] = true;
+                    TempData["UserEmail"] = request.Email;
+                }
                 return View();
             }
             TempData["Succeed"] = "The user signed in successfully!";
@@ -93,6 +100,25 @@ namespace FreelanceProject.Controllers
             await _userService.SignOutAsync();
             TempData["Succeed"] = "The user signed out successfully!";
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResendEmailConfirmation([FromBody] ResendEmailRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var confirmationLink = _urlGenerator.GenerateEmailConfirmationUrl(user, token);
+
+            await _emailService.SendEmailConfirmationEmailAsync(user.Email!, confirmationLink);
+
+            return Ok();
         }
 
         public async Task<IActionResult> Profile(string? userName)

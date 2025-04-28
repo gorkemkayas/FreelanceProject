@@ -17,6 +17,7 @@ namespace FreelanceProject.Services.Abstract
         Task<AppUser>? FindByEmailAsync(string email);
         Task SignOutAsync();
 
+        bool CheckEmailConfirmed(AppUser user);
         Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request);
 
     }

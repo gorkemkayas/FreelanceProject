@@ -45,6 +45,7 @@ else if (TempData["Failed"] != null)
                 <div class="row gy-5 justify-content-center">
                     <div class="col-12 col-lg-5">
                         <form asp-controller="User" asp-action="SignIn" asp-route-returnUrl="@Context.Request.Query["returnUrl"]" method="post">
+                            @Html.AntiForgeryToken()
                             <div class="row gy-3 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
@@ -122,3 +123,50 @@ else if (TempData["Failed"] != null)
         </div>
     </div>
 </section>
+
+@if (TempData["EmailNotConfirmed"] is bool emailNotConrirmed && emailNotConrirmed)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                title: "Email Confirmation Required",
+                text: "You must verify your email address before using your account.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Resend Email",
+                cancelButtonText: "Cancel",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resendEmailConfirmation("@TempData["UserEmail"]");
+                }
+            });
+        });
+
+        function resendEmailConfirmation(email) {
+            fetch('/User/ResendEmailConfirmation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => {
+                if (response.ok) {
+                    Swal.fire(
+                        'Successfull!',
+                        'Email verification link has been sent.',
+                        'success'
+                    );
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred. Please try again.',
+                        'error'
+                    );
+                }
+            });
+        }
+    </script>
+}
