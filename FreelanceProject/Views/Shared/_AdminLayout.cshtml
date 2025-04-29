@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | Admin Panel</title>
+
+    <link rel="stylesheet" href="~/css/adminLayoutSettings.css" asp-append-version="true" />
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Pirata+One&family=Yellowtail&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <span class="gradient-text me-2">TaskFlow</span>  | Admin Panel
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item user-info me-3">
+                        @await Component.InvokeAsync("NavProfilePhoto")
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link logout" asp-route-returnUrl="/Home/Index" asp-area="" asp-controller="User" asp-action="Logout">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="offcanvas-lg offcanvas-start">
+        <h4><i class="fas fa-shield-alt me-2"></i>Admin Dashboard</h4>
+
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <!-- Users Section -->
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#usersSubmenu">
+                <i class="fas fa-users"></i> Users <i class="fas fa-angle-down ms-auto"></i>
+            </a>
+            <div class="collapse show" id="usersSubmenu">
+                <nav class="nav flex-column">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Add">
+                        <i class="fas fa-list"></i> List Users
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Edit">
+                        <i class="fas fa-user-edit"></i> Edit User
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Delete">
+                        <i class="fas fa-user-times"></i> Delete User
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Roles Section -->
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#rolesSubmenu">
+                <i class="fas fa-user-tag"></i> Roles <i class="fas fa-angle-down ms-auto"></i>
+            </a>
+            <div class="collapse show" id="rolesSubmenu">
+                <nav class="nav flex-column">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleAdd">
+                        <i class="fas fa-plus-circle"></i> Add Role
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Edit">
+                        <i class="fas fa-edit"></i> Edit Role
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Delete">
+                        <i class="fas fa-trash-alt"></i> Delete Role
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleList">
+                        <i class="fas fa-list-ul"></i> Role List
+                    </a>
+                </nav>
+            </div>
+
+            <a class="nav-link" href="#">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="content">
+        @RenderBody()
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Enable tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
+        // Auto-collapse sidebar on mobile when clicking a link
+        document.querySelectorAll('#sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) {
+                    const sidebar = document.getElementById('sidebar');
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(sidebar);
+                    bsOffcanvas.hide();
+                }
+            });
+        });
+
+        // Active link highlighting
+        document.querySelectorAll('#sidebar .nav-link').forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+                // Expand parent collapse if this is a child link
+                let parentCollapse = link.closest('.collapse');
+                if (parentCollapse) {
+                    parentCollapse.classList.add('show');
+                    // Also activate the parent toggle link
+                    const parentToggle = document.querySelector(`[data-bs-target="#${parentCollapse.id}"]`);
+                    if (parentToggle) {
+                        parentToggle.classList.add('active');
+                    }
+                }
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,193 @@
+﻿﻿@{
+    Layout = "_AdminLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+    @* <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ana Sayfa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ayarlar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profil</a>
+                </li>
+            </ul>
+        </div>
+    </nav> *@
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="mb-4">Dashboard</h1>
+
+        <!-- İstatistik Kartları -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-users"></i> Kullanıcı Sayısı</h5>
+                        <p class="card-text">1,234</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-file-alt"></i> Post Sayısı</h5>
+                        <p class="card-text">567</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-comments"></i> Yorum Sayısı</h5>
+                        <p class="card-text">8,910</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-heart"></i> Beğeni Sayısı</h5>
+                        <p class="card-text">11,212</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Veri Tazeleme Butonu -->
+        <button class="btn btn-primary mb-4" onclick="refreshData()">Verileri Yenile</button>
+
+        <!-- Grafikler -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Kullanıcı Artışı
+                    </div>
+                    <div class="card-body">
+                        <canvas id="userGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Post ve Yorum Dağılımı
+                    </div>
+                    <div class="card-body">
+                        <canvas id="postCommentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yönlendirme Butonları -->
+        <a href="userDetails.html" class="btn btn-info">Kullanıcı Detayları</a>
+        <a href="postDetails.html" class="btn btn-info">Post Detayları</a>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script> *@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        // Kullanıcı Artış Grafiği
+        const userGrowthChart = new Chart(document.getElementById('userGrowthChart'), {
+            type: 'line',
+            data: {
+                labels: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran'],
+                datasets: [{
+                    label: 'Kullanıcı Sayısı',
+                    data: [100, 200, 300, 400, 500, 600],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Post ve Yorum Dağılım Grafiği
+        const postCommentChart = new Chart(document.getElementById('postCommentChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran'],
+                datasets: [
+                    {
+                        label: 'Post Sayısı',
+                        data: [50, 60, 70, 80, 90, 100],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    },
+                    {
+                        label: 'Yorum Sayısı',
+                        data: [200, 300, 400, 500, 600, 700],
+                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Verileri Yenileme İşlemi
+        function refreshData() {
+            console.log("Veriler yenilendi!");
+        }
+    </script>
+</body>
+</html>
