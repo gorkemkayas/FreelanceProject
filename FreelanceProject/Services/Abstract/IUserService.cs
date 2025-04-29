@@ -1,6 +1,8 @@
 ﻿using FreelanceProject.Data.Entities;
 using FreelanceProject.Models.ViewModels;
 using FreelanceProject.Utilities;
+using Microsoft.AspNetCore.Identity;
+using static FreelanceProject.Models.ViewModels.ExtendedProfileViewModel;
 
 namespace FreelanceProject.Services.Abstract
 {
@@ -8,6 +10,8 @@ namespace FreelanceProject.Services.Abstract
     {
         Task<ServiceResult<AppUser>> CreateUserAsync(SignUpViewModel request);
         Task<ServiceResult<AppUser>> SignInAsync(SignInViewModel request);
+        Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt);
+        public Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
 
         Task<ServiceResult<AppUser>> ResetPasswordAsync(string newPassword, string userId, string token);
 
@@ -18,6 +22,11 @@ namespace FreelanceProject.Services.Abstract
         Task SignOutAsync();
 
         bool CheckEmailConfirmed(AppUser user);
+        Task<AppUser> FindByNameAsync(string userName);
+        Task<int> GetCommentCountByUserAsync(AppUser user);
+        Task<int> GetPostCountByUserAsync(AppUser user);
+        ExtendedProfileViewModel GetExtendedProfileViewModel(AppUser user);
+        VisitorProfileViewModel GetVisitorProfileViewModel(AppUser user);
         Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request);
 
     }

@@ -123,29 +123,30 @@ namespace FreelanceProject.Controllers
 
         public async Task<IActionResult> Profile(string? userName)
         {
-            //if(string.IsNullOrEmpty(userName))
-            //{
-            //    TempData["Error"] = "User not found!";
-            //    return RedirectToAction(nameof(HomeController.Index), "Home");
-            //}
-            //var visitedUser = await _userService.FindByNameAsync(userName);
+            if (string.IsNullOrEmpty(userName))
+            {
+                TempData["Error"] = "User not found!";
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            var visitedUser = await _userService.FindByNameAsync(userName);
 
-            //if (visitedUser == null)
-            //{
-            //    TempData["Error"] = "User not found!";
-            //    return RedirectToAction(nameof(HomeController.Index), "Home");
-            //}
-            //var currentUser = await _userManager.GetUserAsync(User);
+            if (visitedUser == null)
+            {
+                TempData["Error"] = "User not found!";
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            var currentUser = await _userManager.GetUserAsync(User);
 
-            //if (currentUser == visitedUser)
-            //{
-            //    ViewBag.IsCurrentUser = true;
+            if (currentUser == visitedUser)
+            {
+                ViewBag.IsOwner = true;
 
-            //    // extendedviewmodel'i elde edip dön
-            //}
+                var extendedUser = _userService.GetExtendedProfileViewModel(currentUser);
+                return View(extendedUser);
+            }
 
-            // visitorviewmodel'i elde edip dön
-            return View();
+            var visitorUser = _userService.GetVisitorProfileViewModel(visitedUser);
+            return View(visitorUser);
         }
 
 
@@ -251,6 +252,39 @@ namespace FreelanceProject.Controllers
             //confirm edildiyse confirmEmail sayfasında 'basarıyla dogrulandı' mesajı ver
             //confirm edilmediyse 'dogrulama hatası' mesajı ver
             // yönlendirme olmadan girildiyse hata sayfasına yönlendir
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
+
+            if (!result.Item1)
+            {
+                ModelState.AddModelErrorList(result.Item2!.ToList());
+
+                TempData["Failed"] = "An error occurred while updating the profile.";
+                return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+            }
+
+            if (result.Item3)
+            {
+                await _userService.SignOutAsync();
+                await _signInManager.SignInAsync((await _userManager.FindByIdAsync(request.Id))!,true);
+
+                TempData["Succeed"] = "Profile updated successfully.";
+
+                return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+            }
+
+            TempData["Succeed"] = "Profile updated successfully.";
+
+            return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
         }
     }
 }

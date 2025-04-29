@@ -18,6 +18,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 
 
+
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -34,6 +36,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/baseLayoutSettings.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FreelanceProject.styles.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     @* FontAwesome *@
@@ -49,7 +55,7 @@
 
     <style>
         header, main, footer {
-            width: 1200px; /* Maksimum genişlik */
+            width: 1500px; /* Maksimum genişlik */
             margin: 0 auto; /* Merkezi hizalama */
         }
 
@@ -62,6 +68,87 @@
 
 </head>
 <body>
+    <header class="py-2 pt-0">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <!-- Premium Logo -->
+                <a href="/" class="d-flex align-items-center text-decoration-none me-4">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                        <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="url(#paint0_linear)" />
+                        <path d="M21.5 12.5L16 8L10.5 12.5V19.5L16 24L21.5 19.5V12.5Z" fill="white" />
+                        <path d="M16 16L13.5 14V18L16 16Z" fill="white" />
+                        <path d="M16 16L18.5 14V18L16 16Z" fill="white" />
+                        <defs>
+                            <linearGradient id="paint0_linear" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4361EE" />
+                                <stop offset="1" stop-color="#3A0CA3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="brand-text lacquer-regular">Freelance</span>
+                </a>
+
+                <!-- Premium Navigation -->
+                <ul class="nav d-none d-lg-flex me-auto">
+                    <li><a href="#" class="nav-link active">Dashboard</a></li>
+                    <li><a href="#" class="nav-link">Projects</a></li>
+                    <li><a href="#" class="nav-link">Talents</a></li>
+                    <li><a href="#" class="nav-link">Messages</a></li>
+                    <li><a href="#" class="nav-link">Analytics</a></li>
+                </ul>
+
+                <!-- Premium Search -->
+                <div class="d-flex align-items-center ms-auto ms-lg-0">
+                    <div class="position-relative me-2 d-none d-md-block">
+                        <i class="fas fa-search position-absolute ps-1" style="left: 1px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                        <input type="search" class="search-box ps-4 ps-lg-4" placeholder="Search projects, clients...">
+                    </div>
+
+                    <!-- Premium Notifications -->
+                    <button class="btn btn-link position-relative me-2 text-muted p-1">
+                        <i class="fas fa-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            3
+                        </span>
+                    </button>
+
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+                        <!-- Premium Profile -->
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="user" class="profile-img rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name"><i class="fas fa-user"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-wallet"></i> Billing</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
+                            </ul>
+                        </div>
+                        <!-- Premium CTA Button -->
+                        <button class="btn btn-premium ms-3 d-none d-lg-block">
+                            New Project
+                        </button>
+                    }
+                    else
+                    {
+
+                        <!-- Premium CTA Button -->
+                        <a class="btn text-white btn-premium ms-3 d-none d-lg-block" asp-controller="User" asp-action="SignUp">
+                            Sign Up
+                        </a>
+                        <a class="btn text-white btn-premium ms-1 d-none d-lg-block" asp-controller="User" asp-action="SignIn">
+                            Sign In
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </header>
     @if (TempData["Succeed"] != null)
     {
         <div id="successAlert" class="custom-alert alert-success">
@@ -80,72 +167,6 @@
         @await Component.InvokeAsync("SuggestedUsers")
     </div> *@
 
-    <header class="lh-1 py-3">
-        <!-- Üst Navbar -->
-        <div class="container">
-            @* Sol kısım *@
-            <nav class="navbar navbar-expand-sm navbar-light bg-white mb-2 position-relative">
-                <div class="container d-flex justify-content-between align-items-center w-100 pe-0">
-                    <div class="mt-3">
-                        <a href="https://github.com/gorkemkayas" class="fa-brands fs-5 blacktored text-decoration-none fa-github me-1"></a>
-                        <a href="https://www.linkedin.com/in/gorkemkayas/" class="fa-brands fs-5 blacktored text-decoration-none fa-linkedin-in me-1"></a>
-                        <a href="https://x.com/gorkemkayaz" class="fa-brands fs-5 blacktored text-decoration-none fa-x-twitter"></a>
-                    </div>
-
-                    <a class="navbar-brand pirata-one-regular position-absolute Lacquer-Font start-50 translate-middle-x" style="font-size:50px;font-weight:500;margin-bottom:15px" asp-area="" asp-controller="Home" asp-action="Index">
-                        kayas<span class="text-danger">.</span>
-                    </a>
-                    <div class="d-flex ms-auto align-items-center mt-1">
-                        @if (User.Identity!.IsAuthenticated)
-                        {
-                            @await Component.InvokeAsync("NavProfilePhoto")
-                            <li class="nav-item dropdown list-unstyled ms-2">
-                                <a class="nav-link dropdown-toggle ps-1 login-item position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @User.Identity.Name
-                                    <span class="position-absolute top-0 translate-middle p-2 bg-danger border border-light rounded-circle">
-                                        <span class="visually-hidden">New alerts</span>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name">
-                                            <i class="bi bi-person me-2"></i> Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
-                                            <span><i class="bi bi-bell me-2"></i> Notifications</span>
-                                            <span class="badge rounded-pill bg-danger ms-auto">99+</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <i class="bi bi-envelope me-2"></i> Messages
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center graytoblack" asp-controller="User" asp-action="ChangePassword">
-                                            <i class="bi bi-box-arrow-right me-2"></i> Change Password
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center text-danger" asp-route-returnUrl="/Home/Index" asp-controller="User" asp-action="Logout">
-                                            <i class="bi bi-box-arrow-right me-2"></i> Logout
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <a href="/user/signup" class="btn btn-sm btn-danger rounded-pill ms-2">Sign Up</a>
-                            <a href="/user/signin" class="btn btn-sm btn-dark rounded-pill ms-2">Sign In</a>
-                        }
-                    </div>
-                </div>
-            </nav>
 
             <main class="flex-grow-1 container">
                 <div class="container mt-4">

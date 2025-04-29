@@ -27,10 +27,16 @@ body {
     font-style: normal;
 }
 
-
+.roboto-condensed {
+    font-family: "Roboto Condensed", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
 
 
 :root {
+    --primary-black: linear-gradient(135deg, #222, #111, #000);
     --primary-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
     --text-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
     --hover-gradient: linear-gradient(135deg, #3a0ca3, #4361ee);
@@ -81,6 +87,19 @@ header {
         padding: 2px 6px;
         border-radius: 4px;
         -webkit-text-fill-color: white;
+    }
+.text-hover-gradient {
+    color: black;
+    font-weight: 600;
+    transition: all 0.4s ease-in-out;
+    position: relative;
+    display: inline-block;
+}
+
+    .text-hover-gradient:hover {
+        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
 .nav-link {

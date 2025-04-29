@@ -8,6 +8,7 @@ using FreelanceProject.CustomMethods.Abstract;
 using FreelanceProject.CustomMethods.Concrete;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using FreelanceProject.Data.MappingProfile;
 
 namespace FreelanceProject.Extensions
 {
@@ -53,6 +54,8 @@ namespace FreelanceProject.Extensions
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+
+            services.AddAutoMapper(typeof(MappingProfile));
         }
     }
 }

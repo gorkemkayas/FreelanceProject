@@ -5,18 +5,26 @@ using FreelanceProject.Utilities;
 using static FreelanceProject.CustomMethods.CustomMethods;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
+using FreelanceProject.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using static FreelanceProject.Models.ViewModels.ExtendedProfileViewModel;
 
 namespace FreelanceProject.Services.Concrete
 {
     public class UserService : IUserService
     {
+        private readonly FreelanceDbContext _dbContext;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IMapper _mapper;
 
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, FreelanceDbContext dbContext, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public bool CheckEmailConfirmed(AppUser user)
@@ -132,6 +140,114 @@ namespace FreelanceProject.Services.Concrete
             {
                 IsSuccess = true
             };
+        }
+
+        public async Task<int> GetCommentCountByUserAsync(AppUser user)
+        {
+            var commentCount = await _dbContext.Comments.Where(x => x.AuthorId == user.Id).CountAsync();
+            return commentCount;
+        }
+
+        public async Task<int> GetPostCountByUserAsync(AppUser user)
+        {
+            var postCount = await _dbContext.Posts.Where(x => x.AuthorId == user.Id).CountAsync();
+            return postCount;
+        }
+
+        public ExtendedProfileViewModel GetExtendedProfileViewModel(AppUser user)
+        {
+            var extendedProfile = _mapper.Map<ExtendedProfileViewModel>(user);
+            return extendedProfile;
+        }
+        public VisitorProfileViewModel GetVisitorProfileViewModel(AppUser user)
+        {
+            var visitorProfile = _mapper.Map<VisitorProfileViewModel>(user);
+            return visitorProfile;
+        }
+        public async Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type)
+        {
+
+            if (formFile is null)
+            {
+                newUserInfo.SetProperty(type, oldUserInfo.GetPropertyValue(type));
+                return newUserInfo;
+            }
+
+            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var fileName = formFile.FileName.Replace(" ", "_");
+            string filePath = Path.Combine(uploadPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await formFile.CopyToAsync(stream);
+            }
+            newUserInfo.SetProperty(type, fileName);
+
+            if (oldUserInfo.GetPropertyValue(type) != null)
+            {
+                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.GetPropertyValue(type));
+
+                if (File.Exists(oldPhotoPath))
+                {
+                    File.Delete(oldPhotoPath);
+                }
+
+            }
+            return newUserInfo;
+        }
+        public async Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
+        {
+            var errors = new List<IdentityError>();
+
+            bool criticalUpdate = false;
+
+            if (oldUserInfo == null)
+            {
+                errors.Add(new() { Code = "UserNotFound", Description = "The user not found in the system." });
+                return (false, errors, false);
+            }
+
+            if (oldUserInfo.Id.ToString() != newUserInfo.Id)
+            {
+                errors.Add(new() { Code = "UsersNotMatched", Description = "The users not matched." });
+                return (false, errors, false);
+            }
+
+            if (oldUserInfo.Email != newUserInfo.EmailAddress) criticalUpdate = true;
+
+            var step1 = await ConfigurePictureAsync(newUserInfo, oldUserInfo, fileInputProfile, PhotoType.ProfilePicture);
+            var step2 = await ConfigurePictureAsync(step1, oldUserInfo, coverInputProfile, PhotoType.CoverImagePicture);
+            var step3 = await ConfigurePictureAsync(step2, oldUserInfo, IconInputWorkingAt, PhotoType.WorkingAtLogo);
+
+
+            //var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
+            //var step2 = await ConfigureCoverPictureOfNewUserInfoAsync(step1, oldUserInfo, coverInputProfile);
+            //var step3 = await ConfigureWorkingIconOfNewUserInfoAsync(step2, oldUserInfo, IconInputWorkingAt);
+
+            var updatedUser = _mapper.Map(step3, oldUserInfo);
+            await _userManager.UpdateAsync(updatedUser);
+
+            if (criticalUpdate)
+            {
+                await _userManager.UpdateSecurityStampAsync(oldUserInfo);
+                return (true, null, true);
+            }
+
+            return (true, null, false);
+        }
+
+
+        public async Task<AppUser> FindByNameAsync(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user is null)
+            {
+                throw new Exception("User not found");
+            }
+            return user;
         }
         public async Task<ServiceResult<AppUser>> SignInAsync(SignInViewModel request)
         {
