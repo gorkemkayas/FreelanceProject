@@ -198,7 +198,7 @@ namespace FreelanceProject.Services.Concrete
             }
             return newUserInfo;
         }
-        public async Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
+        public async Task<ServiceResult<AppUser>> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
         {
             var errors = new List<IdentityError>();
 
@@ -207,13 +207,13 @@ namespace FreelanceProject.Services.Concrete
             if (oldUserInfo == null)
             {
                 errors.Add(new() { Code = "UserNotFound", Description = "The user not found in the system." });
-                return (false, errors, false);
+                return new ServiceResult<AppUser>() { IsSuccess = false, Errors = errors, isCritical = false };
             }
 
             if (oldUserInfo.Id.ToString() != newUserInfo.Id)
             {
                 errors.Add(new() { Code = "UsersNotMatched", Description = "The users not matched." });
-                return (false, errors, false);
+                return new ServiceResult<AppUser>() { IsSuccess = false, Errors = errors, isCritical = false };
             }
 
             if (oldUserInfo.Email != newUserInfo.EmailAddress) criticalUpdate = true;
@@ -233,10 +233,10 @@ namespace FreelanceProject.Services.Concrete
             if (criticalUpdate)
             {
                 await _userManager.UpdateSecurityStampAsync(oldUserInfo);
-                return (true, null, true);
+                return new ServiceResult<AppUser>() { IsSuccess = true, isCritical = true };
             }
 
-            return (true, null, false);
+            return new ServiceResult<AppUser>() { IsSuccess = true ,isCritical = false };
         }
 
 

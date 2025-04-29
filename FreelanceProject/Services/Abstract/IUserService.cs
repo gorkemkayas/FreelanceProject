@@ -10,7 +10,7 @@ namespace FreelanceProject.Services.Abstract
     {
         Task<ServiceResult<AppUser>> CreateUserAsync(SignUpViewModel request);
         Task<ServiceResult<AppUser>> SignInAsync(SignInViewModel request);
-        Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt);
+        Task<ServiceResult<AppUser>> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt);
         public Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
 
         Task<ServiceResult<AppUser>> ResetPasswordAsync(string newPassword, string userId, string token);

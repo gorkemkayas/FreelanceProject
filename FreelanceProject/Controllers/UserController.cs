@@ -264,15 +264,15 @@ namespace FreelanceProject.Controllers
 
             var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
 
-            if (!result.Item1)
+            if (!result.IsSuccess)
             {
-                ModelState.AddModelErrorList(result.Item2!.ToList());
+                ModelState.AddModelErrorList(result.Errors!.ToList());
 
                 TempData["Failed"] = "An error occurred while updating the profile.";
                 return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
             }
 
-            if (result.Item3)
+            if (result.isCritical)
             {
                 await _userService.SignOutAsync();
                 await _signInManager.SignInAsync((await _userManager.FindByIdAsync(request.Id))!,true);
