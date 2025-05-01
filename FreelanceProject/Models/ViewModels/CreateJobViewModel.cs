@@ -36,6 +36,7 @@ namespace FreelanceProject.Models.ViewModels
 
         //public string ImageUrl { get; set; } // Web URL
 
-        public IFormFile ImageFile { get; set; } // Lokal dosya yükleme
+        public IFormFile? ImageFile { get; set; } // Lokal dosya yükleme
+        public object? ImageUrl { get; internal set; }
     }
 }

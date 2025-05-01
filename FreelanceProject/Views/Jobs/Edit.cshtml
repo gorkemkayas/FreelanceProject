@@ -134,10 +134,10 @@
         <div class="col-lg-8">
             <div class="card form-card">
                 <div class="form-header">
-                    <h4><i class="fas fa-plus-circle me-2"></i>YENİ İŞ İLANI OLUŞTUR</h4>
+                    <h4><i class="fas fa-plus-circle me-2"></i> İŞ İLANI Güncelle</h4>
                 </div>
                 <div class="form-body">
-                    <form asp-action="Edit" method="post">
+                    <form asp-action="Edit" asp-controller="Jobs" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
 
                         <!-- 🔐 İşin ID'si (gizli alan) -->
@@ -214,10 +214,25 @@
                             <span asp-validation-for="Category" class="text-danger"></span>
                         </div>
 
+                        <!-- Mevcut resmi göster -->
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl?.ToString()))
+                        {
+                            <div class="mb-3">
+                                <label>Mevcut Resim:</label><br />
+                                <img src="@Model.ImageUrl.ToString()" alt="Yüklenen Resim" style="max-width: 200px;" />
+                            </div>
+                        }
+
+
+                        <!-- Yeni resim yükleme -->
+                        <div class="mb-3">
+                            <label for="ImageFile" class="form-label">Yeni Resim Yükle (Opsiyonel)</label>
+                            <input asp-for="ImageFile" class="form-control" type="file" />
+                        </div>
+
                         <!-- Buttons -->
                         <div class="d-grid mt-5">
-                            <button input
-                                ="submit" class="btn btn-premium py-3">
+                            <button type="submit" class="btn btn-premium py-3">
                                 <i class="fas fa-paper-plane me-1"></i> İLANI YAYINLA
                             </button>
                             <button type="button" class="btn btn-cancel py-3 mt-2" onclick="window.history.back();">

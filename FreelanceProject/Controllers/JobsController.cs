@@ -24,11 +24,12 @@ namespace FreelanceProject.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public JobsController(FreelanceDbContext context, UserManager<AppUser> userManager, IWebHostEnvironment env, IWebHostEnvironment webHostEnvironment)
+        public JobsController(FreelanceDbContext context, UserManager<AppUser> userManager,  IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
-            _env = env;
+            // _env = env;
+            //IWebHostEnvironment env,
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -128,6 +129,7 @@ namespace FreelanceProject.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
+
             var job = await _context.Jobs.FindAsync(id);
             if (job == null)
             {
@@ -143,7 +145,8 @@ namespace FreelanceProject.Controllers
                 JobDuration = job.JobDuration,
                 DurationUnit = job.DurationUnit,
                 StartDate = job.StartDate,
-                Category = job.Category
+                Category = job.Category,
+                ImageUrl = job.ImageUrl
             };
 
             // HATA BUNDAN DOLAYI GELİYORSA BU KISMI EKLEMEN GEREKİYOR
@@ -153,17 +156,42 @@ namespace FreelanceProject.Controllers
             return View(model);
         }
 
-        // İş ilanını düzenleme işlemi
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CreateJobViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                // Kategori listesi eksik olursa sayfa hata verir
+                ViewBag.Categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };
+                return View(model);
+            }
+
             if (ModelState.IsValid)
             {
+
                 var job = await _context.Jobs.FindAsync(model.JobId);
                 if (job == null)
                 {
                     return NotFound();
+                }
+
+                // Resim güncellenmişse
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                    if (!Directory.Exists(uploadDir))
+                        Directory.CreateDirectory(uploadDir);
+
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+                    var fullPath = Path.Combine(uploadDir, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+
+                    job.ImageUrl = "/uploads/" + fileName; // Yeni resimle değiştiriyoruz
                 }
 
                 job.JobTitle = model.JobTitle;
@@ -178,11 +206,64 @@ namespace FreelanceProject.Controllers
                 _context.Update(job);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(EmployerJobs));  // Listeye yönlendiriyoruz.
+                return RedirectToAction(nameof(EmployerJobs));
             }
 
-            return View(model);
+            // ❗ ModelState geçerli değilse buraya düşer → Kategoriler yeniden ViewBag'e eklenmeli!
+            var categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };
+            ViewBag.Categories = categories;
+
+            return View(model); // ViewBag olmadan dönerse kategori listesi görünmez.
         }
+
+        // İş ilanını düzenleme işlemi
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(CreateJobViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var job = await _context.Jobs.FindAsync(model.JobId);
+        //        if (job == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        // Resim güncellemesi varsa:
+        //        if (model.ImageFile != null && model.ImageFile.Length > 0)
+        //        {
+        //            var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+        //            if (!Directory.Exists(uploadDir))
+        //                Directory.CreateDirectory(uploadDir);
+
+        //            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+        //            var fullPath = Path.Combine(uploadDir, fileName);
+
+        //            using (var stream = new FileStream(fullPath, FileMode.Create))
+        //            {
+        //                await model.ImageFile.CopyToAsync(stream);
+        //            }
+
+        //            job.ImageUrl = "/uploads/" + fileName; // yeni resmi kaydet
+        //        }
+
+        //        job.JobTitle = model.JobTitle;
+        //        job.JobDescription = model.JobDescription;
+        //        job.JobBudget = model.JobBudget;
+        //        job.JobDuration = model.JobDuration;
+        //        job.DurationUnit = model.DurationUnit;
+        //        job.StartDate = model.StartDate;
+        //        job.Category = model.Category;
+        //        job.ModifiedDate = DateTime.UtcNow;
+
+        //        _context.Update(job);
+        //        await _context.SaveChangesAsync();
+
+        //        return RedirectToAction(nameof(EmployerJobs));  // Listeye yönlendiriyoruz.
+        //    }
+
+        //    return View(model);
+        //}
 
         public IActionResult Delete()  // İş ilanını  silme
         {
