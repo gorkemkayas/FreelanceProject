@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "İlanlarım";
+﻿@model List<FreelanceProject.Data.Entities.JobEntity>
+@{
+    ViewData["Title"] = "My Job Listings";
 }
 
 <style>
@@ -96,7 +97,6 @@
         margin-top: 1rem;
     }
 
-    /* Buton içindeki yazıyı ortalamak için */
     .btn {
         display: flex;
         justify-content: center;
@@ -184,7 +184,7 @@
         <div class="col-lg-10">
             <div class="job-management-card">
                 <div class="job-management-header d-flex justify-content-between align-items-center">
-                    <h2><i class="fas fa-briefcase me-2"></i>My Jobs</h2>
+                    <h2><i class="fas fa-briefcase me-2"></i> My Job Listings</h2>
                     <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
                         <i class="fas fa-plus"></i> Create New Job
                     </a>
@@ -192,91 +192,64 @@
                 <div class="job-management-body">
                     <!-- Job List -->
                     <div class="job-list">
-                        <!-- Example Job 1 -->
-                        <div class="job-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h3 class="job-title">Frontend Developer (React) - E-commerce Project</h3>
-                                    <div class="job-meta">
-                                        <div class="meta-item">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            <span>Published Date: June 15, 2023</span>
+                        @if (Model.Any())
+                        {
+                            foreach (var job in Model)
+                            {
+                                <div class="job-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h3 class="job-title">@job.JobTitle</h3>
+                                            <div class="job-meta">
+                                                <div class="meta-item">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>Start Date: @job.StartDate.ToString("MMMM dd, yyyy")</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                    <span>Budget: ₺@job.JobBudget</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-calendar-check"></i>
+                                                    <span>Duration: @job.JobDuration @job.DurationUnit</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-tags"></i>
+                                                    <span>Category: @job.Category</span>
+                                                </div>
+                                            </div>
+                                            <span class="job-status @(job.IsActive ? "status-active" : "status-pending")">
+                                                <i class="fas fa-circle"></i> @(job.IsActive ? "Active" : "Under Review")
+                                            </span>
                                         </div>
-                                        <div class="meta-item">
-                                            <i class="fas fa-money-bill-wave"></i>
-                                            <span>Budget: ₺8,000</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <i class="fas fa-user-tie"></i>
-                                            <span>Applications: 24</span>
-                                        </div>
-                                    </div>
-                                    <span class="job-status status-active">
-                                        <i class="fas fa-circle"></i> Active
-                                    </span>
-                                </div>
-                                <div class="action-buttons">
-                                    <a href="#" class="btn btn-view-applicants">
-                                        <i class="fas fa-users"></i> Applicants
-                                    </a>
-                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="1" class="btn btn-edit">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <a asp-controller="Jobs" asp-action="Delete" asp-route-id="1" class="btn btn-delete">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Example Job 2 -->
-                        <div class="job-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h3 class="job-title">UI/UX Designer - Mobile App</h3>
-                                    <div class="job-meta">
-                                        <div class="meta-item">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            <span>Published Date: July 5, 2023</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <i class="fas fa-money-bill-wave"></i>
-                                            <span>Budget: ₺6,500</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <i class="fas fa-user-tie"></i>
-                                            <span>Applications: 12</span>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn btn-view-applicants">
+                                                <i class="fas fa-users"></i> View Applicants
+                                            </a>
+                                            <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-delete">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </a>
                                         </div>
                                     </div>
-                                    <span class="job-status status-pending">
-                                        <i class="fas fa-circle"></i> Under Review
-                                    </span>
                                 </div>
-                                <div class="action-buttons">
-                                    <a href="#" class="btn btn-view-applicants">
-                                        <i class="fas fa-users"></i> Applicants
-                                    </a>
-                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="2" class="btn btn-edit">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <a asp-controller="Jobs" asp-action="Delete" asp-route-id="2" class="btn btn-delete">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
+                            }
+                        }
+                        else
+                        {
+                            <div class="no-jobs">
+                                <div class="no-jobs-icon">
+                                    <i class="fas fa-briefcase"></i>
                                 </div>
+                                <h4>You haven't posted any jobs yet</h4>
+                                <p class="mb-4">Start creating a job to connect with freelancers</p>
+                                <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
+                                    <i class="fas fa-plus"></i> Create New Job
+                                </a>
                             </div>
-                        </div>
-
-                        <!-- No Jobs Message -->
-                        <!-- <div class="no-jobs">
-                            <div class="no-jobs-icon">
-                                <i class="fas fa-briefcase"></i>
-                            </div>
-                            <h4>You haven't posted any jobs yet</h4>
-                            <p class="mb-4">Start creating a job to connect with freelancers</p>
-                            <a asp-controller="Job" asp-action="Create" class="create-new-btn">
-                                <i class="fas fa-plus"></i> Create New Job
-                            </a>
-                        </div> -->
+                        }
                     </div>
                 </div>
             </div>

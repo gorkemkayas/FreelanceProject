@@ -40,6 +40,7 @@ namespace FreelanceProject.Data.Context
                 entity.Property(e => e.JobBudget)
                       .HasPrecision(18, 2); // 18 basamaklı, 2 ondalıklı
             });
+
         }
 
 
