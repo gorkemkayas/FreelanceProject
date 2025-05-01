@@ -26,5 +26,7 @@ namespace FreelanceProject.Data.Entities
         //public virtual Contract? Contract { get; set; }
 
         public string Category { get; set; } // Kategori adını burada tutuyoruz
+
+        public string ImageUrl { get; set; } // Bu alan hem URL olabilir hem de sunucuda kaydedilen yol
     }
 }

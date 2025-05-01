@@ -137,7 +137,7 @@
                     <h4><i class="fas fa-plus-circle me-2"></i>YENİ İŞ İLANI OLUŞTUR</h4>
                 </div>
                 <div class="form-body">
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
 
                         <!-- Job Title -->
@@ -199,6 +199,14 @@
                             </select>
                             <span asp-validation-for="Category" class="text-danger"></span>
                         </div>
+
+                        <!--Image-->
+                        <div class="mb-4">
+                            <label for="ImageFile" class="form-label">Resim Yükleyin</label>
+                            <input type="file" asp-for="ImageFile" class="form-control" required />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
+
 
                         <!-- Buttons -->
                         <div class="d-grid mt-5">

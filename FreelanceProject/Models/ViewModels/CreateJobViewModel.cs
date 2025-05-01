@@ -33,5 +33,9 @@ namespace FreelanceProject.Models.ViewModels
         // Kategori adını string olarak alacağız.
         [Required(ErrorMessage = "Kategori seçimi zorunludur.")]
         public string Category { get; set; } = null!;
+
+        //public string ImageUrl { get; set; } // Web URL
+
+        public IFormFile ImageFile { get; set; } // Lokal dosya yükleme
     }
 }

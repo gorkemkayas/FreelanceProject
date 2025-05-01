@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using FreelanceProject.Data.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;       // DbContext dosyasını da ekle
+using Microsoft.AspNetCore.Hosting;
+using System;
+using System.IO;
 
 namespace FreelanceProject.Controllers
 {
@@ -17,11 +20,16 @@ namespace FreelanceProject.Controllers
     {
         private readonly FreelanceDbContext _context; // DbContext
         private readonly UserManager<AppUser> _userManager;
+        private readonly IWebHostEnvironment _env;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public JobsController(FreelanceDbContext context, UserManager<AppUser> userManager)
+
+        public JobsController(FreelanceDbContext context, UserManager<AppUser> userManager, IWebHostEnvironment env, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _env = env;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -50,12 +58,49 @@ namespace FreelanceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateJobViewModel model)
         {
+            //if (!ModelState.IsValid)
+            //    return View(model);
+
             if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = new List<string>
+        {
+            "Web Development", "Mobile Development", "Design", "SEO", "Marketing"
+        };
                 return View(model);
+            }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Unauthorized();
+
+            string imagePath = null;
+
+            // Eğer dosya seçilmişse
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                // Dosya kaydedileceği dizini belirleyelim (wwwroot içinde uploads klasörü)
+                var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+
+                // Eğer uploads klasörü yoksa, oluşturuyoruz
+                if (!Directory.Exists(uploadDir))
+                    Directory.CreateDirectory(uploadDir);
+
+                // Dosya adını benzersiz yapmak için GUID kullanıyoruz
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+
+                // Dosyanın tam yolu
+                var fullPath = Path.Combine(uploadDir, fileName);
+
+                // Dosyayı belirtilen klasöre kaydediyoruz
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                // Kaydedilen dosyanın web yolu
+                imagePath = "/uploads/" + fileName;
+            }
 
             var job = new JobEntity
             {
@@ -68,8 +113,10 @@ namespace FreelanceProject.Controllers
                 Category = model.Category, // Kategori bilgisini ekliyoruz
                 EmployerId = user.Id,
                 CreatedDate = DateTime.UtcNow,
-                IsActive = true
+                IsActive = true,
+                ImageUrl = imagePath // Resim URL'sini veya dosya yolunu ekliyoruz
             };
+
 
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
