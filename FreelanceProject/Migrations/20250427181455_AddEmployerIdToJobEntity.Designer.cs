@@ -4,6 +4,7 @@ using FreelanceProject.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreelanceProject.Migrations
 {
     [DbContext(typeof(FreelanceDbContext))]
-    partial class FreelanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250427181455_AddEmployerIdToJobEntity")]
+    partial class AddEmployerIdToJobEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -382,10 +385,6 @@ namespace FreelanceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -396,11 +395,9 @@ namespace FreelanceProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EmployerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<string>("EmployerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -423,12 +420,14 @@ namespace FreelanceProject.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Skills")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployerId");
 
                     b.ToTable("Jobs");
                 });
@@ -780,17 +779,6 @@ namespace FreelanceProject.Migrations
                     b.Navigation("Following");
                 });
 
-            modelBuilder.Entity("FreelanceProject.Data.Entities.JobEntity", b =>
-                {
-                    b.HasOne("FreelanceProject.Data.Entities.AppUser", "Employer")
-                        .WithMany("Jobs")
-                        .HasForeignKey("EmployerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employer");
-                });
-
             modelBuilder.Entity("FreelanceProject.Data.Entities.LikeEntity", b =>
                 {
                     b.HasOne("FreelanceProject.Data.Entities.CommentEntity", "Comment")
@@ -919,8 +907,6 @@ namespace FreelanceProject.Migrations
                     b.Navigation("Followers");
 
                     b.Navigation("Followings");
-
-                    b.Navigation("Jobs");
 
                     b.Navigation("Likes");
 

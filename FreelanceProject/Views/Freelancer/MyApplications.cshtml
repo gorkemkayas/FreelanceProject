@@ -1,0 +1,327 @@
+﻿@{
+    ViewData["Title"] = "My Applications and Work History";
+}
+
+<style>
+    .applications-card {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+        margin-bottom: 2rem;
+    }
+
+    .applications-header {
+        background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        padding: 1.5rem;
+        color: white;
+    }
+
+        .applications-header h2 {
+            font-weight: 700;
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+        }
+
+    .applications-body {
+        padding: 2rem;
+        background-color: #fff;
+    }
+
+    .nav-tabs {
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 2rem;
+    }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #64748b;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+            .nav-tabs .nav-link.active {
+                color: #4361ee;
+                border-bottom: 3px solid #4361ee;
+                background-color: transparent;
+            }
+
+    .job-item {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+        .job-item:hover {
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+        }
+
+    .job-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2b2d42;
+        margin-bottom: 0.5rem;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .job-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+        .meta-item i {
+            margin-right: 0.5rem;
+            color: #4361ee;
+        }
+
+    .application-status {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-accepted {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .status-completed {
+        background-color: #e2e3e5;
+        color: #383d41;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .btn-view {
+        background-color: #4361ee;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-view:hover {
+            background-color: #3a0ca3;
+            transform: translateY(-2px);
+        }
+
+    .btn-message {
+        background-color: white;
+        color: #4361ee;
+        border: 1px solid #4361ee;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-message:hover {
+            background-color: #f8f9fa;
+        }
+
+    .no-applications {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+
+    .no-applications-icon {
+        font-size: 3rem;
+        color: #cbd5e0;
+        margin-bottom: 1rem;
+    }
+
+    .rating-stars {
+        color: #ffc107;
+        margin-left: 0.5rem;
+    }
+
+    .client-info {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .client-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+
+    .client-name {
+        font-weight: 600;
+        color: #2b2d42;
+    }
+
+    .client-rating {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="applications-card">
+                <div class="applications-header">
+                    <h2><i class="fas fa-briefcase me-2"></i>MY APPLICATIONS AND WORK HISTORY</h2>
+                </div>
+                <div class="applications-body">
+                    <ul class="nav nav-tabs" id="applicationsTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="current-tab" data-bs-toggle="tab" data-bs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="true">
+                                <i class="fas fa-spinner me-1"></i> Ongoing
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="false">
+                                <i class="fas fa-clock me-1"></i> Pending
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab" aria-controls="completed" aria-selected="false">
+                                <i class="fas fa-check-circle me-1"></i> Completed
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="applicationsTabContent">
+                        <!-- Ongoing Jobs -->
+                        <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="current-tab">
+                            <!-- Example Job 1 -->
+                            <div class="job-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="job-title">E-commerce Website Design</h3>
+                                        <div class="job-meta">
+                                            <div class="meta-item">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span>Start: June 15, 2023</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                                <span>Budget: ₺8,000</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-clock"></i>
+                                                <span>Estimated Duration: 3 Weeks</span>
+                                            </div>
+                                        </div>
+                                        <span class="application-status status-accepted">
+                                            <i class="fas fa-check-circle"></i> Ongoing
+                                        </span>
+                                        <div class="client-info">
+                                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" class="client-avatar">
+                                            <div>
+                                                <div class="client-name">Ayşe Teknoloji</div>
+                                                <div class="client-rating">
+                                                    <i class="fas fa-star"></i> 4.8 (12 reviews)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <a href="#" class="btn btn-view">
+                                            <i class="fas fa-eye"></i> View Job
+                                        </a>
+                                        <a href="#" class="btn btn-message">
+                                            <i class="fas fa-envelope"></i> Send Message
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Example Job 2 -->
+                            <div class="job-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="job-title">Mobile App Development</h3>
+                                        <div class="job-meta">
+                                            <div class="meta-item">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span>Start: July 1, 2023</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                                <span>Budget: ₺12,000</span>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="fas fa-clock"></i>
+                                                <span>Estimated Duration: 6 Weeks</span>
+                                            </div>
+                                        </div>
+                                        <span class="application-status status-accepted">
+                                            <i class="fas fa-check-circle"></i> Ongoing
+                                        </span>
+                                        <div class="client-info">
+                                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" class="client-avatar">
+                                            <div>
+                                                <div class="client-name">Ahmet Solutions</div>
+                                                <div class="client-rating">
+                                                    <i class="fas fa-star"></i> 5.0 (15 reviews)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <a href="#" class="btn btn-view">
+                                            <i class="fas fa-eye"></i> View Job
+                                        </a>
+                                        <a href="#" class="btn btn-message">
+                                            <i class="fas fa-envelope"></i> Send Message
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pending Jobs Tab Content -->
+                        <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                            <div class="no-applications">
+                                <i class="fas fa-clock no-applications-icon"></i>
+                                <p>No pending applications</p>
+                            </div>
+                        </div>
+                        <!-- Completed Jobs Tab Content -->
+                        <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                            <div class="no-applications">
+                                <i class="fas fa-check-circle no-applications-icon"></i>
+                                <p>No completed applications</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,6 +27,7 @@ public class HomeController : Controller
         var selectedCategory = HttpContext.Request.Query["category"].ToString();
         ViewBag.SelectedCategory = selectedCategory;
         return View();
+
     }
    
 

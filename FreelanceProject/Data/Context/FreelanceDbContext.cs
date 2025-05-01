@@ -22,13 +22,25 @@ namespace FreelanceProject.Data.Context
         public DbSet<PostEntity> Posts { get; set; }
 
         public DbSet<AuditLogEntity> AuditLogs { get; set; }
+        public DbSet<JobEntity> Jobs { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
+            //builder.ApplyConfigurationsFromAssembly(typeof(FreelanceDbContext).Assembly, predicate => predicate.Namespace == "FreelanceProject.Data.EntityTypeConfigurations");
+
+            //base.OnModelCreating(builder);
+            base.OnModelCreating(builder);
+
             builder.ApplyConfigurationsFromAssembly(typeof(FreelanceDbContext).Assembly, predicate => predicate.Namespace == "FreelanceProject.Data.EntityTypeConfigurations");
 
-            base.OnModelCreating(builder);
+            builder.Entity<JobEntity>(entity =>
+            {
+                entity.Property(e => e.JobBudget)
+                      .HasPrecision(18, 2); // 18 basamaklı, 2 ondalıklı
+            });
+
         }
 
 
