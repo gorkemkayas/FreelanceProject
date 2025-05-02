@@ -59,15 +59,13 @@ namespace FreelanceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateJobViewModel model)
         {
-            //if (!ModelState.IsValid)
-            //    return View(model);
-
+            
             if (!ModelState.IsValid)
             {
                 ViewBag.Categories = new List<string>
-        {
-            "Web Development", "Mobile Development", "Design", "SEO", "Marketing"
-        };
+                {
+                     "Web Development", "Mobile Development", "Design", "SEO", "Marketing"
+                 };
                 return View(model);
             }
 
@@ -216,59 +214,62 @@ namespace FreelanceProject.Controllers
             return View(model); // ViewBag olmadan dönerse kategori listesi görünmez.
         }
 
-        // İş ilanını düzenleme işlemi
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(CreateJobViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var job = await _context.Jobs.FindAsync(model.JobId);
-        //        if (job == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        // Resim güncellemesi varsa:
-        //        if (model.ImageFile != null && model.ImageFile.Length > 0)
-        //        {
-        //            var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-        //            if (!Directory.Exists(uploadDir))
-        //                Directory.CreateDirectory(uploadDir);
-
-        //            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
-        //            var fullPath = Path.Combine(uploadDir, fileName);
-
-        //            using (var stream = new FileStream(fullPath, FileMode.Create))
-        //            {
-        //                await model.ImageFile.CopyToAsync(stream);
-        //            }
-
-        //            job.ImageUrl = "/uploads/" + fileName; // yeni resmi kaydet
-        //        }
-
-        //        job.JobTitle = model.JobTitle;
-        //        job.JobDescription = model.JobDescription;
-        //        job.JobBudget = model.JobBudget;
-        //        job.JobDuration = model.JobDuration;
-        //        job.DurationUnit = model.DurationUnit;
-        //        job.StartDate = model.StartDate;
-        //        job.Category = model.Category;
-        //        job.ModifiedDate = DateTime.UtcNow;
-
-        //        _context.Update(job);
-        //        await _context.SaveChangesAsync();
-
-        //        return RedirectToAction(nameof(EmployerJobs));  // Listeye yönlendiriyoruz.
-        //    }
-
-        //    return View(model);
-        //}
-
-        public IActionResult Delete()  // İş ilanını  silme
+        
+        // GET: Jobs/Delete/{id}
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var job = await _context.Jobs
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            //if (job == null)
+            //{
+            //    return NotFound();
+            //}
+
+            if (job == null || job.IsDeleted || !job.IsActive)
+            {
+                TempData["ErrorMessage"] = "Bu ilan zaten silinmiş veya aktif değil.";
+                return RedirectToAction("EmployerJobs");
+            }
+
+            return View(job);
         }
+
+        
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var job = await _context.Jobs.FindAsync(id);
+            //if (job == null)
+            //{
+            //    return NotFound();
+            //}
+
+            if (job == null || job.IsDeleted || !job.IsActive)
+            {
+                TempData["ErrorMessage"] = "İlan zaten silinmiş.";
+                return RedirectToAction("EmployerJobs");
+            }
+
+            // Silme yerine işaretleme işlemi
+            job.IsDeleted = true;
+            job.IsActive = false;
+            job.DeletedDate = DateTime.Now;
+
+            _context.Jobs.Update(job);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(EmployerJobs));
+        }
+
+
 
 
         [ResponseCache(Duration = 0, NoStore = true)]

@@ -1,6 +1,10 @@
-﻿@model List<FreelanceProject.Data.Entities.JobEntity>
+﻿ @model List<FreelanceProject.Data.Entities.JobEntity>
 @{
     ViewData["Title"] = "My Job Listings";
+    // Aktif ilanlar: IsDeleted false ve IsActive true olanlar
+    var activeJobs = Model.Where(job => !job.IsDeleted && job.IsActive).ToList();
+    // Silinmiş/aktif olmayan ilanlar
+    var deletedJobs = Model.Where(job => job.IsDeleted || !job.IsActive).ToList();
 }
 
 <style>
@@ -10,6 +14,7 @@
         border: none;
         box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
         margin-bottom: 2rem;
+        transition: all 0.3s ease;
     }
 
     .job-management-header {
@@ -21,24 +26,34 @@
         .job-management-header h2 {
             font-weight: 700;
             margin: 0;
-            font-family: 'Manrope', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
     .job-management-body {
         padding: 2rem;
         background-color: #fff;
     }
-
+    /* Job Item Styles */
     .job-item {
         border: 1px solid #e2e8f0;
         border-radius: 8px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         transition: all 0.3s ease;
+        position: relative;
     }
 
         .job-item:hover {
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+        }
+
+        .job-item.deleted {
+            opacity: 0.8;
+            background-color: #f8f9fa;
+            border-left: 4px solid #ef4444;
         }
 
     .job-title {
@@ -46,7 +61,6 @@
         font-weight: 600;
         color: #2b2d42;
         margin-bottom: 0.5rem;
-        font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .job-meta {
@@ -69,11 +83,13 @@
         }
 
     .job-status {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         padding: 0.35rem 0.75rem;
         border-radius: 50px;
         font-size: 0.8rem;
         font-weight: 600;
+        gap: 0.5rem;
     }
 
     .status-active {
@@ -81,12 +97,12 @@
         color: #155724;
     }
 
-    .status-pending {
+    .status-inactive {
         background-color: #fff3cd;
         color: #856404;
     }
 
-    .status-completed {
+    .status-deleted {
         background-color: #f8d7da;
         color: #721c24;
     }
@@ -98,66 +114,51 @@
     }
 
     .btn {
-        display: flex;
-        justify-content: center;
+        display: inline-flex;
         align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
     }
 
     .btn-edit {
         background-color: #4361ee;
         color: white;
         border: none;
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
     }
 
         .btn-edit:hover {
             background-color: #3a0ca3;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
         }
 
     .btn-delete {
         background-color: #f87171;
         color: white;
         border: none;
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
     }
 
         .btn-delete:hover {
             background-color: #ef4444;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
 
     .btn-view-applicants {
         background-color: white;
         color: #4361ee;
         border: 1px solid #4361ee;
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
     }
 
         .btn-view-applicants:hover {
             background-color: #f8f9fa;
         }
 
-    .no-jobs {
-        text-align: center;
-        padding: 3rem;
-        color: #6c757d;
-    }
-
-    .no-jobs-icon {
-        font-size: 3rem;
-        color: #cbd5e0;
-        margin-bottom: 1rem;
-    }
+    
 
     .create-new-btn {
         background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
@@ -177,6 +178,52 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(67, 97, 238, 0.35);
         }
+
+    .no-jobs {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+
+    .no-jobs-icon {
+        font-size: 3rem;
+        color: #cbd5e0;
+        margin-bottom: 1rem;
+    }
+    /* Overlay for deleted jobs */
+    .deleted-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #ef4444;
+        font-size: 1.1rem;
+    }
+    /* Nav Tabs Customization */
+    .nav-tabs {
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 2rem;
+    }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #64748b;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+        }
+
+            .nav-tabs .nav-link.active {
+                color: #4361ee;
+                border-bottom: 3px solid #4361ee;
+                background-color: transparent;
+            }
 </style>
 
 <div class="container my-5">
@@ -184,72 +231,147 @@
         <div class="col-lg-10">
             <div class="job-management-card">
                 <div class="job-management-header d-flex justify-content-between align-items-center">
-                    <h2><i class="fas fa-briefcase me-2"></i> My Job Listings</h2>
+                    <h2>
+                        <i class="fas fa-briefcase"></i>
+                        My Job Listings
+                    </h2>
                     <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
                         <i class="fas fa-plus"></i> Create New Job
                     </a>
                 </div>
                 <div class="job-management-body">
-                    <!-- Job List -->
-                    <div class="job-list">
-                        @if (Model.Any())
-                        {
-                            foreach (var job in Model)
-                            {
-                                <div class="job-item">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h3 class="job-title">@job.JobTitle</h3>
-                                            <div class="job-meta">
-                                                <div class="meta-item">
-                                                    <i class="fas fa-calendar-alt"></i>
-                                                    <span>Start Date: @job.StartDate.ToString("MMMM dd, yyyy")</span>
+                    <!-- Nav Tabs for Active / Deleted Jobs -->
+                    <ul class="nav nav-tabs" id="jobPostsTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#activeJobs" type="button" role="tab">
+                                <i class="fas fa-check-circle me-1"></i> Active Jobs
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="deleted-tab" data-bs-toggle="tab" data-bs-target="#deletedJobs" type="button" role="tab">
+                                <i class="fas fa-trash-alt me-1"></i> Deleted Jobs
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="jobPostsTabContent">
+                        <!-- Active Jobs Tab -->
+                        <div class="tab-pane fade show active" id="activeJobs" role="tabpanel">
+                            <div class="job-list">
+                                @if (activeJobs.Any())
+                                {
+                                    foreach (var job in activeJobs)
+                                    {
+                                        <div class="job-item">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h3 class="job-title">@job.JobTitle</h3>
+                                                    <div class="job-meta">
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-calendar-alt"></i>
+                                                            <span>Start Date: @job.StartDate.ToString("MMMM dd, yyyy")</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-money-bill-wave"></i>
+                                                            <span>Budget: ₺@job.JobBudget</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-calendar-check"></i>
+                                                            <span>Duration: @job.JobDuration @job.DurationUnit</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-tags"></i>
+                                                            <span>Category: @job.Category</span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="job-status @(job.IsActive ? "status-active" : "status-inactive")">
+                                                        <i class="fas fa-circle"></i>
+                                                        @(job.IsActive ? "Active" : "Inactive")
+                                                    </span>
                                                 </div>
-                                                <div class="meta-item">
-                                                    <i class="fas fa-money-bill-wave"></i>
-                                                    <span>Budget: ₺@job.JobBudget</span>
-                                                </div>
-                                                <div class="meta-item">
-                                                    <i class="fas fa-calendar-check"></i>
-                                                    <span>Duration: @job.JobDuration @job.DurationUnit</span>
-                                                </div>
-                                                <div class="meta-item">
-                                                    <i class="fas fa-tags"></i>
-                                                    <span>Category: @job.Category</span>
+                                                <div class="action-buttons">
+                                                    <a href="#" class="btn btn-view-applicants">
+                                                        <i class="fas fa-users"></i> View Applicants
+                                                    </a>
+                                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-edit">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-delete">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </a>
                                                 </div>
                                             </div>
-                                            <span class="job-status @(job.IsActive ? "status-active" : "status-pending")">
-                                                <i class="fas fa-circle"></i> @(job.IsActive ? "Active" : "Under Review")
-                                            </span>
                                         </div>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn btn-view-applicants">
-                                                <i class="fas fa-users"></i> View Applicants
-                                            </a>
-                                            <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-edit">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                            <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-delete">
-                                                <i class="fas fa-trash-alt"></i> Delete
-                                            </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="no-jobs">
+                                        <div class="no-jobs-icon">
+                                            <i class="fas fa-briefcase"></i>
                                         </div>
+                                        <h4>You haven't posted any active jobs yet</h4>
+                                        <p class="mb-4">Start creating a job to connect with freelancers</p>
+                                        <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
+                                            <i class="fas fa-plus"></i> Create New Job
+                                        </a>
                                     </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div class="no-jobs">
-                                <div class="no-jobs-icon">
-                                    <i class="fas fa-briefcase"></i>
-                                </div>
-                                <h4>You haven't posted any jobs yet</h4>
-                                <p class="mb-4">Start creating a job to connect with freelancers</p>
-                                <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
-                                    <i class="fas fa-plus"></i> Create New Job
-                                </a>
+                                }
                             </div>
-                        }
+                        </div>
+
+                        <!-- Deleted Jobs Tab -->
+                        <div class="tab-pane fade" id="deletedJobs" role="tabpanel">
+                            <div class="job-list">
+                                @if (deletedJobs.Any())
+                                {
+                                    foreach (var job in deletedJobs)
+                                    {
+                                        <div class="job-item deleted">
+                                            <div class="deleted-overlay">
+                                                <i class="fas fa-trash-alt me-2"></i> This job has been deleted
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h3 class="job-title">@job.JobTitle</h3>
+                                                    <div class="job-meta">
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-calendar-alt"></i>
+                                                            <span>Start Date: @job.StartDate.ToString("MMMM dd, yyyy")</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-money-bill-wave"></i>
+                                                            <span>Budget: ₺@job.JobBudget</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-calendar-check"></i>
+                                                            <span>Duration: @job.JobDuration @job.DurationUnit</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-tags"></i>
+                                                            <span>Category: @job.Category</span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="job-status status-deleted">
+                                                        <i class="fas fa-circle"></i> Deleted
+                                                    </span>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="no-jobs">
+                                        <div class="no-jobs-icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </div>
+                                        <h4>You have no deleted jobs</h4>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -262,7 +384,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Delete Job</h5>
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Delete Job
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -284,25 +408,46 @@
     </div>
 </div>
 
-<script>
-    // Delete confirmation checkbox control
-    document.getElementById('confirmDelete')?.addEventListener('change', function () {
-        document.getElementById('confirmDeleteBtn').disabled = !this.checked;
-    });
 
-    // Trigger for delete button modal
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function (e) {
-            if (!this.getAttribute('href')) {
-                e.preventDefault();
-                var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-                deleteModal.show();
 
-                document.getElementById('confirmDeleteBtn').onclick = function () {
-                    // AJAX delete operation can be performed here
-                    window.location.href = button.getAttribute('href');
-                };
-            }
+@section Scripts {
+    <script>
+        // Delete confirmation checkbox control
+        document.getElementById('confirmDelete')?.addEventListener('change', function () {
+            document.getElementById('confirmDeleteBtn').disabled = !this.checked;
         });
-    });
-</script>
+
+        // Trigger for delete button modal
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function (e) {
+                if (!this.getAttribute('href')) {
+                    e.preventDefault();
+                    var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                    deleteModal.show();
+
+                    document.getElementById('confirmDeleteBtn').onclick = function () {
+                        window.location.href = button.getAttribute('href');
+                    };
+                }
+            });
+        });
+
+        /
+
+        // Optionally, show a toast/alert using SweetAlert2 if TempData contains an error
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '@TempData["ErrorMessage"]',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000
+                });
+            </text>
+        }
+    </script>
+}

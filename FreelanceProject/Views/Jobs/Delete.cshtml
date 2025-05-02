@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 @{
     ViewData["Title"] = "İş İlanını Sil";
 }
@@ -231,3 +231,294 @@
 </script>
 
 
+ *@
+
+
+
+
+
+
+              
+@model FreelanceProject.Data.Entities.JobEntity
+@{
+    ViewData["Title"] = "İş İlanını Sil";
+}
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --primary-light: #e6e9f9;
+        --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        --hover-gradient: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+        --danger-color: #ef4444;
+        --danger-light: #fee2e2;
+    }
+
+    .delete-card {
+        border-radius: 16px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 12px 32px rgba(67, 97, 238, 0.12);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .delete-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(67, 97, 238, 0.18);
+        }
+
+    .delete-header {
+        background: var(--primary-gradient);
+        padding: 1.75rem;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .delete-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .delete-header h3 {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            position: relative;
+            font-size: 1.5rem;
+        }
+
+    .delete-body {
+        padding: 2.5rem;
+        background-color: #ffffff;
+    }
+
+    .job-media {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        height: 280px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+        .job-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .job-media:hover img {
+            transform: scale(1.03);
+        }
+
+    .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #64748b;
+        font-size: 1.1rem;
+    }
+
+    .job-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1.25rem;
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    .warning-message {
+        background-color: var(--danger-light);
+        border-left: 4px solid var(--danger-color);
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .warning-icon {
+        font-size: 1.5rem;
+        color: var(--danger-color);
+        margin-right: 1rem;
+    }
+
+    .warning-text {
+        color: #1e293b;
+        font-size: 1.05rem;
+        line-height: 1.5;
+    }
+
+    .job-details {
+        background-color: #f8fafc;
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2.5rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .detail-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s ease;
+    }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .detail-label {
+        font-size: 0.85rem;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        color: #1e293b;
+        font-weight: 600;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .btn-cancel {
+        background-color: white;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.1);
+    }
+
+        .btn-cancel:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.15);
+        }
+
+    .btn-delete {
+        background: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25);
+        }
+
+    .btn-icon {
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="delete-card">
+                <div class="delete-header">
+                    <h3><i class="fas fa-exclamation-triangle me-2"></i>İLAN SİLME ONAYI</h3>
+                </div>
+                <div class="delete-body">
+                    <div class="job-media">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.JobTitle" class="img-fluid" />
+                        }
+                        else
+                        {
+                            <div class="no-image">
+                                <i class="fas fa-image me-2"></i> İlan görseli bulunamadı
+                            </div>
+                        }
+                    </div>
+
+                    <h3 class="job-title">"@Model.JobTitle"</h3>
+
+                    <div class="warning-message">
+                        <div class="warning-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="warning-text">
+                            Bu ilanı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz ve tüm başvuru bilgileri de silinecektir.
+                        </div>
+                    </div>
+
+                    <div class="job-details">
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <div class="detail-label">Kategori</div>
+                                <div class="detail-value">@Model.Category</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-label">Başlangıç Tarihi</div>
+                                <div class="detail-value">@Model.StartDate.ToString("dd MMMM yyyy")</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-label">Bütçe</div>
+                                <div class="detail-value">₺@Model.JobBudget.ToString("N0")</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-label">Süre</div>
+                                <div class="detail-value">@Model.JobDuration @Model.DurationUnit</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="action-buttons">
+                            <a asp-action="EmployerJobs" class="btn-cancel">
+                                <i class="fas fa-arrow-left btn-icon"></i> Vazgeç
+                            </a>
+                            <button type="submit" class="btn-delete">
+                                <i class="fas fa-trash-alt btn-icon"></i> Silmeyi Onayla
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

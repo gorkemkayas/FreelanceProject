@@ -247,16 +247,4 @@
     </div>
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script>
-        // Set default date to today
-        document.addEventListener('DOMContentLoaded', function () {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('StartDate').value = today;
-            document.querySelector('select[name="DurationUnit"]').value = 'Hafta';
-        });
-    </script>
-}
+
