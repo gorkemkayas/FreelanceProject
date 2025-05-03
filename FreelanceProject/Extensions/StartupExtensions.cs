@@ -9,6 +9,7 @@ using FreelanceProject.CustomMethods.Concrete;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using FreelanceProject.Data.MappingProfile;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace FreelanceProject.Extensions
 {
@@ -42,6 +43,11 @@ namespace FreelanceProject.Extensions
             {
                 options.ValidationInterval = TimeSpan.FromMinutes(5);
             });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/User/Signin";
+            });
         }
 
         public static void AddServicesWithExtension(this IServiceCollection services)
@@ -49,6 +55,7 @@ namespace FreelanceProject.Extensions
             services.AddScoped<UserManager<AppUser>>();
             services.AddScoped<SignInManager<AppUser>>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUrlGenerator, UrlGenerator>();
 

@@ -12,6 +12,12 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
+    <script src="~/js/showAlertSuccess.js"></script>
+    <script src="~/js/showAlertSuccessNoDirect.js"></script>
+    <script src="~/js/showAlertSuccessToIndex.js"></script>
+    <script src="~/js/showAlertError.js"></script>
+    <script src="~/js/formValidations.js"></script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +39,7 @@
                         @await Component.InvokeAsync("NavProfilePhoto")
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link logout" asp-route-returnUrl="/Home/Index" asp-area="" asp-controller="User" asp-action="Logout">
+                        <a class="nav-link logout"  asp-area="" asp-controller="User" asp-action="SignOut">
                             <i class="fas fa-sign-out-alt me-1"></i> Logout
                         </a>
                     </li>
@@ -75,13 +81,13 @@
             </a>
             <div class="collapse show" id="rolesSubmenu">
                 <nav class="nav flex-column">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleAdd">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="AddRole">
                         <i class="fas fa-plus-circle"></i> Add Role
                     </a>
                     <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Edit">
                         <i class="fas fa-edit"></i> Edit Role
                     </a>
-                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Delete">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleDelete">
                         <i class="fas fa-trash-alt"></i> Delete Role
                     </a>
                     <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleList">
@@ -141,6 +147,8 @@
             }
         });
     </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

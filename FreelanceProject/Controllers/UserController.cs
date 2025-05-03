@@ -41,7 +41,7 @@ namespace FreelanceProject.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> SignIn(SignInViewModel request)
+        public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -60,6 +60,7 @@ namespace FreelanceProject.Controllers
                 return View();
             }
             TempData["Succeed"] = "The user signed in successfully!";
+            if(!string.IsNullOrEmpty(returnUrl)) return Redirect(returnUrl);
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 

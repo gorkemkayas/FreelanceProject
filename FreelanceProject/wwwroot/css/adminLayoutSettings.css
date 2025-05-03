@@ -11,7 +11,88 @@
     --sidebar-width: 260px;
     --topbar-height: 64px;
     --transition: all 0.3s ease;
+    --primary-black: linear-gradient(135deg, #222, #111, #000);
+    --primary-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+    --text-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+    --hover-gradient: linear-gradient(135deg, #3a0ca3, #4361ee);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
 }
+
+.blue-to-purple-gradient {
+    background: linear-gradient(to right, #3a8dde, #7b2ff7);
+    color: white; /* yazının görünürlüğü için */
+    padding: 20px;
+    border-radius: 12px;
+}
+.gradient-text2 {
+    background: linear-gradient(to right, #3a8dde, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.btn-edit {
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 999px;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(79, 172, 254, 0.5);
+    }
+
+.btn-view {
+    background: linear-gradient(to right, #43e97b, #38f9d7);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 999px;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(56, 249, 215, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-view:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(56, 249, 215, 0.4);
+    }
+
+.btn-archive {
+    background: linear-gradient(to right, #9d50bb, #6e48aa);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 999px;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(110, 72, 170, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-archive:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(110, 72, 170, 0.4);
+    }
+
+
+
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -262,4 +343,74 @@ body {
     .btn-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(115, 103, 240, 0.4);
+    }
+
+.btn-premium {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(67, 97, 238, 0.2);
+}
+
+    .btn-premium:hover {
+        background: var(--hover-gradient);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+.btn-outline-premium {
+    background: transparent;
+    color: var(--primary-gradient-color, #4361ee); /* Gradient kullanamıyoruz doğrudan, bir ana renk seçelim */
+    border: 2px solid var(--primary-gradient-color, #4361ee);
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(67, 97, 238, 0.1);
+}
+
+    .btn-outline-premium:hover {
+        background: var(--primary-gradient);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        border: 2px solid transparent;
+    }
+
+.text-premium {
+    background: linear-gradient(to right, #4361ee, #5f2c82); /* Örnek gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+    .text-premium:hover {
+        background: linear-gradient(to right, #3a0ca3, #7209b7); /* Hover için farklı bir gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        transform: translateY(-1px);
+    }
+
+.input-gradient {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-image: linear-gradient(white, white), /* input iç kısmı */
+    var(--primary-gradient); /* kenarlık */
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+    .input-gradient:focus {
+        background-image: linear-gradient(white, white), var(--hover-gradient); /* focus olduğunda kenarlık değişir */
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2); /* hafif parlama efekti */
     }

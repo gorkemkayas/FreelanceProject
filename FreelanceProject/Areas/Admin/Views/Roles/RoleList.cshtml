@@ -1,0 +1,233 @@
+﻿﻿@using FreelanceProject.Areas.Admin.Models
+@using FreelanceProject.Utilities
+@using System.Security.Claims
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminLayout";
+}
+
+@model ItemPagination<RoleViewModel>
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
+@section Scripts {
+    <script>
+        showAlertSuccess('successAlert');
+        showAlertError('errorAlert');
+    </script>
+}
+<div class="mb-4">
+    <div class="d-flex align-items-center mb-2">
+        <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+            <i class="fas fa-user-tie fs-2 text-primary"></i>
+        </div>
+        <div>
+            <h1 class="mb-0 fw-bold gradient-text2 text-start">Role Management</h1>
+            <p class="text-muted small mb-0">Streamline permissions and access with our comprehensive role management system.</p>
+        </div>
+    </div>
+    <div class="border-bottom pb-3 mb-3"></div>
+</div>
+<div class="d-flex justify-content-end mb-3">
+    <form asp-action="RoleList" method="get" class="d-flex align-items-center gap-2">
+        <div class="form-check form-switch gradient-text2 d-flex align-content-center gap-2"
+             data-bs-toggle="tooltip" data-bs-placement="top" title="Include deleted roles?">
+            <input class="form-check-input" type="checkbox"
+                   name="includeDeleted"
+                   value="true"
+                   id="includeDeletedSwitch"
+            @(Model.IncludeDeleted ? "checked" : "")
+                   onchange="this.form.submit(); toggleEyeIconAndText(this);" />
+            <label class="form-check-label fw-semibold small text-secondary d-flex align-items-center"
+                   for="includeDeletedSwitch">
+                <i id="eyeIcon" class="bi text-gradient @(Model.IncludeDeleted ? "bi-eye" :"bi-eye-slash-fill") me-2 transition"></i>
+                <span id="eyeLabelText" class="text-gradient">
+                    @(Model.IncludeDeleted ? "Remove deleted ones." : "Include deleted ones.")
+                </span>
+            </label>
+        </div>
+    </form>
+</div>
+
+
+
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="bg-dark bg-opacity-5">
+            <tr>
+                <th class="ps-4 text-uppercase fw-normal small" style="width: 60px;">#</th>
+                <th class="text-uppercase fw-normal small">Role ID</th>
+                <th class="text-uppercase fw-normal small">Role Details</th>
+                <th class="text-uppercase fw-normal small">Author</th>
+                <th class="text-uppercase fw-normal small">Last Editor</th>
+                <th class="text-center text-uppercase fw-normal small" style="width: 240px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = (Model.CurrentPage - 1) * Model.PageSize;
+            }
+            @foreach (var role in Model.Items)
+            {
+                i++;
+                <tr style=" @(role.IsDeleted ? "opacity:40%" : "" )">
+                    <td class="ps-4 text-muted fw-semibold">@i</td>
+                    <td>
+                        <span class="badge blue-to-purple-gradient bg-opacity-10  font-monospace">@role.Id</span>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-column">
+                            <span class="text-black fw-normal text-muted text-start small">@role.Name</span>
+                            @if (role.IsDeleted)
+                            {
+                                <span class="badge bg-danger bg-opacity-10 text-danger  mt-1 align-self-start">
+                                    <i class="bi bi-trash me-1 small"></i>Archived
+                                </span>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center small">
+                            @await Component.InvokeAsync("UserPicName", @role.CreatedBy)
+                        </div>
+                    </td>
+                    <td>
+                        @if (role.EditedBy == null)
+                        {
+                            <span class="text-muted fst-italic small">Not changed.</span>
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center small">
+                                @await Component.InvokeAsync("UserPicName", @role.EditedBy)
+                            </div>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex gap-2 justify-content-center">
+                            @if (!role.IsDeleted)
+                            {
+
+                                <a class="btn btn-sm btn-edit rounded-pill text-white  d-flex align-items-center px-3 border-0 shadow-sm"
+                                   asp-controller="Roles" asp-action="RoleEdit" asp-route-id="@role.Id">
+                                    <i class="bi bi-pencil me-2 text-primary"></i>Edit
+                                </a>
+                                <button class="btn btn-sm btn-archive text-white d-flex align-items-center px-3 rounded-pill delete-button hover-shadow-sm"
+                                        data-role-id="@role.Id" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                    <i class="bi bi-archive me-2"></i>Archive
+                                </button>
+                                <button class="btn btn-sm btn-view d-flex text-white align-items-center px-3 rounded-pill hover-shadow-sm">
+                                    <i class="bi bi-eye  me-2"></i>View
+                                </button>
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm disabled btn-edit rounded-pill d-flex align-items-center px-3 border-0 shadow-sm"
+                                   asp-controller="Roles" asp-action="RoleEdit" asp-route-id="@role.Id">
+                                    <i class="bi bi-pencil me-2 text-primary"></i>Edit
+                                </a>
+                                <button class="btn btn-sm btn-outline-success d-flex align-items-center px-3 rounded-pill hover-shadow-sm ">
+                                    <i class="bi bi-eye me-2"></i>Restore
+                                </button>
+                                <button class="btn disabled btn-view btn-outline-dark d-flex align-items-center px-3 rounded-pill hover-shadow-sm">
+                                    <i class="bi bi-eye me-2"></i>View
+                                </button>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Onayla</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                Bu rolü silmek istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Evet, Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@await Html.PartialAsync("_Pagination", Model)
+
+<script>
+    let selectedRoleId = null;
+
+    // Sil butonuna basıldığında role ID'yi al
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function () {
+            selectedRoleId = this.getAttribute('data-role-id');
+        });
+    });
+
+    // Evet'e basıldığında silme isteği gönder
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        // Modal'ı hemen kapat
+        const modalEl = document.getElementById('confirmDeleteModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        modalInstance?.hide();
+
+        // Silme isteğini gönder
+        fetch(`/Roles/RoleDelete/${selectedRoleId}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                // Başarılıysa yönlendir
+                window.location.href = data.redirectUrl; // Yönlendirme URL'si alınır ve sayfa yönlendirilir
+            } else {
+                // Hata durumunda, tekrar yönlendirme yapılır (gereksizse bu kısmı kaldırabilirsiniz)
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(err => {
+            console.error("Silme sırasında hata oluştu:", err);
+        });
+    });
+
+    function toggleEyeIcon(checkbox) {
+        const icon = document.getElementById("eyeIcon");
+        if (checkbox.checked) {
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash-fill");
+        } else {
+            icon.classList.remove("bi-eye-slash-fill");
+            icon.classList.add("bi-eye");
+        }
+    }
+
+    // Sayfa yüklendiğinde tooltipleri aktive et
+    document.addEventListener("DOMContentLoaded", function () {
+        const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltips.map(el => new bootstrap.Tooltip(el));
+    });
+</script>
