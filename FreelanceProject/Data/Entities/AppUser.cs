@@ -61,7 +61,11 @@ namespace FreelanceProject.Data.Entities
 
         public virtual ICollection<MessageEntity>? SentMessages { get; set; }
         public virtual ICollection<MessageEntity>? ReceivedMessages { get; set; }
-        public virtual ICollection<JobEntity>? Jobs { get; set; } // Kullanıcının oluşturduğu işler (işveren)
+
+        public virtual ICollection<JobEntity>? CreatedJobs { get; set; } // İşveren olarak oluşturduğu işler
+        public virtual ICollection<JobApplicationEntity>? JobApplications { get; set; } // Başvurduğu işler
+
+
 
 
         public string GetPropertyValue(PhotoType type)

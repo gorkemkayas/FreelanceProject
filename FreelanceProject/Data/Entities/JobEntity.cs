@@ -1,32 +1,40 @@
 ﻿using FreelanceProject.Data.Entities.BaseEntities;
 using Microsoft.AspNetCore.Builder;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 
 namespace FreelanceProject.Data.Entities
 {
     public class JobEntity : BaseEntity
     {
-        public string JobTitle { get; set; }
-        public string JobDescription { get; set; }
-        public decimal JobBudget { get; set; }
-        public int JobDuration { get; set; }
-        public string DurationUnit { get; set; }
-        public DateTime StartDate { get; set; }
-        // public string Skills { get; set; } // Virgülle ayrılmış string (HTML/CSS, JavaScript gibi)
-        public bool IsActive { get; set; } = true;
+            public string Title { get; set; } = null!;
+            public string Description { get; set; } = null!;
 
-        // İşveren
-        public Guid EmployerId { get; set; }
-        public AppUser Employer { get; set; } = null!;
+            public string Category { get; set; }
 
-        // Başvurular (freelancer'ların yaptığı başvurular)
-        //public virtual ICollection<Application> Applications { get; set; } = new List<JobApplication>();
+            public string? Requirements { get; set; } // İsteğe bağlı: aranan özellikler
 
-        // Kabul edilen iş varsa ilişki kurulabilir (opsiyonel)
-        //public virtual Contract? Contract { get; set; }
+            public decimal? Budget { get; set; } // Ödeme teklifi (sabit ya da aralık belirtilebilir)
 
-        public string Category { get; set; } // Kategori adını burada tutuyoruz
+            public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-        public string ImageUrl { get; set; } // Bu alan hem URL olabilir hem de sunucuda kaydedilen yol
+            public DateTime? StartDate { get; set; }
+
+            public DateTime? Deadline { get; set; } // Son başvuru tarihi vs.
+
+            public bool IsCompleted { get; set; } = false; // İş tamamlandı mı
+            public bool IsActive { get; set; } = true;
+            public string? JobImage { get; set; }
+
+            // ---- İlişkiler ----
+
+            // İlanı oluşturan kullanıcı
+            [ForeignKey("Owner")]
+            public Guid OwnerId { get; set; }
+            public virtual AppUser Owner { get; set; }
+
+            // Bu ilana yapılan başvurular
+            public virtual ICollection<JobApplicationEntity> Applications { get; set; } = new List<JobApplicationEntity>();
+        }
     }
-}

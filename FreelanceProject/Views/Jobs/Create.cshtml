@@ -142,41 +142,48 @@
 
                         <!-- Job Title -->
                         <div class="mb-4">
-                            <label asp-for="JobTitle" class="form-label required-field"></label>
-                            <input asp-for="JobTitle" class="form-control" placeholder="Örnek: Profesyonel E-ticaret Sitesi Tasarımı" />
-                            <span asp-validation-for="JobTitle" class="text-danger"></span>
+                            <label asp-for="Title" class="form-label required-field"></label>
+                            <input asp-for="Title" class="form-control" placeholder="Örnek: Profesyonel E-ticaret Sitesi Tasarımı" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
                         <!-- Job Description -->
                         <div class="mb-4">
-                            <label asp-for="JobDescription" class="form-label required-field"></label>
-                            <textarea asp-for="JobDescription" class="form-control" rows="6" placeholder="İşin detaylarını, beklentilerinizi ve gereksinimleri açıklayın..."></textarea>
-                            <span asp-validation-for="JobDescription" class="text-danger"></span>
+                            <label asp-for="Description" class="form-label required-field"></label>
+                            <textarea asp-for="Description" class="form-control" rows="6" placeholder="İşin detaylarını, beklentilerinizi ve gereksinimleri açıklayın..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Job Requirements -->
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label required-field">Job Requirements:</label>
+                            <input asp-for="Title" class="form-control" placeholder="Örnek: Mobil uyumlu olması, Hızlı olması vb." />
+                            <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
                         <div class="row">
                             <!-- Budget -->
                             <div class="col-md-6 mb-4">
-                                <label asp-for="JobBudget" class="form-label required-field"></label>
+                                <label asp-for="Budget" class="form-label required-field"></label>
                                 <div class="input-group">
-                                    <input asp-for="JobBudget" class="form-control" placeholder="5000" />
+                                    <input asp-for="Budget" class="form-control" placeholder="5000" />
                                     <span class="input-group-text">₺</span>
                                 </div>
-                                <span asp-validation-for="JobBudget" class="text-danger"></span>
+                                <span asp-validation-for="Budget" class="text-danger"></span>
                             </div>
 
                             <!-- Duration -->
                             <div class="col-md-6 mb-4">
-                                <label asp-for="JobDuration" class="form-label required-field"></label>
+                                <label asp-for="Duration" class="form-label required-field"></label>
                                 <div class="input-group">
-                                    <input asp-for="JobDuration" class="form-control duration-input" placeholder="3" />
+                                    <input asp-for="Duration" class="form-control duration-input" placeholder="3" />
                                     <select asp-for="DurationUnit" class="form-select duration-unit-select">
                                         <option value="Gün">Gün</option>
                                         <option value="Hafta" selected>Hafta</option>
                                         <option value="Ay">Ay</option>
                                     </select>
                                 </div>
-                                <span asp-validation-for="JobDuration" class="text-danger"></span>
+                                <span asp-validation-for="Duration" class="text-danger"></span>
                             </div>
                         </div>
 

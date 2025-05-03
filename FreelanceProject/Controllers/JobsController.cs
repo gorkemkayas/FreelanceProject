@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;       // DbContext dosyasını da ekle
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.IO;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Security.Claims;
+using AutoMapper;
 
 namespace FreelanceProject.Controllers
 {
@@ -20,17 +23,16 @@ namespace FreelanceProject.Controllers
     {
         private readonly FreelanceDbContext _context; // DbContext
         private readonly UserManager<AppUser> _userManager;
-        private readonly IWebHostEnvironment _env;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IJobService _jobService;
+        private readonly IMapper _mapper;
 
 
-        public JobsController(FreelanceDbContext context, UserManager<AppUser> userManager,  IWebHostEnvironment webHostEnvironment)
+        public JobsController(FreelanceDbContext context, UserManager<AppUser> userManager, IJobService jobService, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
-            // _env = env;
-            //IWebHostEnvironment env,
-            _webHostEnvironment = webHostEnvironment;
+            _jobService = jobService;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -53,73 +55,31 @@ namespace FreelanceProject.Controllers
 
 
 
-       
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateJobViewModel model)
         {
-            
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categories = new List<string>
+            ViewBag.Categories = new List<string>
                 {
                      "Web Development", "Mobile Development", "Design", "SEO", "Marketing"
                  };
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Model hatalı!");
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
+            var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var result = await _jobService.AddNewJobAsync(currentUser!, model);
 
-            string imagePath = null;
-
-            // Eğer dosya seçilmişse
-            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            if (!result.IsSuccess)
             {
-                // Dosya kaydedileceği dizini belirleyelim (wwwroot içinde uploads klasörü)
-                var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-
-                // Eğer uploads klasörü yoksa, oluşturuyoruz
-                if (!Directory.Exists(uploadDir))
-                    Directory.CreateDirectory(uploadDir);
-
-                // Dosya adını benzersiz yapmak için GUID kullanıyoruz
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
-
-                // Dosyanın tam yolu
-                var fullPath = Path.Combine(uploadDir, fileName);
-
-                // Dosyayı belirtilen klasöre kaydediyoruz
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await model.ImageFile.CopyToAsync(stream);
-                }
-
-                // Kaydedilen dosyanın web yolu
-                imagePath = "/uploads/" + fileName;
+                ModelState.AddModelErrorList(result.Errors.ToList());
+                return View(model);
             }
-
-            var job = new JobEntity
-            {
-                JobTitle = model.JobTitle,
-                JobDescription = model.JobDescription,
-                JobBudget = model.JobBudget,
-                JobDuration = model.JobDuration,
-                DurationUnit = model.DurationUnit,
-                StartDate = model.StartDate,
-                Category = model.Category, // Kategori bilgisini ekliyoruz
-                EmployerId = user.Id,
-                CreatedDate = DateTime.UtcNow,
-                IsActive = true,
-                ImageUrl = imagePath // Resim URL'sini veya dosya yolunu ekliyoruz
-            };
-
-
-            _context.Jobs.Add(job);
-            await _context.SaveChangesAsync();
-
             return RedirectToAction("EmployerJobs", "Jobs");
         }
 
@@ -127,36 +87,17 @@ namespace FreelanceProject.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
+            ViewBag.Categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };
 
             var job = await _context.Jobs.FindAsync(id);
-            if (job == null)
-            {
-                return NotFound();
-            }
+            var mappedJob = _mapper.Map<EditJobViewModel>(job);
 
-            var model = new CreateJobViewModel
-            {
-                JobId = job.Id,
-                JobTitle = job.JobTitle,
-                JobDescription = job.JobDescription,
-                JobBudget = job.JobBudget,
-                JobDuration = job.JobDuration,
-                DurationUnit = job.DurationUnit,
-                StartDate = job.StartDate,
-                Category = job.Category,
-                ImageUrl = job.ImageUrl
-            };
-
-            // HATA BUNDAN DOLAYI GELİYORSA BU KISMI EKLEMEN GEREKİYOR
-            var categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };
-            ViewBag.Categories = categories;
-
-            return View(model);
+            return View(mappedJob);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CreateJobViewModel model)
+        public async Task<IActionResult> Edit(EditJobViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -164,57 +105,19 @@ namespace FreelanceProject.Controllers
                 ViewBag.Categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };
                 return View(model);
             }
+            var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var result = await _jobService.EditJobAsync(currentUser!, model);
 
-            if (ModelState.IsValid)
+            if (!result.IsSuccess)
             {
-
-                var job = await _context.Jobs.FindAsync(model.JobId);
-                if (job == null)
-                {
-                    return NotFound();
-                }
-
-                // Resim güncellenmişse
-                if (model.ImageFile != null && model.ImageFile.Length > 0)
-                {
-                    var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-                    if (!Directory.Exists(uploadDir))
-                        Directory.CreateDirectory(uploadDir);
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
-                    var fullPath = Path.Combine(uploadDir, fileName);
-
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-
-                    job.ImageUrl = "/uploads/" + fileName; // Yeni resimle değiştiriyoruz
-                }
-
-                job.JobTitle = model.JobTitle;
-                job.JobDescription = model.JobDescription;
-                job.JobBudget = model.JobBudget;
-                job.JobDuration = model.JobDuration;
-                job.DurationUnit = model.DurationUnit;
-                job.StartDate = model.StartDate;
-                job.Category = model.Category;
-                job.ModifiedDate = DateTime.UtcNow;
-
-                _context.Update(job);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(EmployerJobs));
+                ModelState.AddModelErrorList(result.Errors.ToList());
+                return View();
             }
 
-            // ❗ ModelState geçerli değilse buraya düşer → Kategoriler yeniden ViewBag'e eklenmeli!
-            var categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };
-            ViewBag.Categories = categories;
-
-            return View(model); // ViewBag olmadan dönerse kategori listesi görünmez.
+            return RedirectToAction(nameof(EmployerJobs));
         }
 
-        
+
         // GET: Jobs/Delete/{id}
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -240,7 +143,7 @@ namespace FreelanceProject.Controllers
             return View(job);
         }
 
-        
+
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -281,7 +184,7 @@ namespace FreelanceProject.Controllers
 
             // Burada Jobs tablosunu güncel verilerle çektiğinden emin ol
             var jobs = await _context.Jobs
-                .Where(j => j.EmployerId == user.Id)
+                .Where(j => j.OwnerId == user.Id)
                 .OrderByDescending(j => j.CreatedDate) // Veya ModifiedDate ile sıralayabilirsiniz
                 .ToListAsync();
 

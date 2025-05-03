@@ -12,6 +12,7 @@ namespace FreelanceProject.Data.MappingProfile
             CreateMap<ExtendedProfileViewModel, AppUser>().ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.EmailAddress));
 
             CreateMap<AppUser, VisitorProfileViewModel>().ReverseMap();
+            CreateMap<JobEntity, EditJobViewModel>().ReverseMap();
         }
     }
 }
