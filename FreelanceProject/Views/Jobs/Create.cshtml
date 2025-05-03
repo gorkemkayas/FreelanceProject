@@ -1,13 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Yeni İş İlanı Oluştur";
-}
-
+﻿@model FreelanceProject.Models.ViewModels.CreateJobViewModel
 <style>
     :root {
         --primary-color: #4361ee;
         --primary-light: #e6e9f9;
         --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
         --hover-gradient: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+        --danger-color: #e74c3c;
     }
 
     .form-card {
@@ -15,12 +13,14 @@
         overflow: hidden;
         border: none;
         box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+        margin-bottom: 2rem;
     }
 
     .form-header {
         background: var(--primary-gradient);
         padding: 1.5rem;
         text-align: center;
+        color: white;
     }
 
         .form-header h4 {
@@ -41,9 +41,10 @@
         font-size: 0.95rem;
     }
 
-    /* Zorunlu alan başlıkları için kırmızı renk */
-    .required-field {
-        color: #e74c3c; /* Kırmızı renk */
+    .required-field::after {
+        content: "*";
+        color: var(--danger-color);
+        margin-left: 4px;
     }
 
     .form-control, .form-select {
@@ -77,30 +78,6 @@
         border-bottom-right-radius: 0 !important;
     }
 
-    .skills-container {
-        background-color: white;
-        border-radius: 8px;
-        padding: 1.25rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .form-check-input {
-        width: 1.1em;
-        height: 1.1em;
-        margin-top: 0.15em;
-        border: 2px solid #dee2e6;
-    }
-
-        .form-check-input:checked {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-    .form-check-label {
-        font-weight: 500;
-        color: #4a4a4a;
-    }
-
     .btn-premium {
         background: var(--primary-gradient);
         color: white;
@@ -124,107 +101,140 @@
         .btn-premium i {
             margin-right: 8px;
         }
+
+    .btn-cancel {
+        background: #f8f9fa;
+        color: #343a40;
+        border: 1px solid #e0e0e0;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.15);
+        font-size: 1rem;
+        text-transform: uppercase;
+    }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.1);
+        }
+
+    .text-danger {
+        color: var(--danger-color) !important;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
 </style>
 
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card form-card">
-                <div class="form-header text-white">
+                <div class="form-header">
                     <h4><i class="fas fa-plus-circle me-2"></i>YENİ İŞ İLANI OLUŞTUR</h4>
                 </div>
                 <div class="form-body">
-                    <form method="post">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
                         <!-- Job Title -->
                         <div class="mb-4">
-                            <label for="JobTitle" class="form-label required-field">İş Başlığı*</label>
-                            <input type="text" class="form-control" id="JobTitle" name="JobTitle" placeholder="Örnek: Profesyonel E-ticaret Sitesi Tasarımı" required>
+                            <label asp-for="JobTitle" class="form-label required-field"></label>
+                            <input asp-for="JobTitle" class="form-control" placeholder="Örnek: Profesyonel E-ticaret Sitesi Tasarımı" />
+                            <span asp-validation-for="JobTitle" class="text-danger"></span>
                         </div>
 
                         <!-- Job Description -->
                         <div class="mb-4">
-                            <label for="JobDescription" class="form-label required-field">İş Açıklaması*</label>
-                            <textarea class="form-control" id="JobDescription" name="JobDescription" rows="6" placeholder="İşin detaylarını, beklentilerinizi ve gereksinimleri açıklayın..." required></textarea>
+                            <label asp-for="JobDescription" class="form-label required-field"></label>
+                            <textarea asp-for="JobDescription" class="form-control" rows="6" placeholder="İşin detaylarını, beklentilerinizi ve gereksinimleri açıklayın..."></textarea>
+                            <span asp-validation-for="JobDescription" class="text-danger"></span>
                         </div>
 
                         <div class="row">
                             <!-- Budget -->
                             <div class="col-md-6 mb-4">
-                                <label for="JobBudget" class="form-label required-field">Bütçe (₺)*</label>
+                                <label asp-for="JobBudget" class="form-label required-field"></label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="JobBudget" name="JobBudget" placeholder="5000" required>
+                                    <input asp-for="JobBudget" class="form-control" placeholder="5000" />
                                     <span class="input-group-text">₺</span>
                                 </div>
+                                <span asp-validation-for="JobBudget" class="text-danger"></span>
                             </div>
 
                             <!-- Duration -->
                             <div class="col-md-6 mb-4">
-                                <label for="JobDuration" class="form-label required-field">Tahmini Süre*</label>
+                                <label asp-for="JobDuration" class="form-label required-field"></label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control duration-input" id="JobDuration" name="JobDuration" placeholder="3" required>
-                                    <select class="form-select duration-unit-select" id="DurationUnit" name="DurationUnit">
+                                    <input asp-for="JobDuration" class="form-control duration-input" placeholder="3" />
+                                    <select asp-for="DurationUnit" class="form-select duration-unit-select">
                                         <option value="Gün">Gün</option>
                                         <option value="Hafta" selected>Hafta</option>
                                         <option value="Ay">Ay</option>
-                                        <option value="Proje Bazlı">Proje Bazlı</option>
                                     </select>
                                 </div>
+                                <span asp-validation-for="JobDuration" class="text-danger"></span>
                             </div>
                         </div>
 
                         <!-- Start Date -->
                         <div class="mb-4">
-                            <label for="StartDate" class="form-label required-field">Başlangıç Tarihi*</label>
-                            <input type="date" class="form-control" id="StartDate" name="StartDate" required>
+                            <label asp-for="StartDate" class="form-label required-field"></label>
+                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
 
-                        <!-- Skills -->
+                        <!-- Category -->
                         <div class="mb-4">
-                            <label class="form-label required-field">Gerekli Beceriler*</label>
-                            <div class="skills-container">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" id="skill1" name="Skills" value="HTML/CSS" required>
-                                            <label class="form-check-label" for="skill1">HTML/CSS</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" id="skill2" name="Skills" value="JavaScript">
-                                            <label class="form-check-label" for="skill2">JavaScript</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" id="skill3" name="Skills" value="React">
-                                            <label class="form-check-label" for="skill3">React</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" id="skill4" name="Skills" value="UI/UX Tasarım">
-                                            <label class="form-check-label" for="skill4">UI/UX Tasarım</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" id="skill5" name="Skills" value="Node.js">
-                                            <label class="form-check-label" for="skill5">Node.js</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" id="skill6" name="Skills" value="Mobil Uygulama">
-                                            <label class="form-check-label" for="skill6">Mobil Uygulama</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <small class="text-muted">En az bir beceri seçmelisiniz</small>
-                            </div>
+                            <label asp-for="Category" class="form-label required-field">Kategori</label>
+                            <select asp-for="Category" class="form-select">
+                                <option value="">Kategori Seçin</option>
+                                @foreach (var category in ViewBag.Categories as List<string>)
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger"></span>
                         </div>
 
-                        <!-- Submit Button -->
+                        <!--Image-->
+                        <div class="mb-4">
+                            <label for="ImageFile" class="form-label">Resim Yükleyin</label>
+                            <input type="file" asp-for="ImageFile" class="form-control" required />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
+
+
+                        <!-- Buttons -->
                         <div class="d-grid mt-5">
                             <button type="submit" class="btn btn-premium py-3">
                                 <i class="fas fa-paper-plane me-1"></i> İLANI YAYINLA
                             </button>
+                            <button type="button" class="btn btn-cancel py-3 mt-2" onclick="window.history.back();">
+                                <i class="fas fa-times me-1"></i> İPTAL
+                            </button>
                         </div>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Set default date to today
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('StartDate').value = today;
+            document.querySelector('select[name="DurationUnit"]').value = 'Hafta';
+        });
+    </script>
+}
