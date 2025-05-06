@@ -37,7 +37,7 @@ namespace FreelanceProject.Data.Context
 
             builder.Entity<JobEntity>(entity =>
             {
-                entity.Property(e => e.JobBudget)
+                entity.Property(e => e.Budget)
                       .HasPrecision(18, 2); // 18 basamaklı, 2 ondalıklı
             });
 

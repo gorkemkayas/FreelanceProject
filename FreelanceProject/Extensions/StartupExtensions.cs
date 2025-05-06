@@ -56,6 +56,7 @@ namespace FreelanceProject.Extensions
             services.AddScoped<SignInManager<AppUser>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IJobService, JobService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUrlGenerator, UrlGenerator>();
 

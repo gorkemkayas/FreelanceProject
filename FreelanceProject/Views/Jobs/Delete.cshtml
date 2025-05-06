@@ -461,7 +461,7 @@
                     <h3><i class="fas fa-exclamation-triangle me-2"></i>İLAN SİLME ONAYI</h3>
                 </div>
                 <div class="delete-body">
-                    <div class="job-media">
+                    @* <div class="job-media">
                         @if (!string.IsNullOrEmpty(Model.ImageUrl))
                         {
                             <img src="@Model.ImageUrl" alt="@Model.JobTitle" class="img-fluid" />
@@ -474,7 +474,7 @@
                         }
                     </div>
 
-                    <h3 class="job-title">"@Model.JobTitle"</h3>
+                    <h3 class="job-title">"@Model.JobTitle"</h3> *@
 
                     <div class="warning-message">
                         <div class="warning-icon">
@@ -485,7 +485,7 @@
                         </div>
                     </div>
 
-                    <div class="job-details">
+                    @* <div class="job-details">
                         <div class="detail-grid">
                             <div class="detail-card">
                                 <div class="detail-label">Kategori</div>
@@ -504,7 +504,7 @@
                                 <div class="detail-value">@Model.JobDuration @Model.DurationUnit</div>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
 
                     <form asp-action="Delete" method="post">
                         <input type="hidden" asp-for="Id" />

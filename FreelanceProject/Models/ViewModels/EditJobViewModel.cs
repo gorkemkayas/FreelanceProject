@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FreelanceProject.Models.ViewModels
 {
-    public class CreateJobViewModel
+    public class EditJobViewModel
     {
+        public Guid Id { get; set; }
+
         [Required(ErrorMessage = "İş başlığı zorunludur.")]
         public string Title { get; set; } = null!;
 
@@ -27,6 +28,7 @@ namespace FreelanceProject.Models.ViewModels
         [Required(ErrorMessage = "Başlama tarihi zorunludur.")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
+
         public DateTime? Deadline { get; set; }
 
 
@@ -36,7 +38,7 @@ namespace FreelanceProject.Models.ViewModels
 
         //public string ImageUrl { get; set; } // Web URL
 
-        public IFormFile ImageFile { get; set; } = null!; // Lokal dosya yükleme
+        public IFormFile? ImageFile { get; set; } // Lokal dosya yükleme
         public object? ImageUrl { get; internal set; }
     }
 }
