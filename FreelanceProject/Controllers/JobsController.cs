@@ -37,9 +37,16 @@ namespace FreelanceProject.Controllers
         {
             return View();
         }
-        public IActionResult Details() // iş detaylarını görüntüle.
+        public IActionResult Details(Guid id) // iş detaylarını görüntüle.
         {
-            return View();
+            var job = _context.Jobs.FirstOrDefault(j => j.Id == id);
+
+            if (job == null)
+            {
+                return NotFound(); // Eğer iş ilanı bulunamazsa 404 sayfası döner.
+            }
+
+            return View(job); // Bulunan iş ilanını view'a gönderir.
 
         }
         public IActionResult Create() // Yeni iş ilanı  oluşturma

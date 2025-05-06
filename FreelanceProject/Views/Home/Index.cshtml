@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<FreelanceProject.Data.Entities.JobEntity>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -21,155 +23,138 @@ else if (TempData["Failed"] != null)
         showAlertSuccessNoDirect('successAlert');
         showAlertError('errorAlert');
     </script>
+
 }
+
+<head>
+    
+    <style>
+        .hero-section {
+            min-height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 60px 0;
+           /*  min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            width: 90%; /* Genişlik ayarı */
+         /*    height: 90%; /* Yükseklik ayarı */
+           /*  border-radius: 50% / 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px; */ 
+        } 
+    </style>
+</head>
+
+
+
+
 <main class="pb-5">
     <!-- Hero Section -->
-    <section class="py-5 text-center">
-        <div class="container py-lg-5 py-md-4">
+    <section class="hero-section py-5 text-center">
+       @*  <div class="container py-lg-5 py-md-4"> *@
+        <div class="container-fluid py-lg-5 py-md-4"> <!-- container-fluid yaptık -->
             <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="col-lg-8 col-md-10 mx-auto position-relative">
                     <h1 class="display-4 fw-bold mb-4" style="background: linear-gradient(135deg, #4361ee, #3a0ca3); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                         Discover Premium Freelance Talent
                     </h1>
-                    <p class="lead text-muted mb-4">
+                    <p class="lead text-muted mb-5">
                         Connect with top professionals ready to bring your vision to life. Our curated network ensures quality and reliability for every project.
                     </p>
-                    <div class="d-flex gap-3 justify-content-center">
-                        <a href="#" class="btn btn-premium btn-lg px-4">
+
+                    <!-- Stacked Buttons Section -->
+                    <div class="d-flex flex-column gap-3 align-items-center" style="max-width: 500px; margin: 0 auto;">
+                        <!-- Start Project Button -->
+                        <a href="/Jobs/Create" class="btn btn-premium btn-lg w-100 py-3 position-relative">
                             <i class="fas fa-rocket me-2"></i> Start a Project
                         </a>
-                        <a href="#" class="btn btn-outline-secondary btn-lg px-4">
-                            <i class="fas fa-search me-2"></i> Browse Talent
-                        </a>
+
+                        <!-- Search Form -->
+                        <form method="get" asp-action="Index" class="w-100 position-relative">
+                            <div class="input-group input-group-lg">
+                                <input type="text" name="query" class="form-control" placeholder="Search jobs...">
+                                <button type="submit" class="btn btn-outline-secondary px-4">
+                                    <i class="fas fa-search me-2"></i> Browse Talent
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Background Design Elements -->
+        <div class="hero-shape-1"></div>
+        <div class="hero-shape-2"></div>
     </section>
+
 
     <!-- Featured Projects Section -->
     <div class="py-5 bg-white">
-        <div class="container">
+         <div class="container"> 
+        @* <div class="container-fluid"> *@ <!-- container-fluid yaptık -->
             <div class="text-center mb-5">
                 <h2 class="fw-bold">Featured Projects</h2>
                 <p class="text-muted">Explore work from our top-rated freelancers</p>
             </div>
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                <!-- Project Card 1 -->
-                <div class="col">
-                    <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
-                        <div class="position-relative overflow-hidden" style="height: 200px;">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Web Design Project">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-success bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
-                                    <i class="fas fa-star me-1"></i> Featured
-                                </span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0">E-commerce Website Redesign</h5>
-                                <span class="text-success fw-bold">$2,500</span>
-                            </div>
-                            <p class="card-text text-muted small mb-3">Modern redesign for fashion retailer with improved UX and mobile responsiveness.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
-                                    <span class="small">Sarah Johnson</span>
-                                </div>
-                                <span class="badge bg-primary bg-opacity-10 text-primary">Web Design</span>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-transparent border-0 pt-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2">
-                                    <span class="text-muted small"><i class="fas fa-clock me-1"></i> 2 days ago</span>
-                                </div>
-                                <button class="btn btn-sm btn-outline-primary">View Details</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
 
-                <!-- Project Card 2 -->
-                <div class="col">
-                    <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
-                        <div class="position-relative overflow-hidden" style="height: 200px;">
-                            <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Mobile App Project">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-info bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
-                                    <i class="fas fa-bolt me-1"></i> Urgent
-                                </span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0">Fitness Mobile App</h5>
-                                <span class="text-success fw-bold">$4,200</span>
-                            </div>
-                            <p class="card-text text-muted small mb-3">iOS/Android app with workout tracking, nutrition planning and progress analytics.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
-                                    <span class="small">Mike Rodriguez</span>
+                @foreach (var job in Model)
+                {
+                    <div class="col">
+                        <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
+                            <div class="position-relative overflow-hidden" style="height: 200px;">
+                                <img src="@job.ImageUrl"
+                                     class="card-img-top h-100 w-100 object-fit-cover" alt="@job.JobTitle">
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-success bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
+                                        <i class="fas fa-star me-1"></i> Featured
+                                    </span>
                                 </div>
-                                <span class="badge bg-info bg-opacity-10 text-info">Mobile App</span>
                             </div>
-                        </div>
-                        <div class="card-footer bg-transparent border-0 pt-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2">
-                                    <span class="text-muted small"><i class="fas fa-clock me-1"></i> 1 week ago</span>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title mb-0">@job.JobTitle</h5>
+                                    <span class="text-success fw-bold">$@job.JobBudget</span>
                                 </div>
-                                <button class="btn btn-sm btn-outline-primary">View Details</button>
+                                <p class="card-text text-muted small mb-3">@job.JobDescription</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <img src="@job.ImageUrl" class="rounded-circle me-2" width="32" height="32" alt="Client">
+                                        <span class="small">@job.JobDescription</span>
+                                    </div>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary">@job.Category</span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 pt-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex gap-2">
+                                       
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">View Details</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
 
-                <!-- Project Card 3 -->
-                <div class="col">
-                    <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
-                        <div class="position-relative overflow-hidden" style="height: 200px;">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-                                 class="card-img-top h-100 w-100 object-fit-cover" alt="Branding Project">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-warning bg-opacity-90 text-dark px-3 py-2" style="border-radius: 50px;">
-                                    <i class="fas fa-gem me-1"></i> Premium
-                                </span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0">Complete Brand Identity</h5>
-                                <span class="text-success fw-bold">$3,800</span>
-                            </div>
-                            <p class="card-text text-muted small mb-3">Full branding package including logo, style guide, and marketing materials.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-                                         class="rounded-circle me-2" width="32" height="32" alt="Client">
-                                    <span class="small">Emma Wilson</span>
-                                </div>
-                                <span class="badge bg-warning bg-opacity-10 text-warning">Branding</span>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-transparent border-0 pt-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2">
-                                    <span class="text-muted small"><i class="fas fa-clock me-1"></i> 3 days ago</span>
-                                </div>
-                                <button class="btn btn-sm btn-outline-primary">View Details</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
            @*  <div class="text-center mt-5">
                 <a href="#" class="btn btn-outline-primary px-4">
@@ -186,7 +171,8 @@ else if (TempData["Failed"] != null)
 
     <!-- Stats Section -->
     <div class="py-5" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
-        <div class="container">
+        @* <div class="container"> *@
+            <div class="container-fluid"> <!-- container-fluid yaptık -->
             <div class="row g-4 text-center">
                 <div class="col-md-3 col-6">
                     <div class="p-4 bg-white rounded-3 shadow-sm">

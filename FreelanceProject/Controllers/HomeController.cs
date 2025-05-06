@@ -1,35 +1,111 @@
-using System.Diagnostics;
+using FreelanceProject.Data.Entities;    // Entity dosyasýný da ekle
+using FreelanceProject.Extensions;
+using FreelanceProject.Models.ViewModels;  // ViewModel dosyasýný eklemeyi unutma
+using FreelanceProject.Services.Abstract;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
+using FreelanceProject.Data.Context;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;       // DbContext dosyasýný da ekle
+using Microsoft.AspNetCore.Hosting;
+using System;
+using System.IO;
 using FreelanceProject.Models;
+using System.Diagnostics;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FreelanceProject.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly FreelanceDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger , FreelanceDbContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string? query)
     {
-        return View();
+        
+
+        var jobsQuery = _context.Jobs.AsQueryable();
+
+        if (!string.IsNullOrEmpty(query))
+        {
+            jobsQuery = jobsQuery.Where(j =>
+                j.JobTitle.Contains(query) ||
+                j.JobDescription.Contains(query) ||
+                j.Category.Contains(query));
+        }
+
+        var lastThreeJobs = jobsQuery
+            .OrderByDescending(j => j.Id)
+            .Take(3)
+            .ToList();
+
+        return View(lastThreeJobs);
+
     }
 
     public IActionResult Privacy()
     {
         return View();
     }
-    public IActionResult Index2()
+    public IActionResult Index2(string? query, string? category)
     {
-        var selectedCategory = HttpContext.Request.Query["category"].ToString();
-        ViewBag.SelectedCategory = selectedCategory;
-        return View();
+        //// Veritabaný sorgusuna baþla
+        //var jobsQuery = _context.Jobs.AsQueryable();
 
+        //// Eðer query parametresi varsa, onu kullanarak filtrele
+        //if (!string.IsNullOrEmpty(query))
+        //{
+        //    jobsQuery = jobsQuery.Where(j =>
+        //        j.JobTitle.Contains(query) ||
+        //        j.JobDescription.Contains(query) ||
+        //        j.Category.Contains(query));
+        //}
+
+        //// Eðer kategori parametresi varsa, onu kullanarak filtrele
+        //if (!string.IsNullOrEmpty(category))
+        //{
+        //    jobsQuery = jobsQuery.Where(j => j.Category == category);
+        //}
+
+        //// Filtrelenmiþ iþ ilanlarýný liste olarak al
+        //var jobs = jobsQuery.ToList();
+
+        //// Filtrelenmiþ iþ ilanlarýný view'a gönder
+        //return View(jobs);
+
+        var jobsQuery = _context.Jobs.AsQueryable();
+
+        // Arama query parametresine göre filtreleme
+        if (!string.IsNullOrEmpty(query))
+        {
+            jobsQuery = jobsQuery.Where(j =>
+                j.JobTitle.Contains(query) ||
+                j.JobDescription.Contains(query) ||
+                j.Category.Contains(query));
+        }
+
+        // Kategoriye göre filtreleme
+        if (!string.IsNullOrEmpty(category))
+        {
+            jobsQuery = jobsQuery.Where(j => j.Category == category);
+        }
+
+        // Listeyi al ve view'a gönder
+        var jobs = jobsQuery.ToList();
+
+        return View(jobs);
     }
-   
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -18,7 +18,8 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
+    overflow-x: hidden;
 }
 
 .lacquer-regular {
@@ -288,3 +289,23 @@ footer {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Yeni eklenen stil */
+.full-width-container {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-right: 10px;
+        padding-left: 10px;
+    }

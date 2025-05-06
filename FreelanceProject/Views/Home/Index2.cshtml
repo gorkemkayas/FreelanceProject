@@ -1,33 +1,9 @@
-﻿@using Azure.Core
+﻿@model List<FreelanceProject.Data.Entities.JobEntity>
+@using Azure.Core
 @{
-    Layout = null;
+    Layout = "_Layout";
 
-    // Model creation - Normally this should come from Controller
-    var jobs = new List<dynamic>
-    {
-        new { Id = 1, Title = "Website Design", Category = "Web Design", Price = "$500", Bids = 12, DaysLeft = 5, Image = "https://via.placeholder.com/300x150/4776E6/80B0FF?text=Web+Design" },
-        new { Id = 2, Title = "Mobile App Development", Category = "Software", Price = "$1200", Bids = 8, DaysLeft = 7, Image = "https://via.placeholder.com/300x150/8E54E9/D8B5FF?text=Mobile+App" },
-        new { Id = 3, Title = "Logo Design", Category = "Graphic Design", Price = "$150", Bids = 20, DaysLeft = 3, Image = "https://via.placeholder.com/300x150/FF61D2/FFBDE6?text=Logo+Design" },
-        new { Id = 4, Title = "SEO Article Writing", Category = "Content Writing", Price = "$50", Bids = 15, DaysLeft = 2, Image = "https://via.placeholder.com/300x150/00C9FF/92FE9D?text=Article+Writing" },
-        new { Id = 5, Title = "E-commerce Website", Category = "Web Design", Price = "$800", Bids = 10, DaysLeft = 10, Image = "https://via.placeholder.com/300x150/4776E6/80B0FF?text=E-commerce" },
-        new { Id = 6, Title = "Database Optimization", Category = "Software", Price = "$600", Bids = 5, DaysLeft = 4, Image = "https://via.placeholder.com/300x150/8E54E9/D8B5FF?text=Database" },
-        new { Id = 7, Title = "Brochure Design", Category = "Graphic Design", Price = "$120", Bids = 18, DaysLeft = 6, Image = "https://via.placeholder.com/300x150/FF61D2/FFBDE6?text=Brochure" },
-        new { Id = 8, Title = "Product Descriptions", Category = "Content Writing", Price = "$30", Bids = 25, DaysLeft = 1, Image = "https://via.placeholder.com/300x150/00C9FF/92FE9D?text=Product+Descriptions" },
-        new { Id = 9, Title = "WordPress Setup", Category = "Web Design", Price = "$250", Bids = 14, DaysLeft = 3, Image = "https://via.placeholder.com/300x150/4776E6/80B0FF?text=WordPress" },
-        new { Id = 10, Title = "Python Scripting", Category = "Software", Price = "$300", Bids = 7, DaysLeft = 5, Image = "https://via.placeholder.com/300x150/8E54E9/D8B5FF?text=Python" },
-        new { Id = 11, Title = "Social Media Graphics", Category = "Graphic Design", Price = "$90", Bids = 22, DaysLeft = 4, Image = "https://via.placeholder.com/300x150/FF61D2/FFBDE6?text=Social+Media" },
-        new { Id = 12, Title = "Blog Articles", Category = "Content Writing", Price = "$20", Bids = 30, DaysLeft = 2, Image = "https://via.placeholder.com/300x150/00C9FF/92FE9D?text=Blog" },
-        new { Id = 13, Title = "Responsive Design", Category = "Web Design", Price = "$400", Bids = 9, DaysLeft = 7, Image = "https://via.placeholder.com/300x150/4776E6/80B0FF?text=Responsive" },
-        new { Id = 14, Title = "API Integration", Category = "Software", Price = "$550", Bids = 6, DaysLeft = 5, Image = "https://via.placeholder.com/300x150/8E54E9/D8B5FF?text=API" },
-        new { Id = 15, Title = "Business Card Design", Category = "Graphic Design", Price = "$80", Bids = 17, DaysLeft = 3, Image = "https://via.placeholder.com/300x150/FF61D2/FFBDE6?text=Business+Card" },
-        new { Id = 16, Title = "Translation Service", Category = "Content Writing", Price = "$15", Bids = 28, DaysLeft = 1, Image = "https://via.placeholder.com/300x150/00C9FF/92FE9D?text=Translation" },
-        new { Id = 17, Title = "PHP Development", Category = "Software", Price = "$450", Bids = 11, DaysLeft = 6, Image = "https://via.placeholder.com/300x150/8E54E9/D8B5FF?text=PHP" },
-        new { Id = 18, Title = "UI/UX Design", Category = "Web Design", Price = "$700", Bids = 8, DaysLeft = 8, Image = "https://via.placeholder.com/300x150/4776E6/80B0FF?text=UI/UX" },
-        new { Id = 19, Title = "Animation Design", Category = "Graphic Design", Price = "$350", Bids = 13, DaysLeft = 4, Image = "https://via.placeholder.com/300x150/FF61D2/FFBDE6?text=Animation" },
-        new { Id = 20, Title = "Technical Documentation", Category = "Content Writing", Price = "$75", Bids = 9, DaysLeft = 5, Image = "https://via.placeholder.com/300x150/00C9FF/92FE9D?text=Documentation" }
-    };
-
-    var categories = jobs.Select(j => j.Category).Distinct().ToList();
+    var categories = ViewBag.Categories as List<string>;
     var selectedCategory = ViewBag.SelectedCategory as string;
 }
 
@@ -38,70 +14,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freelance Job Platform</title>
     <style>
+
         :root {
-            --primary-gradient: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
-            --secondary-gradient: linear-gradient(135deg, #4361ee 0, #3a0ca3 100%);
+             --primary-gradient: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);   
+             --secondary-gradient: linear-gradient(135deg, #4361ee 0, #3a0ca3 100%); 
             --success-gradient: linear-gradient(135deg, #4361ee 0, #3a0ca3 100%);
-            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            --card-gradient: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+           --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); 
+             --card-gradient: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f5f7fa;
-            color: #333;
-            min-height: 100vh;
-        }
-
-        header {
-            background: var(--primary-gradient);
-            color: white;
-            text-align: center;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
+            background-color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
+            line-height: 1.6;
+            background-image: url('https://images.unsplash.com/photo-1585435465945-bef5a93f8849?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
-            overflow: hidden;
         }
 
-            header::before {
-                content: '';
+            body::before {
+                content: "";
                 position: absolute;
-                top: -50px;
-                right: -50px;
-                width: 200px;
-                height: 200px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.1);
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 76.8%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 0;
             }
 
-            header::after {
-                content: '';
-                position: absolute;
-                bottom: -80px;
-                left: -80px;
-                width: 300px;
-                height: 300px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.1);
-            }
 
-            header h1 {
-                margin: 0;
-                font-size: 2.8rem;
-                position: relative;
-                z-index: 1;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            header p {
-                margin: 0.8rem 0 0;
-                font-size: 1.3rem;
-                opacity: 0.9;
-                position: relative;
-                z-index: 1;
-            }
+        
 
         .search-container {
             text-align: center;
@@ -248,14 +194,7 @@
             border-top: 1px solid #eee;
         }
 
-        footer {
-            text-align: center;
-            padding: 2.5rem;
-            background: var(--dark-gradient);
-            color: white;
-            margin-top: 3rem;
-        }
-
+       
         /* Modal Styles */
         .modal {
             display: none;
@@ -525,214 +464,122 @@
     </style>
 </head>
 <body>
+
+
+
     <header>
-        <h1>Freelance Job Platform</h1>
-        <p>Find jobs that match your skills</p>
+        <h1>
+
+        </h1>
     </header>
-    
+    <!-- Search Form -->
+    @* <form method="get" asp-action="Index2" class="w-100 position-relative">
+        <div class="search-container">
+            <input type="text"  placeholder="Search for freelance jobs..." class="form-control" placeholder="Search jobs...   />
+            <button class="btn" onclick="filterJobs()">Search</button>
+        </div>
+    </form> *@
 
-    <div class="job-categories">
-        <a href="?category=all" class="category-btn @(string.IsNullOrEmpty(selectedCategory) || selectedCategory == "all" ? "active" : "")">All</a>
-        @foreach (var category in categories)
-        {
-            <a href="?category=@category" class="category-btn @(selectedCategory == category ? "active" : "")">@category</a>
-        }
-    </div>
-    
-    <div class="jobs-container" id="jobsContainer">
-        @{
-            var filteredJobs = jobs;
-            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "all")
-            {
-                filteredJobs = jobs.Where(j => j.Category == selectedCategory).ToList();
-            }
+    <!-- Search Form -->
+    <form method="get" asp-action="Index2" class="w-100 position-relative">
+        <div class="search-container">
+            <input type="text" name="query" placeholder="Search for freelance jobs..." class="form-control" />
+            <button type="submit" class="btn">Search</button>
+        </div>
+    </form>
 
-            foreach (var job in filteredJobs)
+
+        <div class="jobs-container">
+            @* @foreach (var job in Model)
             {
-                <div class="job-card" onclick="showJobDetails(@job.Id)" data-category="@job.Category">
-                    <img src="@job.Image" alt="@job.Title" class="job-image">
+                <div class="job-card" onclick="showJobDetails('@job.JobTitle')">
+                    <img class="job-image" src="@job.ImageUrl" alt="Job image">
                     <div class="job-info">
-                        <h3 class="job-title">@job.Title</h3>
-                        <div class="job-price">@job.Price</div>
+                        <h3 class="job-title">@job.JobTitle</h3>
+                        <p class="job-price">@job.JobBudget</p>
                         <div class="job-meta">
-                            <span>@job.Bids bids</span>
-                            <span>@job.DaysLeft days left</span>
+                            <span>@job.StartDate days left</span>
+                            <span>@job.Category</span>
                         </div>
                     </div>
                 </div>
-            }
-        }
-    </div>
-
-   
-    
-    <!-- Job Details Modal -->
-    <div id="jobModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                <h2 id="modalTitle"></h2>
-                <div id="modalPrice"></div>
+            } *@
+        @foreach (var job in Model)
+        {
+            <div class="job-card" onclick="location.href='@Url.Action("Details", "Jobs", new { id = job.Id })'">
+                <img class="job-image" src="@job.ImageUrl" alt="Job image">
+                <div class="job-info">
+                    <h3 class="job-title">@job.JobTitle</h3>
+                    <p class="job-price">$@job.JobBudget</p>
+                    <div class="job-meta">
+                        <span>@(job.StartDate.ToShortDateString())</span>
+                        <span>@job.Category</span>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <img id="modalImage" class="modal-image">
-                <div class="modal-meta">
-                    <span id="modalCategory"></span>
-                    <span id="modalBids"></span>
-                    <span id="modalDays"></span>
+        }
+        </div>
+
+        <!-- Job Details Modal -->
+        <div id="jobModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle"></h2>
+                    <p class="modal-price" id="modalPrice"></p>
                 </div>
-                <div class="modal-description">
-                    <h3>Job Description</h3>
-                    <p id="modalDescription"></p>
+                <div class="modal-body">
+                    <img id="modalImage" class="modal-image" src="" alt="Job Image">
+                    <div class="modal-meta">
+                        <span id="modalCategory"></span>
+                        <span id="modalBids"></span>
+                        <span id="modalDays"></span>
+                    </div>
+                    <div class="modal-description">
+                        <h3>Description</h3>
+                        <p id="modalDescription"></p>
+                    </div>
+                    <div class="modal-requirements">
+                        <h3>Requirements</h3>
+                        <ul id="modalRequirements"></ul>
+                    </div>
+                    <button class="apply-btn">Apply</button>
                 </div>
-                <div class="modal-requirements">
-                    <h3>Requirements</h3>
-                    <ul id="modalRequirements"></ul>
-                </div>
-                <button class="apply-btn">Place Bid</button>
             </div>
         </div>
-    </div>
-    
-    <footer>
-        <p>© @DateTime.Now.Year Freelance Job Platform. All rights reserved.</p>
-    </footer>
-    
-    <script>
-        // Modal operations
-        const modal = document.getElementById("jobModal");
-        const span = document.getElementsByClassName("close")[0];
-        
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-        
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-        
-        // Show job details
-        function showJobDetails(jobId) {
-            // Normally we should fetch details from server via AJAX
-            // For now we'll use sample data
-            const jobData = {
-                1: {
-                    title: "Website Design",
-                    category: "Web Design",
-                    price: "$500",
-                    bids: 12,
-                    daysLeft: 5,
-                    image: "https://via.placeholder.com/800x400/4776E6/80B0FF?text=Web+Design+Details",
-                    description: "Modern and responsive website design for a business. The site should consist of at least 5 pages and be mobile-friendly. The design should use the client's brand colors. The project should be completed within 2 weeks.",
-                    requirements: [
-                        "HTML/CSS knowledge",
-                        "Basic JavaScript",
-                        "Responsive design experience",
-                        "Understanding of UI/UX principles",
-                        "Ability to use Photoshop or Figma",
-                        "Git version control knowledge"
-                    ]
-                },
-                2: {
-                    title: "Mobile App Development",
-                    category: "Software",
-                    price: "$1200",
-                    bids: 8,
-                    daysLeft: 7,
-                    image: "https://via.placeholder.com/800x400/8E54E9/D8B5FF?text=Mobile+App+Details",
-                    description: "E-commerce app development for iOS and Android platforms. The app should include product listing, shopping cart, payment integration and user management features. Firebase will be used as backend.",
-                    requirements: [
-                        "React Native or Flutter experience",
-                        "Firebase integration knowledge",
-                        "Redux or similar state management tools",
-                        "API integration experience",
-                        "Git version control system"
-                    ]
-                },
-                // Other jobs can be added similarly
-                // ...
-            };
-            
-            // If jobId not found, show a default job
-            const job = jobData[jobId] || {
-                title: "Sample Job",
-                category: "Category",
-                price: "$100",
-                bids: 10,
-                daysLeft: 3,
-                image: "https://via.placeholder.com/800x400/00C9FF/92FE9D?text=Job+Details",
-                description: "Detailed description of this job will appear here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl. Proin eget tortor risus. Cras ultricies ligula sed magna dictum porta.",
-                requirements: [
-                    "Basic knowledge",
-                    "Experience",
-                    "Skills",
-                    "Teamwork",
-                    "Communication skills"
-                ]
-            };
-            
-            // Fill modal content
-            document.getElementById("modalTitle").textContent = job.title;
-            document.getElementById("modalImage").src = job.image;
-            document.getElementById("modalImage").alt = job.title;
-            document.getElementById("modalCategory").textContent = job.category;
-            document.getElementById("modalPrice").textContent = job.price;
-            document.getElementById("modalBids").textContent = `${job.bids} bids`;
-            document.getElementById("modalDays").textContent = `${job.daysLeft} days left`;
-            document.getElementById("modalDescription").textContent = job.description;
-            
-            const requirementsList = document.getElementById("modalRequirements");
-            requirementsList.innerHTML = "";
-            job.requirements.forEach(req => {
-                const li = document.createElement("li");
-                li.textContent = req;
-                requirementsList.appendChild(li);
-            });
-            
-            // Show modal
-            modal.style.display = "block";
-        }
-        
-        // Job search function
-        function searchJobs() {
-            const searchText = document.getElementById("searchInput").value.toLowerCase();
-            const jobCards = document.querySelectorAll(".job-card");
-            
-            jobCards.forEach(card => {
-                const title = card.querySelector(".job-title").textContent.toLowerCase();
-                if (title.includes(searchText)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        }
-        
-        // Search on Enter key
-        document.getElementById("searchInput").addEventListener("keyup", function(event) {
-            if (event.key === "Enter") {
-                searchJobs();
-            }
-        });
 
-        // Update query string parameters
-        function updateQueryStringParameter(uri, key, value) {
-            const re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-            const separator = uri.indexOf('?') !== -1 ? "&" : "?";
-            if (uri.match(re)) {
-                return uri.replace(re, '$1' + key + "=" + value + '$2');
-            }
-            return uri + separator + key + "=" + value;
-        }
+        
 
-        // Change page size function
-        function changePageSize(size) {
-            const currentUrl = window.location.href;
-            const newUrl = updateQueryStringParameter(currentUrl, 'pageSize', size);
-            window.location.href = newUrl;
-        }
-    </script>
-</body>
+        <script>
+            // Function to display job details in the modal
+            function showJobDetails(jobTitle) {
+                const job = @Html.Raw(Json.Serialize(Model));
+                const selectedJob = job.find(j => j.JobTitle === jobTitle);
+
+                document.getElementById("modalTitle").innerText = selectedJob.JobTitle;
+                document.getElementById("modalPrice").innerText = selectedJob.Price;
+                document.getElementById("modalCategory").innerText = selectedJob.Category;
+                document.getElementById("modalBids").innerText = selectedJob.Bids + " Bids";
+                document.getElementById("modalDays").innerText = selectedJob.DaysLeft + " days left";
+                document.getElementById("modalDescription").innerText = selectedJob.Description;
+                document.getElementById("modalImage").src = selectedJob.ImageUrl;
+
+                let requirementsList = document.getElementById("modalRequirements");
+                requirementsList.innerHTML = '';
+                selectedJob.Requirements.forEach(requirement => {
+                    let li = document.createElement('li');
+                    li.textContent = requirement;
+                    requirementsList.appendChild(li);
+                });
+
+                document.getElementById("jobModal").style.display = "block";
+            }
+
+            // Function to close the modal
+            function closeModal() {
+                document.getElementById("jobModal").style.display = "none";
+            }
+        </script>
+
+    </body>
 </html>
