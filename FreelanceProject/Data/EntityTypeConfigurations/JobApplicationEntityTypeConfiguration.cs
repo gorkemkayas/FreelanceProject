@@ -25,7 +25,7 @@ namespace FreelanceProject.Data.EntityTypeConfigurations
                 .HasDefaultValue(JobApplicationStatus.Pending); // Varsayılan değer
 
             builder.HasOne(ja => ja.Job)
-                .WithMany(j => j.Applications)
+                .WithMany(j => j.JobApplications)
                 .HasForeignKey(ja => ja.JobId)
                 .OnDelete(DeleteBehavior.Restrict); // İlan silinirse başvuruları silme (restrict)
 

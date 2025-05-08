@@ -13,6 +13,7 @@ namespace FreelanceProject.Models.ViewModels
         public string? Title { get; set; }
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
+        public string? CVUrl { get; set; }
         //public IFormFile? WorkingAtLogo { get; set; }
         public string? Country { get; set; }
 

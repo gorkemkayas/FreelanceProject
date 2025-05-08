@@ -23,6 +23,7 @@ namespace FreelanceProject.Data.Context
 
         public DbSet<AuditLogEntity> AuditLogs { get; set; }
         public DbSet<JobEntity> Jobs { get; set; }
+        public DbSet<JobApplicationEntity> JobApplications { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

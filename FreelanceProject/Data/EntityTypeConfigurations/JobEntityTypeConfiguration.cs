@@ -38,7 +38,7 @@ namespace FreelanceProject.Data.EntityTypeConfigurations
                 .HasForeignKey(j => j.OwnerId) // OwnerId foreign key olarak
                 .OnDelete(DeleteBehavior.Restrict); // Kullanıcı silindiğinde ilan silinmesin
 
-            builder.HasMany(j => j.Applications) // Bir iş birden fazla başvuru alabilir
+            builder.HasMany(j => j.JobApplications) // Bir iş birden fazla başvuru alabilir
                 .WithOne(a => a.Job) // Her başvuru bir işe ait
                 .HasForeignKey(a => a.JobId) // JobId foreign key olarak
                 .OnDelete(DeleteBehavior.Restrict); // Başvuru silindiğinde iş silinmesin

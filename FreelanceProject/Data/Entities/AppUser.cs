@@ -10,11 +10,13 @@ namespace FreelanceProject.Data.Entities
         public string Surname { get; set; } = null!;
         public string FullName { get { return Name + " " + Surname; } }
         public DateTime BirthDate { get; set; }
+        public string? CVUrl { get; set; } 
 
         public string? Title { get; set; }
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
         public string? WorkingAtLogo { get; set; }
+        
 
         //public string? LivesIn { get; set; }
 
