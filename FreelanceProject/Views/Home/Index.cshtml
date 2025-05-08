@@ -39,23 +39,6 @@ else if (TempData["Failed"] != null)
             align-items: center;
             color: white;
             padding: 60px 0;
-           /*  min-height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 0;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            width: 90%; /* Genişlik ayarı */
-         /*    height: 90%; /* Yükseklik ayarı */
-           /*  border-radius: 50% / 5%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px; */ 
         } 
     </style>
 </head>
@@ -87,8 +70,8 @@ else if (TempData["Failed"] != null)
                         <!-- Search Form -->
                         <form method="get" asp-action="Index" class="w-100 position-relative">
                             <div class="input-group input-group-lg">
-                                <input type="text" name="query" class="form-control" placeholder="Search jobs...">
-                                <button type="submit" class="btn btn-outline-secondary px-4">
+                                <input type="text" name="query" class="form-control rounded-pill" placeholder="Search jobs...">
+                                <button type="submit" class="btn btn-outline-secondary ms-2 rounded-pill px-2">
                                     <i class="fas fa-search me-2"></i> Browse Talent
                                 </button>
                             </div>
@@ -114,58 +97,62 @@ else if (TempData["Failed"] != null)
             </div>
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-               
-
-                @foreach (var job in Model)
+               @foreach (var job in Model)
                 {
                     <div class="col">
-                        <div class="card border-0 shadow-sm h-100 overflow-hidden" style="border-radius: var(--radius-lg);">
+                        <div class="card border-0 shadow-sm h-100 overflow-hidden position-relative" style="border-radius: var(--radius-lg);">
+
+                            <!-- Görsel -->
                             <div class="position-relative overflow-hidden" style="height: 200px;">
-                                <img src="@job.ImageUrl"
-                                     class="card-img-top h-100 w-100 object-fit-cover" alt="@job.JobTitle">
-                                <div class="position-absolute top-0 end-0 m-3">
-                                    <span class="badge bg-success bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
-                                        <i class="fas fa-star me-1"></i> Featured
-                                    </span>
-                                </div>
+                                <img src="@job.JobImage"
+                                     class="card-img-top h-100 w-100 object-fit-cover" alt="@job.Title">
+                                @* <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-success bg-opacity-90 text-white px-3 py-2" style="border-radius: 50px;">
+                            <i class="fas fa-star me-1"></i> Featured
+                            </span>
+                            </div> *@
                             </div>
-                            <div class="card-body">
+
+                            <!-- İçerik -->
+                            <div class="card-body pb-2">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title mb-0">@job.JobTitle</h5>
-                                    <span class="text-success fw-bold">$@job.JobBudget</span>
+                                    <h5 class="card-title mb-0">@job.Title</h5>
+                                    <span class="text-success fw-bold">$@job.Budget</span>
                                 </div>
-                                <p class="card-text text-muted small mb-3">@job.JobDescription</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <img src="@job.ImageUrl" class="rounded-circle me-2" width="32" height="32" alt="Client">
-                                        <span class="small">@job.JobDescription</span>
-                                    </div>
-                                    <span class="badge bg-primary bg-opacity-10 text-primary">@job.Category</span>
-                                </div>
+                                <p class="card-text text-muted small mb-3">@job.Description</p>
+                                <span class="badge bg-primary bg-opacity-10 text-primary">@job.Category</span>
                             </div>
-                            <div class="card-footer bg-transparent border-0 pt-0">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="d-flex gap-2">
-                                       
-                                    </div>
-                                    <button class="btn btn-sm btn-outline-primary">View Details</button>
-                                </div>
+
+                            <!-- Sol alt köşede profil resmi -->
+                            <div class="position-relative bottom-0 start-0 m-3 d-flex align-items-center">
+                                <img src="@(string.IsNullOrEmpty(job.Owner.ProfilePicture)
+     ? "/img/defaultProfilePhoto.jpg"
+     : $"/img/userPhotos/{job.Owner.UserName}/{job.Owner.ProfilePicture}")"
+                                     class="rounded-circle border"
+                                     width="40" height="40"
+                                     alt="Profile Picture" />
+                                <span class="ms-2 small text-muted">@job.Owner.Name @job.Owner.Surname</span>
                             </div>
+
+                            <!-- Sağ alt köşede detay butonu -->
+                            <div class="position-absolute bottom-0 end-0 m-3">
+                                <a asp-action="Details" asp-controller="Jobs" asp-route-id="@job.Id" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 }
+           
+        </div>
+            <div class="row d-flex  mb-4 justify-content-end">
 
-
-           @*  <div class="text-center mt-5">
-                <a href="#" class="btn btn-outline-primary px-4">
-                    View All Projects <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div> *@
-            <div class="text-center mt-5">
+             <div class="d-flex mt-5 justify-content-end">
                 <a href="/Home/Index2" class="btn btn-outline-primary px-4">
                     View All Projects <i class="fas fa-arrow-right ms-2"></i>
                 </a>
-            </div>
+            </div> 
         </div>
     </div>
 

@@ -28,7 +28,7 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             color: #1e293b;
             line-height: 1.6;
-            background-image: url('https://images.unsplash.com/photo-1585435465945-bef5a93f8849?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1585435465945-bef5a93f8849?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -41,7 +41,7 @@
                 top: 0;
                 left: 0;
                 width: 100%;
-                height: 76.8%;
+                /* height: 76.8%; */
                 background-color: rgba(0, 0, 0, 0.5);
                 z-index: 0;
             }
@@ -428,7 +428,7 @@
         
             .search-container {
                 display: flex;
-                flex-direction: column;
+                flex-direction:row;
                 align-items: center;
                 gap: 1rem;
             }
@@ -464,25 +464,9 @@
     </style>
 </head>
 <body>
-
-
-
-    <header>
-        <h1>
-
-        </h1>
-    </header>
-    <!-- Search Form -->
-    @* <form method="get" asp-action="Index2" class="w-100 position-relative">
-        <div class="search-container">
-            <input type="text"  placeholder="Search for freelance jobs..." class="form-control" placeholder="Search jobs...   />
-            <button class="btn" onclick="filterJobs()">Search</button>
-        </div>
-    </form> *@
-
     <!-- Search Form -->
     <form method="get" asp-action="Index2" class="w-100 position-relative">
-        <div class="search-container">
+        <div class="search-container d-flex mt-4 justify-content-center">
             <input type="text" name="query" placeholder="Search for freelance jobs..." class="form-control" />
             <button type="submit" class="btn">Search</button>
         </div>
@@ -507,13 +491,25 @@
         @foreach (var job in Model)
         {
             <div class="job-card" onclick="location.href='@Url.Action("Details", "Jobs", new { id = job.Id })'">
-                <img class="job-image" src="@job.ImageUrl" alt="Job image">
+                <img class="job-image" src="@job.JobImage" alt="Job image">
                 <div class="job-info">
-                    <h3 class="job-title">@job.JobTitle</h3>
-                    <p class="job-price">$@job.JobBudget</p>
+                    <h3 class="job-title">@job.Title</h3>
+                    <p class="job-price">$@job.Budget</p>
                     <div class="job-meta">
-                        <span>@(job.StartDate.ToShortDateString())</span>
-                        <span>@job.Category</span>
+                        @* <span>@(job.StartDate.ToShortDateString())</span> *@
+                        <div class="row d-flex justify-content-between "> 
+                            <div class="col-md-6 d-flex flex-column ">
+                                <span>
+                                    @job.StartDate?.ToString("dd.MM.yyyy")
+                                </span>
+                                <span>@(job.Deadline?.ToString("dd.MM.yyyy"))</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span>@job.Category</span>
+                            </div>
+
+                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@ namespace FreelanceProject.Data.EntityTypeConfigurations
                 .IsRequired()
                 .HasDefaultValue(false);
 
-            builder.HasMany(e => e.Posts)
+            builder.HasMany(e => e.Jobs)
                 .WithOne(e => e.Category)
                 .HasForeignKey(e => e.CategoryId);
 

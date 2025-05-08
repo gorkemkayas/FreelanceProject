@@ -31,15 +31,15 @@ public class HomeController : Controller
 
     public IActionResult Index(string? query)
     {
-        
 
-        var jobsQuery = _context.Jobs.AsQueryable();
+
+        var jobsQuery = _context.Jobs.Include(ý => ý.Owner).AsQueryable();
 
         if (!string.IsNullOrEmpty(query))
         {
             jobsQuery = jobsQuery.Where(j =>
-                j.JobTitle.Contains(query) ||
-                j.JobDescription.Contains(query) ||
+                j.Title.Contains(query) ||
+                j.Description.Contains(query) ||
                 j.Category.Contains(query));
         }
 
@@ -88,8 +88,8 @@ public class HomeController : Controller
         if (!string.IsNullOrEmpty(query))
         {
             jobsQuery = jobsQuery.Where(j =>
-                j.JobTitle.Contains(query) ||
-                j.JobDescription.Contains(query) ||
+                j.Title.Contains(query) ||
+                j.Description.Contains(query) ||
                 j.Category.Contains(query));
         }
 

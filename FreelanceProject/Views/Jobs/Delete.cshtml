@@ -1,245 +1,4 @@
-﻿@* 
-@{
-    ViewData["Title"] = "İş İlanını Sil";
-}
-
-<style>
-    :root {
-        --primary-color: #4361ee;
-        --primary-light: #e6e9f9;
-        --danger-color: #f94144;
-        --danger-light: #fee2e2;
-    }
-
-    .delete-card {
-        border-radius: 12px;
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .delete-header {
-        background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
-        padding: 1.5rem;
-        text-align: center;
-        color: white;
-    }
-
-        .delete-header h3 {
-            font-weight: 700;
-            margin: 0;
-        }
-
-    .delete-body {
-        padding: 2rem;
-        background-color: #fff;
-    }
-
-    .job-details {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        border-left: 4px solid var(--primary-color);
-    }
-
-    .job-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #2b2d42;
-        margin-bottom: 0.5rem;
-    }
-
-    .job-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .meta-item {
-        display: flex;
-        align-items: center;
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-
-        .meta-item i {
-            margin-right: 0.5rem;
-            color: var(--primary-color);
-        }
-
-    .warning-alert {
-        background-color: var(--danger-light);
-        border-left: 4px solid var(--danger-color);
-        padding: 1rem;
-        margin-bottom: 2rem;
-        border-radius: 4px;
-    }
-
-    .btn-delete {
-        background-color: var(--danger-color);
-        color: white;
-        border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 5px rgba(249, 65, 68, 0.2);
-    }
-
-        .btn-delete:hover {
-            background-color: #e03537;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(249, 65, 68, 0.3);
-        }
-
-    .btn-cancel {
-        background-color: white;
-        color: var(--primary-color);
-        border: 1px solid var(--primary-color);
-        padding: 0.75rem 2rem;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        margin-right: 1rem;
-    }
-
-        .btn-cancel:hover {
-            background-color: #f8f9fa;
-        }
-
-    .modal-header {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .modal-footer {
-        border-top: none;
-    }
-</style>
-
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card delete-card">
-                <div class="delete-header">
-                    <h3><i class="fas fa-exclamation-circle me-2"></i>İŞ İLANINI SİL</h3>
-                </div>
-                <div class="delete-body">
-                    <!-- İş İlanı Detayları -->
-                    <div class="job-details">
-                        <h4 class="job-title">Frontend Developer (React) - E-ticaret Projesi</h4>
-                        <div class="job-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Yayın Tarihi: 15 Haziran 2023</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <span>Bütçe: ₺8,000</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-user-tie"></i>
-                                <span>Başvuru: 24 adet</span>
-                            </div>
-                        </div>
-                        <p class="mb-0">E-ticaret sitemizin frontend geliştirmesi için React uzmanı arıyoruz. Redux ve TypeScript tecrübesi olanlar tercih sebebidir.</p>
-                    </div>
-
-                    <!-- Uyarı Mesajı -->
-                    <div class="warning-alert">
-                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Dikkat! Bu işlem geri alınamaz</h5>
-                        <p class="mb-0">Bu ilanı sildiğinizde, tüm başvuru bilgileri de kalıcı olarak silinecektir. Lütfen bu işlemi onaylamadan önce iki kez düşünün.</p>
-                    </div>
-
-                    <!-- Silme Sebebi -->
-                    <div class="mb-4">
-                        <label for="deleteReason" class="form-label">Silme Nedeni (Opsiyonel)</label>
-                        <select class="form-select" id="deleteReason" name="deleteReason">
-                            <option value="" selected>Sebep seçiniz</option>
-                            <option value="position_filled">Pozisyon dolduruldu</option>
-                            <option value="project_cancelled">Proje iptal edildi</option>
-                            <option value="duplicate">Yinelenen ilan</option>
-                            <option value="other">Diğer</option>
-                        </select>
-                    </div>
-
-                    <!-- Onay Butonları -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="/ilanlarim" class="btn btn-cancel">
-                            <i class="fas fa-arrow-left me-1"></i> Vazgeç
-                        </a>
-                        <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                            <i class="fas fa-trash-alt me-1"></i> İlanı Sil
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Onay Modalı -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">
-                    <i class="fas fa-shield-alt text-primary me-2"></i>Son Onay
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning mb-4">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>"Frontend Developer (React) - E-ticaret Projesi"</strong> başlıklı ilanı ve <strong>24 başvuruyu</strong> silmek üzeresiniz.
-                </div>
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="confirmDelete" required>
-                    <label class="form-check-label" for="confirmDelete">
-                        Bu işlemin geri alınamayacağını ve tüm verilerin kalıcı olarak silineceğini anlıyorum
-                    </label>
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
-                    <i class="fas fa-arrow-left me-1"></i> İptal
-                </button>
-                <button type="button" class="btn btn-danger" id="finalDeleteBtn" disabled>
-                    <i class="fas fa-trash-alt me-1"></i> Kalıcı Olarak Sil
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Onay checkbox kontrolü
-    document.getElementById('confirmDelete').addEventListener('change', function () {
-        document.getElementById('finalDeleteBtn').disabled = !this.checked;
-    });
-
-    // Final delete butonu işlevi
-    document.getElementById('finalDeleteBtn').addEventListener('click', function () {
-        // Burada silme işlemi için AJAX çağrısı yapılabilir
-        alert('İlan başarıyla silindi!');
-        window.location.href = '/ilanlarim';
-    });
-</script>
-
-
- *@
-
-
-
-
-
-
-              
-@model FreelanceProject.Data.Entities.JobEntity
+﻿@model FreelanceProject.Data.Entities.JobEntity
 @{
     ViewData["Title"] = "İş İlanını Sil";
 }
@@ -461,10 +220,10 @@
                     <h3><i class="fas fa-exclamation-triangle me-2"></i>İLAN SİLME ONAYI</h3>
                 </div>
                 <div class="delete-body">
-                    @* <div class="job-media">
-                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    <div class="job-media">
+                        @if (!string.IsNullOrEmpty(Model.JobImage))
                         {
-                            <img src="@Model.ImageUrl" alt="@Model.JobTitle" class="img-fluid" />
+                            <img src="@Model.JobImage" alt="@Model.Title" class="img-fluid" />
                         }
                         else
                         {
@@ -474,7 +233,7 @@
                         }
                     </div>
 
-                    <h3 class="job-title">"@Model.JobTitle"</h3> *@
+                    <h3 class="job-title">"@Model.Title"</h3>
 
                     <div class="warning-message">
                         <div class="warning-icon">
@@ -485,7 +244,7 @@
                         </div>
                     </div>
 
-                    @* <div class="job-details">
+                    <div class="job-details">
                         <div class="detail-grid">
                             <div class="detail-card">
                                 <div class="detail-label">Kategori</div>
@@ -493,18 +252,18 @@
                             </div>
                             <div class="detail-card">
                                 <div class="detail-label">Başlangıç Tarihi</div>
-                                <div class="detail-value">@Model.StartDate.ToString("dd MMMM yyyy")</div>
+                                <div class="detail-value">@Model.StartDate?.ToString("dd MMMM yyyy")</div>
                             </div>
                             <div class="detail-card">
                                 <div class="detail-label">Bütçe</div>
-                                <div class="detail-value">₺@Model.JobBudget.ToString("N0")</div>
+                                <div class="detail-value">₺@Model.Budget?.ToString("N0")</div>
                             </div>
                             <div class="detail-card">
-                                <div class="detail-label">Süre</div>
-                                <div class="detail-value">@Model.JobDuration @Model.DurationUnit</div>
+                                <div class="detail-label">SON TARİH:</div>
+                                <div class="detail-value">@Model.Deadline?.ToString("dd MMMM yyyy") </div>
                             </div>
                         </div>
-                    </div> *@
+                    </div>
 
                     <form asp-action="Delete" method="post">
                         <input type="hidden" asp-for="Id" />

@@ -1,4 +1,5 @@
-﻿@model FreelanceProject.Data.Entities.JobEntity
+﻿@using FreelanceProject.Data.Entities
+@model FreelanceProject.Data.Entities.JobEntity
 
 @{
     ViewData["Title"] = "Job Details";
@@ -12,7 +13,7 @@
                 <div class="card shadow-sm mb-4">
                     <!-- Job Image -->
                     <div class="position-relative overflow-hidden" style="height: 400px;">
-                        <img src="@Model.ImageUrl"
+                        <img src="@Model.JobImage"
                              alt="Project Image"
                              class="w-100 h-100 object-fit-cover" />
                     </div>
@@ -20,34 +21,34 @@
                     <div class="card-body">
                         <!-- Title and Category -->
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h3 class="fw-bold mb-0">@Model.JobTitle</h3>
+                            <h3 class="fw-bold mb-0">@Model.Title</h3>
                             <span class="badge bg-primary text-light">@Model.Category</span>
                         </div>
 
                         <!-- Description -->
-                        <p class="text-muted mb-3">@Model.JobDescription</p>
+                        <p class="text-muted mb-3">@Model.Description</p>
 
                         <!-- Project Info -->
                         <div class="row text-muted mb-4">
                             <div class="col-md-4">
-                                <strong>Budget:</strong> $@Model.JobBudget
+                                <strong>Budget:</strong> $@Model.Budget
                             </div>
                             <div class="col-md-4">
-                                <strong>Start Date:</strong> @Model.StartDate.ToShortDateString()
+                                <strong>Start Date:</strong> @Model.StartDate?.ToString("dd MMMM yyyy")
                             </div>
                             <div class="col-md-4">
-                                <strong>Duration:</strong> @Model.DurationUnit
+                                <strong>Deadline:</strong> @Model.Deadline?.ToString("dd MMMM yyyy")
                             </div>
                         </div>
 
-                        <!-- Skills (example) -->
+                        @* <!-- Skills (example) -->
                         <h5 class="fw-bold">Skills Required</h5>
                         <ul class="list-inline text-muted mb-4">
-                            <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> HTML/CSS</li>
-                            <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> JavaScript</li>
-                            <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> .NET</li>
-                            <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> React</li>
-                        </ul>
+                        <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> HTML/CSS</li>
+                        <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> JavaScript</li>
+                        <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> .NET</li>
+                        <li class="list-inline-item"><i class="fas fa-check text-success me-1"></i> React</li>
+                        </ul> *@
 
                         <!-- Action Buttons -->
                         <div class="d-flex justify-content-start gap-3">
@@ -65,32 +66,55 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <div class="sticky-top" style="top: 30px;">
+                    <!-- Overview Card -->
                     <div class="card shadow-sm mb-4">
                         <div class="card-body">
                             <h5 class="fw-bold mb-3">Project Overview</h5>
                             <ul class="list-unstyled text-muted mb-0">
-                                <li><i class="fas fa-calendar-alt me-2"></i><strong>Start:</strong> @Model.StartDate.ToShortDateString()</li>
-                                <li><i class="fas fa-clock me-2"></i><strong>Duration:</strong> @Model.DurationUnit</li>
-                                <li><i class="fas fa-money-bill-wave me-2"></i><strong>Budget:</strong> $@Model.JobBudget</li>
+                                <li><i class="fas fa-calendar-alt me-2"></i><strong>Start:</strong>@Model.StartDate?.ToString("dd MMMM yyyy")</li>
+                                <li><i class="fas fa-clock me-2"></i><strong>Deadline:</strong> @Model.Deadline?.ToString("dd MMMM yyyy")</li>
+                                <li><i class="fas fa-money-bill-wave me-2"></i><strong>Budget:</strong> $@Model.Budget</li>
                                 <li><i class="fas fa-tags me-2"></i><strong>Category:</strong> @Model.Category</li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Similar Projects -->
-                    <div class="card shadow-sm">
+                    <!-- Similar Jobs -->
+                    <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <h5 class="fw-bold mb-3">Similar Projects</h5>
+                            <h5 class="fw-bold mb-3">Similar Jobs</h5>
                             <ul class="list-unstyled">
-                                <li><a href="#" class="text-decoration-none">Mobile App UI/UX Design</a></li>
-                                <li><a href="#" class="text-decoration-none">React Admin Dashboard</a></li>
-                                <li><a href="#" class="text-decoration-none">E-commerce Site Revamp</a></li>
+                                @foreach (var similar in ViewBag.SimilarJobs as List<FreelanceProject.Data.Entities.JobEntity>)
+                                {
+                                    <li class="mb-2">
+                                        <a asp-action="Details" asp-controller="Jobs" asp-route-id="@similar.Id" class="text-decoration-none text-primary">
+                                            <i class="fas fa-briefcase me-2"></i> @similar.Title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Latest Jobs -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3">Latest Jobs</h5>
+                            <ul class="list-unstyled">
+                                @foreach (var recent in ViewBag.LastThreeJobs as List<FreelanceProject.Data.Entities.JobEntity>)
+                                {
+                                    <li class="mb-2">
+                                        <a asp-action="Details" asp-controller="Jobs" asp-route-id="@recent.Id" class="text-decoration-none text-secondary">
+                                            <i class="fas fa-clock me-2"></i> @recent.Title
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </div>
 
                     <!-- Back Button -->
-                    <a href="@Url.Action("Index2", "Jobs")" class="btn btn-secondary mt-3 w-100">
+                    <a href="@Url.Action("Index2", "Home")" class="btn btn-secondary mt-3 w-100">
                         ← Back to Listings
                     </a>
                 </div>

@@ -32,7 +32,7 @@ namespace FreelanceProject.Data.EntityTypeConfigurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Category)
-                .WithMany(c => c.Posts)
+                .WithMany(c => c.Jobs)
                 .HasForeignKey(e => e.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 

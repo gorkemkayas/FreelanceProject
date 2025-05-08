@@ -15,6 +15,8 @@ using System.IO;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Security.Claims;
 using AutoMapper;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FreelanceProject.Controllers
 {
@@ -41,6 +43,14 @@ namespace FreelanceProject.Controllers
         }
         public IActionResult Details(Guid id) // iş detaylarını görüntüle.
         {
+            //var job = _context.Jobs.FirstOrDefault(j => j.Id == id);
+
+            //if (job == null)
+            //{
+            //    return NotFound(); // Eğer iş ilanı bulunamazsa 404 sayfası döner.
+            //}
+
+            //return View(job); // Bulunan iş ilanını view'a gönderir.
             var job = _context.Jobs.FirstOrDefault(j => j.Id == id);
 
             if (job == null)
@@ -48,7 +58,22 @@ namespace FreelanceProject.Controllers
                 return NotFound(); // Eğer iş ilanı bulunamazsa 404 sayfası döner.
             }
 
-            return View(job); // Bulunan iş ilanını view'a gönderir.
+            // Sorguya göre filtrelenmiş job listesi
+            var jobsQuery = _context.Jobs.AsQueryable();
+            // Son 3 iş ilanı
+            ViewBag.LastThreeJobs = jobsQuery
+                .OrderByDescending(j => j.Id)
+                .Take(3)
+                .ToList();
+
+            // Aynı kategoriye sahip benzer işler
+            ViewBag.SimilarJobs = _context.Jobs
+                .Where(j => j.Category == job.Category && j.Id != job.Id)
+                .OrderByDescending(j => j.Id)
+                .Take(3)
+                .ToList();
+
+            return View(job); // Ana model sadece JobEntity nesnesi
 
         }
         public IActionResult Create() // Yeni iş ilanı  oluşturma
