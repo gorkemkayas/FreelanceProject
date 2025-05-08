@@ -4,56 +4,18 @@
 }
 
 @model VisitorProfileViewModel
-
-@* @if (TempData["Succeed"] != null)
-{
-    <div id="successAlert" class="custom-alert alert-success">
-        <i class="fa-solid fa-check"></i>
-        @TempData["Succeed"]!.ToString()
-    </div>
-}
-else if (TempData["Failed"] != null)
-{
-    <div id="errorAlert" class="custom-alert alert-danger">
-        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
-    </div>
-} *@
-
-@* <div class="ad-left-full">
-    <video class="ad-video" autoplay loop muted playsinline>
-        <source src="~/img/AdLeft.webm" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-</div>
-<div class="ad-right-full">
-    <video class="ad-video" autoplay loop muted playsinline>
-        <source src="~/img/AdRight.webm" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-</div> *@
-
-@* <!-- Sol Reklam Alanı -->
-<div class="ad-left">
-    <!-- Video reklamı buraya gelecek -->
-    <video class="ad-video" autoplay loop muted playsinline>
-        <source src="~/img/AdLeft.webm" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-</div>
-
-<!-- Sağ Reklam Alanı -->
-<div class="ad-right">
-    <!-- Video reklamı buraya gelecek -->
-    <video class="ad-video" autoplay loop muted playsinline>
-        <source src="~/img/AdRight.webm" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-</div> *@
 @section Styles {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3); /* Gradient renkleri */
+            -webkit-background-clip: text; /* Metnin üzerine gradient uygular */
+            color: transparent; /* Metnin rengini şeffaf yapar, sadece gradient görünür */
+            transition: all 0.4s ease-in-out;
         }
     </style>
 }
@@ -69,17 +31,17 @@ else if (TempData["Failed"] != null)
                         <!-- Cover Image -->
                         <div class="w-100 h-100 position-absolute">
                             <img src=@(string.IsNullOrEmpty(Model.CoverImagePicture) ? "/img/defaultCoverPicture.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.CoverImagePicture}")
-                            alt="Cover Image"
-                            class="w-100 h-100"
-                            style="object-fit: cover;" />
+                                 alt="Cover Image"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;" />
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
                         <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
                             <img src=@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.ProfilePicture}")
-                            alt="Profile Picture"
-                            class="img-fluid img-thumbnail mt-4 mb-2 "
-                            style="width: 175px; height: 175px; " />
+                                 alt="Profile Picture"
+                                 class="img-fluid img-thumbnail mt-4 mb-2 "
+                                 style="width: 175px; height: 175px; " />
                         </div>
                     </div>
                     @if (ViewBag.IsOwner != null && ViewBag.IsOwner == true)
@@ -207,6 +169,26 @@ else if (TempData["Failed"] != null)
                             </div>
                         </div>
                         <hr class="" style="margin-top:10px" />
+
+                        <div class="card-body p-4 py-0 text-black">
+                            <div class="mb-2 d-flex justify-content-center ms-4">
+                                <h5 class="mb-1 mt-4 ms-2 d-flex">
+                                    CV Information |<p class="text-muted ms-1" style="font-weight:300">
+                                        <a href="/img/userPhotos/@extendedProfileViewModel.UserName/@extendedProfileViewModel.CVPath#toolbar=0&navpanes=0&scrollbar=0"
+                                           target="_blank"
+                                           class=" text-gradient text-decoration-none ">
+                                            Click here to review the CV.
+                                        </a>
+                                    </p>
+                                </h5>
+                            </div>
+                        </div>
+
+                        <hr class="" style="margin-top:10px" />
+
+
+
+
                     }
 
                     <div class="card-body p-4 text-black">

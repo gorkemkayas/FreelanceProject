@@ -198,7 +198,7 @@ namespace FreelanceProject.Services.Concrete
             }
             return newUserInfo;
         }
-        public async Task<ServiceResult<AppUser>> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
+        public async Task<ServiceResult<AppUser>> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt, IFormFile? CVFile)
         {
             var errors = new List<IdentityError>();
 
@@ -221,6 +221,7 @@ namespace FreelanceProject.Services.Concrete
             var step1 = await ConfigurePictureAsync(newUserInfo, oldUserInfo, fileInputProfile, PhotoType.ProfilePicture);
             var step2 = await ConfigurePictureAsync(step1, oldUserInfo, coverInputProfile, PhotoType.CoverImagePicture);
             var step3 = await ConfigurePictureAsync(step2, oldUserInfo, IconInputWorkingAt, PhotoType.WorkingAtLogo);
+            var step4 = await ConfigurePictureAsync(step2, oldUserInfo, CVFile, PhotoType.CV);
 
 
             //var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
