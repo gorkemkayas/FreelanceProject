@@ -6,6 +6,7 @@ namespace FreelanceProject.Models.ViewModels
     {
         public string Id { get; set; } = null!;
         public string? PhoneNumber { get; set; }
+        public string? CVPath { get; set; }
 
         [Required]
         public string EmailAddress { get; set; } = null!;
@@ -29,6 +30,9 @@ namespace FreelanceProject.Models.ViewModels
                 case PhotoType.WorkingAtLogo:
                     WorkingAtLogo = value;
                     break;
+                case PhotoType.CV:
+                    CVPath = value;
+                    break;
                 default:
                     throw new Exception("Invalid operation.");
             }
@@ -38,7 +42,8 @@ namespace FreelanceProject.Models.ViewModels
         {
             ProfilePicture = 0,
             CoverImagePicture = 1,
-            WorkingAtLogo = 2
+            WorkingAtLogo = 2,
+            CV = 3
         }
     }
 }

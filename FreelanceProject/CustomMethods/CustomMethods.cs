@@ -1,4 +1,6 @@
 ﻿using FreelanceProject.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreelanceProject.CustomMethods
 {
@@ -37,6 +39,7 @@ namespace FreelanceProject.CustomMethods
 
 
         }
+
     }
 }
 

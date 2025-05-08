@@ -18,6 +18,7 @@ namespace FreelanceProject.Data.Entities
 
         //public string? LivesIn { get; set; }
 
+
         public string? Country { get; set; }
 
         // yeni eklediklerim
@@ -43,6 +44,8 @@ namespace FreelanceProject.Data.Entities
         public DateTime RegisteredDate { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public string? CVPath { get; set; }
 
         public string? ProfilePicture { get; set; }
         public string? CoverImagePicture { get; set; }
@@ -78,6 +81,8 @@ namespace FreelanceProject.Data.Entities
                     return CoverImagePicture;
                 case PhotoType.WorkingAtLogo:
                     return WorkingAtLogo;
+                case PhotoType.CV:
+                    return CVPath;
                 default:
                     return "";
             }

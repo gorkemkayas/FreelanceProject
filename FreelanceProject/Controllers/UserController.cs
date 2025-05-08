@@ -256,14 +256,14 @@ namespace FreelanceProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
+        public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt, IFormFile? CVFile)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
+            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt, CVFile);
 
             if (!result.IsSuccess)
             {
