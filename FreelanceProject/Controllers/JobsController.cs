@@ -76,6 +76,54 @@ namespace FreelanceProject.Controllers
             return View(job); // Ana model sadece JobEntity nesnesi
 
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ApplyForJob(Guid jobId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Kullanıcı CV bilgisi kontrolü
+            if (string.IsNullOrEmpty(user.CVPath))  // CV bilgisi boşsa
+            {
+                //TempData["ErrorMessage"] = "CV'nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
+                //// Kullanıcının profil sayfasına yönlendir
+                //return RedirectToAction("Profile", "User", new { userName = user.UserName });
+
+                TempData["ErrorMessage"] = "CV’nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
+                return RedirectToAction("Details", new { id = jobId });
+
+            }
+
+            var job = await _context.Jobs.FindAsync(jobId);
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            var jobApplication = new JobApplicationEntity
+            {
+                JobId = jobId,
+                ApplicantId = user.Id,
+                Status = JobApplicationStatus.Pending,
+                AppliedDate = DateTime.UtcNow,
+                IsApprovedByEmployer = false,
+                IsApprovedByApplicant = false
+            };
+
+            _context.JobApplications.Add(jobApplication);
+            await _context.SaveChangesAsync();
+
+            // Başvuru işlemi tamamlandıktan sonra MyApplications sayfasına yönlendir
+            return RedirectToAction("MyApplications", "Freelancer");
+        }
+
+
+
         public IActionResult Create() // Yeni iş ilanı  oluşturma
         {
             var categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };  // Sabit Kategoriler
@@ -83,10 +131,6 @@ namespace FreelanceProject.Controllers
 
             return View();
         }
-
-
-
-
 
 
         [HttpPost]
@@ -208,19 +252,75 @@ namespace FreelanceProject.Controllers
 
 
         [ResponseCache(Duration = 0, NoStore = true)]
+        //public async Task<IActionResult> EmployerJobs()
+        //{
+        //    var user = await _userManager.GetUserAsync(User);
+        //    if (user == null)
+        //        return Unauthorized();
+
+        //    // Burada Jobs tablosunu güncel verilerle çektiğinden emin ol
+        //    var jobs = await _context.Jobs
+        //        .Where(j => j.OwnerId == user.Id)
+        //        .OrderByDescending(j => j.CreatedDate) // Veya ModifiedDate ile sıralayabilirsiniz
+        //        .ToListAsync();
+
+        //    return View(jobs);
+        //}
         public async Task<IActionResult> EmployerJobs()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Unauthorized();
 
-            // Burada Jobs tablosunu güncel verilerle çektiğinden emin ol
+            // İşverenin iş ilanları
             var jobs = await _context.Jobs
-                .Where(j => j.OwnerId == user.Id)
-                .OrderByDescending(j => j.CreatedDate) // Veya ModifiedDate ile sıralayabilirsiniz
+                .Where(j => j.OwnerId == user.Id) // İlan sahibi olan işverenin ilanları
+                .OrderByDescending(j => j.CreatedDate)
+                .Include(j => j.JobApplications) // Başvuruları da dahil et
+                .ThenInclude(ja => ja.Applicant) // Başvuran kullanıcı bilgilerini de dahil et
                 .ToListAsync();
 
             return View(jobs);
         }
+
+        //// ViewApplicants Action
+        //public async Task<IActionResult> ViewApplicants(Guid jobId)
+        //{
+        //    var applicants = await _context.JobApplications
+        //        .Where(a => a.JobId == jobId)
+        //        .Include(a => a.Applicant) // başvuran kullanıcı bilgisi
+        //        .ToListAsync();
+
+        //    ViewBag.JobTitle = await _context.Jobs
+        //        .Where(j => j.Id == jobId)
+        //        .Select(j => j.Title)
+        //        .FirstOrDefaultAsync();
+
+        //    return View(applicants);
+        //}
+
+        //public async Task<IActionResult> ViewApplicants(Guid jobId)
+        //{
+        //    var job = await _context.Jobs
+        //        .Include(j => j.JobApplications)
+        //            .ThenInclude(a => a.Applicant)
+        //        .FirstOrDefaultAsync(j => j.Id == jobId);
+
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var applicants = job.JobApplications.Select(a => new ApplicationViewModel
+        //    {
+        //        ApplicantId = a.ApplicantId,
+        //        ApplicantName = a.Freelancer.FullName,
+        //        AppliedDate = a.AppliedAt,
+        //        Message = a.Message
+        //    }).ToList();
+
+        //    return View(applicants);
+        //}
+
     }
 }

@@ -4,6 +4,7 @@ using FreelanceProject.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreelanceProject.Migrations
 {
     [DbContext(typeof(FreelanceDbContext))]
-    partial class FreelanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508092556_AddJobApplicationsTable")]
+    partial class AddJobApplicationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,7 +82,7 @@ namespace FreelanceProject.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CVPath")
+                    b.Property<string>("CVUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -895,7 +898,7 @@ namespace FreelanceProject.Migrations
                         .IsRequired();
 
                     b.HasOne("FreelanceProject.Data.Entities.JobEntity", "Job")
-                        .WithMany("JobApplications")
+                        .WithMany("Applications")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1074,7 +1077,7 @@ namespace FreelanceProject.Migrations
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.JobEntity", b =>
                 {
-                    b.Navigation("JobApplications");
+                    b.Navigation("Applications");
                 });
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.PostEntity", b =>
