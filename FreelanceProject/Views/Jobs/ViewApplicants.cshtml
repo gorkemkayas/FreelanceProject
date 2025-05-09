@@ -1,0 +1,40 @@
+﻿@model List<FreelanceProject.Models.ApplicationViewModel>
+
+@{
+    ViewData["Title"] = "Applicants";
+}
+
+<h2>Applicants for This Job</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No applicants yet.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Freelancer</th>
+                <th>Applied On</th>
+                <th>Message</th>
+                <th>Profile</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var applicant in Model)
+            {
+                <tr>
+                    <td>@applicant.FreelancerName</td>
+                    <td>@applicant.AppliedDate.ToString("dd MMM yyyy")</td>
+                    <td>@applicant.Message</td>
+                    <td>
+                        <a asp-controller="Freelancers" asp-action="Details" asp-route-id="@applicant.FreelancerId" class="btn btn-sm btn-outline-info">
+                            View Profile
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

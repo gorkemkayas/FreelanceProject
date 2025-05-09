@@ -77,154 +77,6 @@ namespace FreelanceProject.Controllers
 
         }
 
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> ApplyForJob(Guid jobId)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    var job = await _context.Jobs.FindAsync(jobId);
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var jobApplication = new JobApplicationEntity
-        //    {
-        //        JobId = jobId,
-        //        ApplicantId = user.Id,
-        //        Status = JobApplicationStatus.Pending,
-        //        AppliedDate = DateTime.UtcNow,
-        //        IsApprovedByEmployer = false,
-        //        IsApprovedByApplicant = false
-        //    };
-
-        //    _context.JobApplications.Add(jobApplication);
-        //    await _context.SaveChangesAsync();
-
-        //    return RedirectToAction("ApplicantDetails", new { applicationId = jobApplication.Id });
-        //}
-
-
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> ApplyForJob(Guid jobId)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    var job = await _context.Jobs.FindAsync(jobId);
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var jobApplication = new JobApplicationEntity
-        //    {
-        //        JobId = jobId,
-        //        ApplicantId = user.Id,
-        //        Status = JobApplicationStatus.Pending,
-        //        AppliedDate = DateTime.UtcNow,
-        //        IsApprovedByEmployer = false,
-        //        IsApprovedByApplicant = false
-        //    };
-
-        //    _context.JobApplications.Add(jobApplication);
-        //    await _context.SaveChangesAsync();
-
-        //    // Apply işlemi tamamlandıktan sonra MyApplications sayfasına yönlendirme yap
-        //    return RedirectToAction("MyApplications", "Freelancer");
-        //}
-
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> ApplyForJob(Guid jobId)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    // Kullanıcı CV bilgisi kontrolü
-        //    if (string.IsNullOrEmpty(user.CVUrl))  // CV bilgisi boşsa
-        //    {
-        //        TempData["ErrorMessage"] = "CV'nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
-        //        return RedirectToAction("User", "Profile");  // CV'yi güncellemesi için profil düzenleme sayfasına yönlendir
-        //    }
-
-        //    var job = await _context.Jobs.FindAsync(jobId);
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var jobApplication = new JobApplicationEntity
-        //    {
-        //        JobId = jobId,
-        //        ApplicantId = user.Id,
-        //        Status = JobApplicationStatus.Pending,
-        //        AppliedDate = DateTime.UtcNow,
-        //        IsApprovedByEmployer = false,
-        //        IsApprovedByApplicant = false
-        //    };
-
-        //    _context.JobApplications.Add(jobApplication);
-        //    await _context.SaveChangesAsync();
-
-        //    // Başvuru işlemi tamamlandıktan sonra MyApplications sayfasına yönlendir
-        //    return RedirectToAction("MyApplications", "Freelancer");
-        //}
-
-
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> ApplyForJob(Guid jobId)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    // Kullanıcı CV bilgisi kontrolü
-        //    if (string.IsNullOrEmpty(user.CVUrl))  // CV bilgisi boşsa
-        //    {
-        //        TempData["ErrorMessage"] = "CV'nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
-        //        // Kullanıcının profil sayfasına yönlendir
-        //        return RedirectToAction("Profile", "User", new { id = user.Id });
-        //    }
-
-        //    var job = await _context.Jobs.FindAsync(jobId);
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var jobApplication = new JobApplicationEntity
-        //    {
-        //        JobId = jobId,
-        //        ApplicantId = user.Id,
-        //        Status = JobApplicationStatus.Pending,
-        //        AppliedDate = DateTime.UtcNow,
-        //        IsApprovedByEmployer = false,
-        //        IsApprovedByApplicant = false
-        //    };
-
-        //    _context.JobApplications.Add(jobApplication);
-        //    await _context.SaveChangesAsync();
-
-        //    // Başvuru işlemi tamamlandıktan sonra MyApplications sayfasına yönlendir
-        //    return RedirectToAction("MyApplications", "Freelancer");
-        //}
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> ApplyForJob(Guid jobId)
@@ -236,7 +88,7 @@ namespace FreelanceProject.Controllers
             }
 
             // Kullanıcı CV bilgisi kontrolü
-            if (string.IsNullOrEmpty(user.CVUrl))  // CV bilgisi boşsa
+            if (string.IsNullOrEmpty(user.CVPath))  // CV bilgisi boşsa
             {
                 //TempData["ErrorMessage"] = "CV'nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
                 //// Kullanıcının profil sayfasına yönlendir
@@ -430,5 +282,45 @@ namespace FreelanceProject.Controllers
 
             return View(jobs);
         }
+
+        //// ViewApplicants Action
+        //public async Task<IActionResult> ViewApplicants(Guid jobId)
+        //{
+        //    var applicants = await _context.JobApplications
+        //        .Where(a => a.JobId == jobId)
+        //        .Include(a => a.Applicant) // başvuran kullanıcı bilgisi
+        //        .ToListAsync();
+
+        //    ViewBag.JobTitle = await _context.Jobs
+        //        .Where(j => j.Id == jobId)
+        //        .Select(j => j.Title)
+        //        .FirstOrDefaultAsync();
+
+        //    return View(applicants);
+        //}
+
+        //public async Task<IActionResult> ViewApplicants(Guid jobId)
+        //{
+        //    var job = await _context.Jobs
+        //        .Include(j => j.JobApplications)
+        //            .ThenInclude(a => a.Applicant)
+        //        .FirstOrDefaultAsync(j => j.Id == jobId);
+
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var applicants = job.JobApplications.Select(a => new ApplicationViewModel
+        //    {
+        //        ApplicantId = a.ApplicantId,
+        //        ApplicantName = a.Freelancer.FullName,
+        //        AppliedDate = a.AppliedAt,
+        //        Message = a.Message
+        //    }).ToList();
+
+        //    return View(applicants);
+        //}
+
     }
 }
