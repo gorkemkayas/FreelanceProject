@@ -1,6 +1,10 @@
-﻿@{
+﻿@using FreelanceProject.Data.Entities
+@using FreelanceProject.Utilities
+@{
     ViewData["Title"] = "My Applications and Work History";
 }
+
+@model JobsAndCurrentTab
 
 <style>
     .applications-card {
@@ -95,24 +99,71 @@
     }
 
     .status-pending {
-        background-color: #fff3cd;
-        color: #856404;
+        background-color: #fff8e1; /* Hafif sarı arka plan */
+        color: #ef6c00; /* Turuncu yazı rengi */
+        border: 1px solid #ef6c00;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
+
+        .status-pending:hover {
+            background-color: #ffecb3; /* Daha açık sarı hover */
+            color: #e65100; /* Daha koyu yazı rengi */
+        }
+
 
     .status-accepted {
-        background-color: #d4edda;
-        color: #155724;
+        background-color: #e6f4ea; /* Hafif yeşil arka plan */
+        color: #2e7d32; /* Koyu yeşil yazı rengi */
+        border: 1px solid #2e7d32;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
+
+        .status-accepted:hover {
+            background-color: #c8e6c9; /* Daha açık yeşil hover */
+            color: #1b5e20; /* Daha koyu yazı rengi */
+        }
+
 
     .status-rejected {
-        background-color: #f8d7da;
-        color: #721c24;
+        background-color: #ffebee; /* Hafif kırmızı arka plan */
+        color: #c62828; /* Koyu kırmızı yazı rengi */
+        border: 1px solid #c62828;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
 
+        .status-rejected:hover {
+            background-color: #ffcdd2; /* Daha açık kırmızı hover */
+            color: #b71c1c; /* Daha koyu yazı rengi */
+        }
+
+
     .status-completed {
-        background-color: #e2e3e5;
-        color: #383d41;
+        background-color: #e0f7fa; /* Hafif mavi arka plan */
+        color: #00796b; /* Koyu yeşil yazı rengi */
+        border: 1px solid #00796b; /* İnce sınır */
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
+
+        .status-completed:hover {
+            background-color: #b2ebf2; /* Hoverda daha açık mavi */
+            color: #004d40; /* Daha koyu yazı rengi */
+        }
 
     .action-buttons {
         display: flex;
@@ -200,124 +251,205 @@
                 <div class="applications-body">
                     <ul class="nav nav-tabs" id="applicationsTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="current-tab" data-bs-toggle="tab" data-bs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="true">
+                            <a class="nav-link @(Model.CurrentTab == "Ongoing" ? "active" : "")"
+                               id="current-tab"
+                               role="tab"
+                               href="@Url.Action("MyApplications", "Freelancer", new { status = JobApplicationStatus.Ongoing })">
                                 <i class="fas fa-spinner me-1"></i> Ongoing
-                            </button>
+                            </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="false">
+                            <a class="nav-link @(Model.CurrentTab == "Pending" ? "active" : "")"
+                               id="pending-tab"
+                               role="tab"
+                               href="@Url.Action("MyApplications", "Freelancer", new { status = JobApplicationStatus.Pending })">
                                 <i class="fas fa-clock me-1"></i> Pending
-                            </button>
+                            </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab" aria-controls="completed" aria-selected="false">
+                            <a class="nav-link @(Model.CurrentTab == "Completed" ? "active" : "")"
+                               id="completed-tab"
+                               role="tab"
+                               href="@Url.Action("MyApplications", "Freelancer", new { status = JobApplicationStatus.Completed })">
                                 <i class="fas fa-check-circle me-1"></i> Completed
-                            </button>
+                            </a>
                         </li>
                     </ul>
 
                     <div class="tab-content" id="applicationsTabContent">
                         <!-- Ongoing Jobs -->
-                        <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="current-tab">
-                            <!-- Example Job 1 -->
-                            <div class="job-item">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h3 class="job-title">E-commerce Website Design</h3>
-                                        <div class="job-meta">
-                                            <div class="meta-item">
-                                                <i class="fas fa-calendar-alt"></i>
-                                                <span>Start: June 15, 2023</span>
+                        <div class="tab-pane fade @(Model.CurrentTab == "Ongoing" ? "show active" : "")" id="current" role="tabpanel" aria-labelledby="current-tab">
+                            @if (Model.CurrentTab != "Ongoing")
+                            {
+                                <div class="no-applications">
+                                    <i class="fas fa-clock no-applications-icon"></i>
+                                    <p>No ongoing applications</p>
+                                </div>
+                            }
+                            else
+                            {
+                            @foreach (var jobApplication in Model.Jobs)
+                            {
+                                <!-- Example Job 1 -->
+                                <div class="job-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h3 class="job-title">@jobApplication.Job.Title</h3>
+                                            <div class="job-meta">
+                                                <div class="meta-item">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>Start: @jobApplication.Job.StartDate</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                    <span>Budget: ₺@jobApplication.Job.Budget</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>Estimated Deadline: @jobApplication.Job.Deadline</span>
+                                                </div>
                                             </div>
-                                            <div class="meta-item">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                                <span>Budget: ₺8,000</span>
-                                            </div>
-                                            <div class="meta-item">
-                                                <i class="fas fa-clock"></i>
-                                                <span>Estimated Duration: 3 Weeks</span>
-                                            </div>
-                                        </div>
-                                        <span class="application-status status-accepted">
-                                            <i class="fas fa-check-circle"></i> Ongoing
-                                        </span>
-                                        <div class="client-info">
-                                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" class="client-avatar">
-                                            <div>
-                                                <div class="client-name">Ayşe Teknoloji</div>
-                                                <div class="client-rating">
-                                                    <i class="fas fa-star"></i> 4.8 (12 reviews)
+                                            <span class="application-status status-accepted">
+                                                    <i class="fas fa-spinner me-1"></i> @jobApplication.Status
+                                            </span>
+                                            <div class="client-info">
+                                                <img src="/img/userPhotos/@jobApplication.Job.Owner.UserName/@jobApplication.Job.Owner.ProfilePicture" class="client-avatar">
+                                                <div>
+                                                    <div class="client-name">@jobApplication.Job.Owner.FullName</div>
+                                                    <div class="client-rating">
+                                                        <i class="fas fa-star"></i> 4.8 (12 reviews)
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn btn-view">
-                                            <i class="fas fa-eye"></i> View Job
-                                        </a>
-                                        <a href="#" class="btn btn-message">
-                                            <i class="fas fa-envelope"></i> Send Message
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Example Job 2 -->
-                            <div class="job-item">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h3 class="job-title">Mobile App Development</h3>
-                                        <div class="job-meta">
-                                            <div class="meta-item">
-                                                <i class="fas fa-calendar-alt"></i>
-                                                <span>Start: July 1, 2023</span>
-                                            </div>
-                                            <div class="meta-item">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                                <span>Budget: ₺12,000</span>
-                                            </div>
-                                            <div class="meta-item">
-                                                <i class="fas fa-clock"></i>
-                                                <span>Estimated Duration: 6 Weeks</span>
-                                            </div>
-                                        </div>
-                                        <span class="application-status status-accepted">
-                                            <i class="fas fa-check-circle"></i> Ongoing
-                                        </span>
-                                        <div class="client-info">
-                                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" class="client-avatar">
-                                            <div>
-                                                <div class="client-name">Ahmet Solutions</div>
-                                                <div class="client-rating">
-                                                    <i class="fas fa-star"></i> 5.0 (15 reviews)
-                                                </div>
-                                            </div>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn btn-view">
+                                                <i class="fas fa-eye"></i> View Job
+                                            </a>
+                                            <a href="#" class="btn btn-message">
+                                                <i class="fas fa-envelope"></i> Send Message
+                                            </a>
                                         </div>
                                     </div>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn btn-view">
-                                            <i class="fas fa-eye"></i> View Job
-                                        </a>
-                                        <a href="#" class="btn btn-message">
-                                            <i class="fas fa-envelope"></i> Send Message
-                                        </a>
-                                    </div>
                                 </div>
-                            </div>
+                            }
+                            }
                         </div>
                         <!-- Pending Jobs Tab Content -->
-                        <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                            <div class="no-applications">
-                                <i class="fas fa-clock no-applications-icon"></i>
-                                <p>No pending applications</p>
-                            </div>
+                        <div class="tab-pane fade @(Model.CurrentTab == "Pending" ? "show active" : "")" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                            @if (Model.CurrentTab != "Pending")
+                            {
+                                <div class="no-applications">
+                                    <i class="fas fa-clock no-applications-icon"></i>
+                                    <p>No pending applications</p>
+                                </div>
+                            }
+                            else
+                            {
+                            @foreach (var jobApplication in Model.Jobs)
+                            {
+                                <!-- Example Job 1 -->
+                                <div class="job-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h3 class="job-title">@jobApplication.Job.Title</h3>
+                                            <div class="job-meta">
+                                                <div class="meta-item">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>Start: @jobApplication.Job.StartDate</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                    <span>Budget: ₺@jobApplication.Job.Budget</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>Estimated Deadline: @jobApplication.Job.Deadline</span>
+                                                </div>
+                                            </div>
+                                            <span class="application-status status-pending">
+                                                    <i class="fas fa-hourglass-half me-1"></i> @jobApplication.Status
+                                            </span>
+                                            <div class="client-info">
+                                                    <img src="/img/userPhotos/@jobApplication.Job.Owner.UserName/@jobApplication.Job.Owner.ProfilePicture" class="client-avatar">
+                                                <div>
+                                                    <div class="client-name">@jobApplication.Job.Owner.FullName</div>
+                                                    <div class="client-rating">
+                                                        <i class="fas fa-star"></i> 4.8 (12 reviews)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn btn-view">
+                                                <i class="fas fa-eye"></i> View Job
+                                            </a>
+                                            <a href="#" class="btn btn-message">
+                                                <i class="fas fa-envelope"></i> Send Message
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            }
                         </div>
                         <!-- Completed Jobs Tab Content -->
-                        <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
-                            <div class="no-applications">
-                                <i class="fas fa-check-circle no-applications-icon"></i>
-                                <p>No completed applications</p>
-                            </div>
+                        <div class="tab-pane fade @(Model.CurrentTab == "Completed" ? "show active" : "")" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                            @if (Model.CurrentTab != "Completed")
+                            {
+                                <div class="no-applications">
+                                    <i class="fas fa-clock no-applications-icon"></i>
+                                    <p>No completed applications</p>
+                                </div>
+                            }
+                            else
+                            {
+                            @foreach (var jobApplication in Model.Jobs)
+                            {
+                                <!-- Example Job 1 -->
+                                <div class="job-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h3 class="job-title">@jobApplication.Job.Title</h3>
+                                            <div class="job-meta">
+                                                <div class="meta-item">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>Start: @jobApplication.Job.StartDate</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                    <span>Budget: ₺@jobApplication.Job.Budget</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>Estimated Deadline: @jobApplication.Job.Deadline</span>
+                                                </div>
+                                            </div>
+                                            <span class="application-status status-completed">
+                                                <i class="fas fa-check-circle"></i> @jobApplication.Status
+                                            </span>
+                                            <div class="client-info">
+                                                    <img src="/img/userPhotos/@jobApplication.Job.Owner.UserName/@jobApplication.Job.Owner.ProfilePicture" class="client-avatar">
+                                                <div>
+                                                    <div class="client-name">@jobApplication.Job.Owner.FullName</div>
+                                                    <div class="client-rating">
+                                                        <i class="fas fa-star"></i> 4.8 (12 reviews)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn btn-view">
+                                                <i class="fas fa-eye"></i> View Job
+                                            </a>
+                                            <a href="#" class="btn btn-message">
+                                                <i class="fas fa-envelope"></i> Send Message
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            }
                         </div>
                     </div>
                 </div>
@@ -325,3 +457,4 @@
         </div>
     </div>
 </div>
+

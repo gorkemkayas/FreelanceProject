@@ -1,4 +1,4 @@
-﻿@model List<FreelanceProject.Models.ApplicationViewModel>
+﻿@model List<FreelanceProject.Models.ViewModels.ApplicationViewModel>
 
 @{
     ViewData["Title"] = "Applicants";
@@ -25,11 +25,11 @@ else
             @foreach (var applicant in Model)
             {
                 <tr>
-                    <td>@applicant.FreelancerName</td>
+                    <td>@applicant.ApplicantName</td>
                     <td>@applicant.AppliedDate.ToString("dd MMM yyyy")</td>
                     <td>@applicant.Message</td>
                     <td>
-                        <a asp-controller="Freelancers" asp-action="Details" asp-route-id="@applicant.FreelancerId" class="btn btn-sm btn-outline-info">
+                        <a asp-controller="Freelancers" asp-action="Details" asp-route-id="@applicant.ApplicantId" class="btn btn-sm btn-outline-info">
                             View Profile
                         </a>
                     </td>

@@ -8,117 +8,117 @@
 <!-- Custom CSS -->
 <style>
     :root {
-        --primary: #4a6bff;
-        --secondary: #7a4dff;
-        --dark: #1a1a2e;
-        --light: #f8f9ff;
-        --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    --primary: #4a6bff;
+    --secondary: #7a4dff;
+    --dark: #1a1a2e;
+    --light: #f8f9ff;
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     }
 
     body {
-        background-color: var(--light);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--light);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     .gradient-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--gradient);
-        opacity: 0.85;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient);
+    opacity: 0.85;
     }
 
     .glass-card {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(74, 107, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(74, 107, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(74, 107, 255, 0.15);
-        }
+    .glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(74, 107, 255, 0.15);
+    }
 
     .btn-gradient {
-        background: var(--gradient);
-        color: white;
-        border: none;
-        padding: 12px 28px;
-        font-weight: 600;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
     }
 
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 107, 255, 0.4);
-            color: white;
-        }
+    .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(74, 107, 255, 0.4);
+    color: white;
+    }
 
     .text-gradient {
-        background: var(--gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     }
 
     .badge-gradient {
-        background: var(--gradient);
-        color: white;
-        font-weight: 600;
-        padding: 6px 12px;
-        border-radius: 8px;
+    background: var(--gradient);
+    color: white;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
     }
 
     .info-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(74, 107, 255, 0.1);
-        color: var(--primary);
-        font-size: 1.25rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(74, 107, 255, 0.1);
+    color: var(--primary);
+    font-size: 1.25rem;
     }
 
     .job-header {
-        min-height: 400px;
-        border-radius: 16px 16px 0 0;
+    min-height: 400px;
+    border-radius: 16px 16px 0 0;
     }
 
     .avatar-xl {
-        width: 100px;
-        height: 100px;
-        border: 3px solid white;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 100px;
+    height: 100px;
+    border: 3px solid white;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
 
     .stat-pill {
-        background: rgba(74, 107, 255, 0.1);
-        color: var(--primary);
-        border-radius: 20px;
-        padding: 6px 12px;
-        font-weight: 500;
+    background: rgba(74, 107, 255, 0.1);
+    color: var(--primary);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-weight: 500;
     }
 
     .hover-grow {
-        transition: all 0.3s ease;
+    transition: all 0.3s ease;
     }
 
-        .hover-grow:hover {
-            transform: scale(1.02);
-        }
+    .hover-grow:hover {
+    transform: scale(1.02);
+    }
 
     .divider {
-        height: 1px;
-        background: linear-gradient(90deg, rgba(74,107,255,0) 0%, rgba(74,107,255,0.2) 50%, rgba(74,107,255,0) 100%);
+    height: 1px;
+    background: linear-gradient(90deg, rgba(74,107,255,0) 0%, rgba(74,107,255,0.2) 50%, rgba(74,107,255,0) 100%);
     }
 </style>
 
@@ -132,8 +132,8 @@
                     <div class="position-relative job-header overflow-hidden">
                         <div class="gradient-overlay"></div>
                         <img src="@Model.JobImage"
-                             alt="Project Image"
-                             class="w-100 h-100 object-fit-cover">
+                        alt="Project Image"
+                        class="w-100 h-100 object-fit-cover">
                         <div class="position-absolute bottom-0 start-0 p-4 text-white">
                             <div class="d-flex justify-content-between align-items-end w-100">
                                 <div>
@@ -231,7 +231,7 @@
                             </form>
                         }
 
-                        
+
 
 
                     </div>
@@ -246,7 +246,7 @@
                         <div class="card-body p-4 text-center">
                             <div class="avatar-xl mx-auto mb-3 position-relative">
                                 <img src="/img/userPhotos/@Model.Owner.UserName/@Model.Owner.ProfilePicture"
-                                     class="rounded-2" style="width:100px;height:100px" alt="Client">
+                                class="rounded-2" style="width:100px;height:100px" alt="Client">
                                 <span class="position-absolute bottom-0 end-0 bg-success rounded-circle p-1 border border-3 border-white"></span>
                             </div>
                             <h4 class="fw-bold mb-1" style="color: var(--dark);"></h4>
@@ -285,11 +285,11 @@
                                 @foreach (var similar in ViewBag.SimilarJobs as List<FreelanceProject.Data.Entities.JobEntity>)
                                 {
                                     <a asp-action="Details" asp-controller="Jobs" asp-route-id="@similar.Id"
-                                       class="glass-card text-decoration-none hover-grow p-3">
+                                    class="glass-card text-decoration-none hover-grow p-3">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-shrink-0">
                                                 <img src="@similar.JobImage"
-                                                     class="rounded-2" width="60" height="60" alt="Job">
+                                                class="rounded-2" width="60" height="60" alt="Job">
                                             </div>
                                             <div class="flex-grow-1 ms-3">
                                                 <h6 class="fw-semibold mb-1" style="color: var(--dark);">@similar.Title</h6>
@@ -314,6 +314,10 @@
         </div>
     </div>
 </main>
+
+@if(TempData["ErrorMessage"] != null)
+{
+    
 
 <!--Modal-->
 <div class="modal fade" id="cvWarningModal" tabindex="-1" aria-labelledby="cvWarningModalLabel" aria-hidden="true">
@@ -348,6 +352,56 @@
         </div>
     </div>
 </div>
+
+}
+@if (TempData["OwnJobError"] != null)
+{
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="cvWarningModal" tabindex="-1" aria-labelledby="cvWarningModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 overflow-hidden glass-card" style="border: none;">
+                <!-- Modal Header with Gradient Background -->
+                <div class="modal-header text-white position-relative" style="border-bottom: none; padding: 1.5rem;">
+                    <div class="position-absolute gradient-overlay" style="border-radius: 16px 16px 0 0;"></div>
+                    <div class="position-relative d-flex align-items-center w-100">
+                        <div class="info-icon me-3" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h5 class="modal-title mb-0 fw-bold">Dikkat Gerekli</h5>
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Kapat" style="filter: brightness(0) invert(1);"></button>
+                    </div>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body p-4 position-relative">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0">
+                            <div class="info-icon" style="background: rgba(74, 107, 255, 0.1); color: var(--primary);">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="fw-bold mb-3 text-gradient">Kendi oluşturduğun işe başvuramazsın.</h6>
+                            <p class="mb-0 text-muted">@TempData["OwnJobError"]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer border-0 position-relative" style="padding: 1rem 1.5rem;">
+                    <div class="w-100 d-flex justify-content-end">
+                        <button type="button" class="btn btn-sm btn-gradient rounded-pill px-4 py-2" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i> Kapat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
 
 <style>
     /* Özel stil eklemeleri */
@@ -402,6 +456,15 @@
     <script>
         window.onload = function () {
             var showModal = '@TempData["ErrorMessage"]' !== '';
+            if (showModal) {
+                var myModal = new bootstrap.Modal(document.getElementById('cvWarningModal'));
+                myModal.show();
+            }
+        }
+    </script>
+    <script>
+        window.onload = function () {
+            var showModal = '@TempData["OwnJobError"]' !== '';
             if (showModal) {
                 var myModal = new bootstrap.Modal(document.getElementById('cvWarningModal'));
                 myModal.show();

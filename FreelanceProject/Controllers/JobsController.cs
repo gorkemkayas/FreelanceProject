@@ -82,7 +82,12 @@ namespace FreelanceProject.Controllers
         public async Task<IActionResult> ApplyForJob(Guid jobId)
         {
             var user = await _userManager.GetUserAsync(User);
+            var selectedJob = await _context.Jobs.FindAsync(jobId);
             if (user == null)
+            {
+                return Unauthorized();
+            }
+            if (selectedJob == null)
             {
                 return Unauthorized();
             }
@@ -98,6 +103,17 @@ namespace FreelanceProject.Controllers
                 return RedirectToAction("Details", new { id = jobId });
 
             }
+            if (user.Id == selectedJob.OwnerId)  // CV bilgisi boşsa
+            {
+                //TempData["ErrorMessage"] = "CV'nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
+                //// Kullanıcının profil sayfasına yönlendir
+                //return RedirectToAction("Profile", "User", new { userName = user.UserName });
+
+                TempData["OwnJobError"] = "Kendi oluşturduğunuz işe başvuramazsınız!";
+                return RedirectToAction("Details", new { id = jobId });
+
+            }
+
 
             var job = await _context.Jobs.FindAsync(jobId);
             if (job == null)
