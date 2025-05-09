@@ -59,7 +59,7 @@ namespace FreelanceProject.Controllers
             }
 
             // Sorguya göre filtrelenmiş job listesi
-            var jobsQuery = _context.Jobs.AsQueryable();
+            var jobsQuery = _context.Jobs.Include(e => e.Owner).AsQueryable();
             // Son 3 iş ilanı
             ViewBag.LastThreeJobs = jobsQuery
                 .OrderByDescending(j => j.Id)
