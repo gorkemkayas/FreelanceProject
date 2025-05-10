@@ -299,6 +299,9 @@
                                                     <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-delete">
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </a>
+                                                    <a asp-controller="Messages" asp-action="JobMessageThreads" asp-route-id="@job.Id" asp-route-id="@job.OwnerId" class="btn btn-edit">
+                                                        <i class="fas fa-message"></i> Messages
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

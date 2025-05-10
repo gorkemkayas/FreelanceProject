@@ -1,0 +1,28 @@
+﻿ @model FreelanceProject.Models.ViewModels.ChatViewModel
+
+<h2>Message Threads for Job</h2>
+
+@foreach (var thread in Model.Threads)
+{
+    <div class="card mb-2 p-3">
+        <strong>@thread.UserName</strong>
+        <p>@thread.LastMessage</p>
+        <small>@thread.LastMessageDate.ToString("g")</small>
+
+
+
+      <a asp-action="ViewChat"
+           asp-controller="Messages"
+           asp-route-receiverId="@thread.UserId"
+           asp-route-jobId="@Model.Job.Id"
+           asp-route-senderId="@Model.OwnerId" 
+           asp-route-userName="@thread.UserName" 
+           class="btn btn-sm btn-primary mt-2">
+            View Chat
+       </a>
+
+
+       
+    </div>
+}
+ 

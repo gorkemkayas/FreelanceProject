@@ -24,6 +24,7 @@ namespace FreelanceProject.Data.Context
         public DbSet<AuditLogEntity> AuditLogs { get; set; }
         public DbSet<JobEntity> Jobs { get; set; }
 
+        public DbSet<JobApplicationEntity> JobApplicationEntity { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,6 +41,25 @@ namespace FreelanceProject.Data.Context
                 entity.Property(e => e.Budget)
                       .HasPrecision(18, 2); // 18 basamaklı, 2 ondalıklı
             });
+
+            builder.Entity<MessageEntity>()
+        .HasOne(m => m.Job)
+        .WithMany() // Eğer Job → Message ilişkisi tanımlı değilse boş bırak
+        .HasForeignKey(m => m.JobId)
+        .OnDelete(DeleteBehavior.Restrict); // Silindiğinde mesajlar silinmesin
+
+            // Diğer ilişkiler (opsiyonel)
+            builder.Entity<MessageEntity>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<MessageEntity>()
+                .HasOne(m => m.Receiver)
+                .WithMany()
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
 

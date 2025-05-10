@@ -1,0 +1,68 @@
+﻿@* @* @model FreelanceProject.Models.ViewModels.ChatViewModel
+
+@{
+    ViewData["Title"] = "Chat with Client";
+}
+
+<main class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Messages for Job: @Model.Job.Title</h5>
+
+                        <!-- Mesaj Listesi -->
+                        <div class="messages-list">
+                            @foreach (var message in Model.Messages)
+                            {
+                                <div class="message">
+                                    <div class="message-header d-flex justify-content-between">
+                                        <strong>@message.Sender.UserName:</strong> @message.Content <br />
+                                        <small>@message.SentDate.ToString("dd MMMM yyyy, HH:mm")</small>
+                                    </div>
+                                    <p>@message.Content</p>
+                                    
+                                </div>
+                            }
+                        </div>
+                        
+                        <!-- Yeni Mesaj Gönderme -->
+                        <form method="post" asp-action="SendMessage" asp-controller="Messages" asp-route-jobId="@Model.Job.Id ">
+                            <textarea name="newMessageContent" rows="4" cols="50" placeholder="Type your message..." required></textarea>
+                            <button type="submit" class="btn btn-primary mt-2">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+ *@
+ @model FreelanceProject.Models.ViewModels.ChatViewModel
+
+<h2>Chat with @Model.Messages.FirstOrDefault()?.Receiver?.UserName ?? "User"</h2>
+
+<div class="messages-list">
+    @foreach (var message in Model.Messages)
+    {
+        var isMine = message.SenderId == Model.OwnerId;
+
+        <div class="message @(isMine ? "text-end" : "text-start")">
+            <strong>@message.Sender.UserName:</strong>
+            <p>@message.Content</p>
+            <small>@message.SentDate.ToString("g")</small>
+        </div>
+    }
+</div> 
+
+<!-- Yeni Mesaj Gönderme -->
+ <form asp-action="SendMessage" asp-controller="Messages" method="post">
+    <input type="hidden" name="JobId" value="@Model.Job.Id" />
+    <input type="hidden" name="ReceiverId" value="@Model.ReceiverId" />
+    <input type="hidden" name="SenderId" value="@Model.OwnerId" />
+
+    <textarea name="newMessageContent" rows="3" placeholder="Mesajınızı yazın..." required></textarea>
+    <button type="submit" class="btn btn-primary mt-2">Gönder</button>
+</form>
+  

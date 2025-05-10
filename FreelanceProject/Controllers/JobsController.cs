@@ -41,17 +41,15 @@ namespace FreelanceProject.Controllers
         {
             return View();
         }
-        public IActionResult Details(Guid id) // iş detaylarını görüntüle.
+        public async Task<IActionResult> Details(Guid id)// iş detaylarını görüntüle.
         {
-            //var job = _context.Jobs.FirstOrDefault(j => j.Id == id);
 
-            //if (job == null)
-            //{
-            //    return NotFound(); // Eğer iş ilanı bulunamazsa 404 sayfası döner.
-            //}
 
             //return View(job); // Bulunan iş ilanını view'a gönderir.
-            var job = _context.Jobs.FirstOrDefault(j => j.Id == id);
+            //var job = _context.Jobs.FirstOrDefault(j => j.Id == id);
+            var job = await _context.Jobs
+      .Include(x => x.Owner)
+      .FirstOrDefaultAsync(j => j.Id == id);
 
             if (job == null)
             {
@@ -87,7 +85,7 @@ namespace FreelanceProject.Controllers
 
 
 
-
+        [Route("Messages")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -4,6 +4,7 @@ using FreelanceProject.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreelanceProject.Migrations
 {
     [DbContext(typeof(FreelanceDbContext))]
-    partial class FreelanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508122811_AddJobToMessages")]
+    partial class AddJobToMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -582,12 +585,6 @@ namespace FreelanceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AppUserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -627,10 +624,6 @@ namespace FreelanceProject.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("JobId");
 
@@ -955,28 +948,17 @@ namespace FreelanceProject.Migrations
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.MessageEntity", b =>
                 {
-                    b.HasOne("FreelanceProject.Data.Entities.AppUser", null)
-                        .WithMany("SentMessages")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("FreelanceProject.Data.Entities.AppUser", null)
-                        .WithMany("ReceivedMessages")
-                        .HasForeignKey("AppUserId1");
-
                     b.HasOne("FreelanceProject.Data.Entities.JobEntity", "Job")
                         .WithMany()
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("JobId");
 
                     b.HasOne("FreelanceProject.Data.Entities.AppUser", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId");
 
                     b.HasOne("FreelanceProject.Data.Entities.AppUser", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId");
 
                     b.Navigation("Job");
 
