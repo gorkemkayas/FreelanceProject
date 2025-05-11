@@ -268,20 +268,6 @@ namespace FreelanceProject.Controllers
 
 
         [ResponseCache(Duration = 0, NoStore = true)]
-        //public async Task<IActionResult> EmployerJobs()
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //        return Unauthorized();
-
-        //    // Burada Jobs tablosunu güncel verilerle çektiğinden emin ol
-        //    var jobs = await _context.Jobs
-        //        .Where(j => j.OwnerId == user.Id)
-        //        .OrderByDescending(j => j.CreatedDate) // Veya ModifiedDate ile sıralayabilirsiniz
-        //        .ToListAsync();
-
-        //    return View(jobs);
-        //}
         public async Task<IActionResult> EmployerJobs()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -299,27 +285,12 @@ namespace FreelanceProject.Controllers
             return View(jobs);
         }
 
-        //// ViewApplicants Action
-        //public async Task<IActionResult> ViewApplicants(Guid jobId)
-        //{
-        //    var applicants = await _context.JobApplications
-        //        .Where(a => a.JobId == jobId)
-        //        .Include(a => a.Applicant) // başvuran kullanıcı bilgisi
-        //        .ToListAsync();
-
-        //    ViewBag.JobTitle = await _context.Jobs
-        //        .Where(j => j.Id == jobId)
-        //        .Select(j => j.Title)
-        //        .FirstOrDefaultAsync();
-
-        //    return View(applicants);
-        //}
 
         //public async Task<IActionResult> ViewApplicants(Guid jobId)
         //{
         //    var job = await _context.Jobs
         //        .Include(j => j.JobApplications)
-        //            .ThenInclude(a => a.Applicant)
+        //            .ThenInclude(ja => ja.Applicant)
         //        .FirstOrDefaultAsync(j => j.Id == jobId);
 
         //    if (job == null)
@@ -327,16 +298,130 @@ namespace FreelanceProject.Controllers
         //        return NotFound();
         //    }
 
-        //    var applicants = job.JobApplications.Select(a => new ApplicationViewModel
+        //    // Giriş yapan kişinin bu ilana sahip olup olmadığını kontrol et
+        //    var currentUser = await _userManager.GetUserAsync(User);
+        //    if (job.OwnerId != currentUser.Id)
         //    {
-        //        ApplicantId = a.ApplicantId,
-        //        ApplicantName = a.Freelancer.FullName,
-        //        AppliedDate = a.AppliedAt,
-        //        Message = a.Message
-        //    }).ToList();
+        //        return Forbid(); // Başkasının ilanına erişemezsin
+        //    }
+
+        //    ViewBag.JobId = jobId;
+        //    var applicants = job.JobApplications.Select(ja => ja.Applicant).ToList();
 
         //    return View(applicants);
         //}
+
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> UpdateApplicationStatus(Guid userId, Guid jobId, bool approve)
+        //{
+        //    var application = await _context.JobApplications
+        //        .FirstOrDefaultAsync(a => a.ApplicantId == userId && a.JobId == jobId);
+
+        //    if (application == null)
+        //    {
+        //        TempData["ErrorMessage"] = "İşlem başarısız: Geçersiz kullanıcı veya iş ID.";
+        //        return RedirectToAction("ViewApplicants", new { jobId = jobId });
+        //    }
+
+        //    if (approve)
+        //    {
+        //        // Eğer onay veriliyorsa, diğer başvuruları reddediyoruz
+        //        var otherApplications = await _context.JobApplications
+        //            .Where(a => a.JobId == jobId && a.ApplicantId != userId)
+        //            .ToListAsync();
+
+        //        foreach (var otherApplication in otherApplications)
+        //        {
+        //            otherApplication.Status = JobApplicationStatus.Rejected;
+        //            otherApplication.IsApprovedByEmployer = false; // Diğer başvuruları reddet
+        //        }
+        //    }
+
+        //    application.IsApprovedByEmployer = approve;
+        //    application.Status = approve ? JobApplicationStatus.Accepted : JobApplicationStatus.Rejected;
+
+        //    await _context.SaveChangesAsync();
+
+        //    TempData["SuccessMessage"] = approve ? "Başvuru onaylandı." : "Başvuru reddedildi.";
+        //    return RedirectToAction("ViewApplicants", new { jobId = jobId });
+        //}
+
+
+        public async Task<IActionResult> ViewApplicants(Guid jobId)
+        {
+            var job = await _context.Jobs
+                .Include(j => j.JobApplications)
+                    .ThenInclude(ja => ja.Applicant)
+                .FirstOrDefaultAsync(j => j.Id == jobId);
+
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            // Giriş yapan kişinin bu ilana sahip olup olmadığını kontrol et
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (job.OwnerId != currentUser.Id)
+            {
+                return Forbid(); // Başkasının ilanına erişemezsin
+            }
+
+            ViewBag.JobId = jobId;
+
+            // Başvuranları ApplicantViewModel formatında döndür
+            var applicants = job.JobApplications.Select(ja => new ApplicantViewModel
+            {
+                ApplicantId = ja.ApplicantId,
+                UserName = ja.Applicant.UserName,
+                FullName = ja.Applicant.FullName,
+                ProfilePicture = ja.Applicant.ProfilePicture,
+                Status = ja.Status,
+                IsApprovedByEmployer = ja.IsApprovedByEmployer,
+                IsApprovedByApplicant = ja.IsApprovedByApplicant,
+                Email = ja.Applicant.Email,
+                CVPath = ja.Applicant.CVPath
+
+            }).ToList();
+
+            return View(applicants);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateApplicationStatus(Guid userId, Guid jobId, bool approve)
+        {
+            var application = await _context.JobApplications
+                .FirstOrDefaultAsync(a => a.ApplicantId == userId && a.JobId == jobId);
+
+            if (application == null)
+            {
+                TempData["ErrorMessage"] = "İşlem başarısız: Geçersiz kullanıcı veya iş ID.";
+                return RedirectToAction("ViewApplicants", new { jobId = jobId });
+            }
+
+            if (approve)
+            {
+                // Eğer onay veriliyorsa, diğer başvuruları reddediyoruz
+                var otherApplications = await _context.JobApplications
+                    .Where(a => a.JobId == jobId && a.ApplicantId != userId)
+                    .ToListAsync();
+
+                foreach (var otherApplication in otherApplications)
+                {
+                    otherApplication.Status = JobApplicationStatus.Rejected;
+                    otherApplication.IsApprovedByEmployer = false; // Diğer başvuruları reddet
+                }
+            }
+
+            application.IsApprovedByEmployer = approve;
+            application.Status = approve ? JobApplicationStatus.Accepted : JobApplicationStatus.Rejected;
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = approve ? "Başvuru onaylandı." : "Başvuru reddedildi.";
+            return RedirectToAction("ViewApplicants", new { jobId = jobId });
+        }
 
     }
 }
