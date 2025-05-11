@@ -10,13 +10,15 @@ namespace FreelanceProject.Data.Entities
         public string Surname { get; set; } = null!;
         public string FullName { get { return Name + " " + Surname; } }
         public DateTime BirthDate { get; set; }
-
+       
         public string? Title { get; set; }
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
         public string? WorkingAtLogo { get; set; }
+        
 
         //public string? LivesIn { get; set; }
+
 
         public string? Country { get; set; }
 
@@ -43,6 +45,8 @@ namespace FreelanceProject.Data.Entities
         public DateTime RegisteredDate { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public string? CVPath { get; set; }
 
         public string? ProfilePicture { get; set; }
         public string? CoverImagePicture { get; set; }
@@ -78,6 +82,8 @@ namespace FreelanceProject.Data.Entities
                     return CoverImagePicture;
                 case PhotoType.WorkingAtLogo:
                     return WorkingAtLogo;
+                case PhotoType.CV:
+                    return CVPath;
                 default:
                     return "";
             }

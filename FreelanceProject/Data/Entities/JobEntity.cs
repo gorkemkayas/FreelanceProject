@@ -35,6 +35,6 @@ namespace FreelanceProject.Data.Entities
             public virtual AppUser Owner { get; set; }
 
             // Bu ilana yapılan başvurular
-            public virtual ICollection<JobApplicationEntity> Applications { get; set; } = new List<JobApplicationEntity>();
+            public virtual ICollection<JobApplicationEntity> JobApplications { get; set; } = new List<JobApplicationEntity>();
         }
     }

@@ -27,6 +27,8 @@ namespace FreelanceProject.Data.Entities
     {
         Pending = 0, // Başvuru beklemede
         Accepted = 1, // Başvuru kabul edildi
-        Rejected = 2 // Başvuru reddedildi
+        Rejected = 2, // Başvuru reddedildi
+        Ongoing = 3, // Başvuru devam ediyor
+        Completed = 4 // Başvuru tamamlandı
     }
 }

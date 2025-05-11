@@ -1,0 +1,717 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Checkout | Luxury Brand</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F5D020 50%, #D4AF37 100%);
+            --platinum-gradient: linear-gradient(135deg, #e0e0e0 0%, #c9c9c9 50%, #e0e0e0 100%);
+            --dark-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+            --success-gradient: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            --glow-effect: 0 0 15px rgba(142, 45, 226, 0.5);
+        }
+
+        .btn-premium {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(67, 97, 238, 0.2);
+        }
+
+            .btn-premium:hover {
+                background: var(--hover-gradient);
+                color: white;
+                transform: translateY(-1px);
+                box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            }
+
+        body {
+            background: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .luxury-header {
+            background: var(--dark-gradient);
+            color: white;
+            padding: 4rem 0 6rem;
+            margin-bottom: -3rem;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Playfair Display', serif;
+        }
+
+            .luxury-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+               
+            }
+
+            .luxury-header::after {
+                content: '';
+                position: absolute;
+                bottom: -50px;
+                left: -10%;
+                right: -10%;
+                height: 100px;
+                background: white;
+                transform: rotate(-2deg);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            }
+
+        .luxury-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+
+            .luxury-card:hover {
+                transform: translateY(-10px) scale(1.01);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+
+            .luxury-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: var(--primary-gradient);
+            }
+
+        .cart-header {
+            background: var(--dark-gradient);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .cart-header::after {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 100px;
+                height: 100px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 50%;
+            }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #8E2DE2;
+                box-shadow: var(--glow-effect);
+            }
+
+        .btn-luxury {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+            .btn-luxury::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient( to bottom right, rgba(255,255,255,0) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 55% );
+                transform: rotate(30deg);
+                transition: all 0.5s;
+                opacity: 0;
+            }
+
+            .btn-luxury:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(142, 45, 226, 0.4);
+            }
+
+                .btn-luxury:hover::after {
+                    animation: shine 1.5s;
+                    opacity: 1;
+                }
+
+        .payment-method {
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .payment-method::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 5px;
+                height: 100%;
+                background: var(--primary-gradient);
+                transition: all 0.3s;
+                opacity: 0;
+            }
+
+            .payment-method:hover {
+                border-color: #8E2DE2;
+                transform: translateX(5px);
+            }
+
+            .payment-method.active {
+                border: 1px solid #8E2DE2;
+                background-color: rgba(142, 45, 226, 0.03);
+                box-shadow: var(--glow-effect);
+            }
+
+                .payment-method.active::before {
+                    opacity: 1;
+                }
+
+        .list-group-item {
+            border-left: none;
+            border-right: none;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+            .list-group-item:hover {
+                background: rgba(0,0,0,0.02);
+            }
+
+        .badge-luxury {
+            background: var(--gold-gradient);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+            margin: 2rem 0;
+            position: relative;
+        }
+
+            .divider::before {
+                content: '✧';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 0 15px;
+                color: #8E2DE2;
+                font-size: 1.2rem;
+            }
+
+        .floating-label {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+            .floating-label label {
+                position: absolute;
+                top: -10px;
+                left: 18px;
+                padding: 0 8px;
+                background: white;
+                font-size: 0.85rem;
+                color: #8E2DE2;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                z-index: 1;
+                transition: all 0.3s;
+            }
+
+        .credit-card {
+            background: var(--dark-gradient);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-family: 'Courier New', monospace;
+            transition: all 0.4s;
+        }
+
+            .credit-card:hover {
+                transform: rotate(-1deg);
+            }
+
+            .credit-card::after {
+                content: '';
+                position: absolute;
+                top: -100px;
+                right: -100px;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+                border-radius: 50%;
+            }
+
+        .card-logo {
+            text-align: right;
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+
+        .card-number {
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            margin: 30px 0;
+            font-weight: 500;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+        }
+
+            .card-details small {
+                opacity: 0.7;
+                display: block;
+                margin-bottom: 5px;
+                font-size: 0.7rem;
+                letter-spacing: 1px;
+            }
+
+
+        .select-gradient {
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-image: linear-gradient(white, white), /* select iç kısmı */
+            var(--primary-gradient); /* kenarlık */
+            transition: all 0.3s ease;
+            outline: none;
+            appearance: none; /* varsayılan ok simgesini kaldırır */
+            -webkit-appearance: none; /* Safari ve Chrome için */
+            -moz-appearance: none; /* Firefox için */
+            background-repeat: no-repeat;
+            background-position: right 1rem center; /* özel ok simgesi için yer açar */
+            padding-right: 2.5rem; /* özel ok simgesi için boşluk */
+            cursor: pointer;
+        }
+
+            .select-gradient:focus {
+                background-image: linear-gradient(white, white), var(--hover-gradient);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            }
+
+
+
+
+
+        .luxury-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--gold-gradient);
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            z-index: 2;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.05;
+            font-size: 8rem;
+            font-weight: 700;
+            z-index: 0;
+            font-family: 'Playfair Display', serif;
+            pointer-events: none;
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient( 135deg, rgba(142, 45, 226, 0.03) 0%, rgba(74, 0, 224, 0.03) 100% );
+            z-index: -1;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-gradient);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .input-gradient {
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-image: linear-gradient(white, white), /* input iç kısmı */
+            var(--primary-gradient); /* kenarlık */
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+            .input-gradient:focus {
+                background-image: linear-gradient(white, white), var(--hover-gradient); /* focus olduğunda kenarlık değişir */
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2); /* hafif parlama efekti */
+            }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <header class="luxury-header" style="z-index:1000">
+        <div class="container position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="display-4 fw-bold mb-4">Pay the job fee and get the job done.</h1>
+                    <p class="lead opacity-75 mb-4">Complete your premium purchase with our secure payment gateway</p>
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <span>256-bit Encryption</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-lock me-2"></i>
+                            <span>PCI DSS Compliant</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">TaskFlow</div>
+    </header>
+
+    <div class="container position-relative mt-4" style="z-index: 2;">
+        <div class="row g-5">
+            <div class="col-xl-4 col-lg-5 order-lg-last">
+                <div class="position-relative">
+                    <div class="luxury-card mb-5">
+                        <div class="cart-header">
+                            <h4 class="mb-0 d-flex justify-content-between align-items-center">
+                                <span><i class="far fa-credit-card me-2"></i> Payment Summary</span>
+                                <span class="badge badge-luxury rounded-pill">3 items</span>
+                            </h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Platinum Membership</div>
+                                    <small>Annual subscription</small>
+                                </div>
+                                <span class="fw-bold">$299.00</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">Exclusive Add-ons</div>
+                                    <small>Priority features</small>
+                                </div>
+                                <span class="fw-bold">$99.00</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">VIP Support</div>
+                                    <small>24/7 dedicated line</small>
+                                </div>
+                                <span class="fw-bold">$199.00</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <div class="text-success ms-2">
+                                    <div class="fw-bold">Exclusive Discount</div>
+                                    <small>VIP2023</small>
+                                </div>
+                                <span class="text-success fw-bold">−$100.00</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between fw-bold fs-4 py-3">
+                                <span>Total (USD)</span>
+                                <strong>$497.00</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="luxury-card p-4">
+                    <div class="credit-card mb-4">
+                        <div class="card-logo">
+                            <i class="fab fa-cc-visa fa-3x" style="color: #fff;"></i>
+                        </div>
+                        <div class="card-number">•••• •••• •••• 4242</div>
+                        <div class="card-details">
+                            <div>
+                                <small>CARD HOLDER</small>
+                                <div>JOHN SMITH</div>
+                            </div>
+                            <div>
+                                <small>EXPIRES</small>
+                                <div>12/25</div>
+                            </div>
+                            <div>
+                                <small>CVV</small>
+                                <div>•••</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="mt-3">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control input-gradient " placeholder="Promo code">
+                            <button class="btn btn-luxury text-white" type="button">Apply</button>
+                        </div>
+                        <small class="text-muted d-block text-center">
+                            <i class="fas fa-tag me-1"></i> Have a discount code? Enter it above
+                        </small>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-xl-8 col-lg-7">
+                <div class="luxury-card p-5">
+                    <h2 class="mb-5 fw-bold text-center " style="font-family: 'Playfair Display', serif;">
+                        <i class="fas fa-crown me-3" style="background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                        Billing Information
+                    </h2>
+
+                    <form class="needs-validation" novalidate>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="floating-label">
+                                    <input type="text" class="form-control input-gradient" id="firstName" placeholder=" " required>
+                                    <label for="firstName"><i class="far fa-user me-2"></i>First name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="floating-label">
+                                    <input type="text" class="form-control input-gradient" id="lastName" placeholder=" " required>
+                                    <label for="lastName"><i class="far fa-user me-2"></i>Last name</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="floating-label">
+                                    <input type="email" class="form-control input-gradient" id="email" placeholder=" " required>
+                                    <label for="email"><i class="far fa-envelope me-2"></i>Email address</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="floating-label">
+                                    <input type="text" class="form-control input-gradient" id="address" placeholder=" " required>
+                                    <label for="address"><i class="fas fa-map-marker-alt me-2"></i>Street address</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="floating-label">
+                                    <input type="text" class="form-control input-gradient" id="address2" placeholder=" ">
+                                    <label for="address2"><i class="fas fa-building me-2"></i>Apt, suite, etc. (optional)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="floating-label">
+                                    <select class="form-select" id="country" required>
+                                        <option value=""></option>
+                                        <option>United States</option>
+                                        <option>United Kingdom</option>
+                                        <option>Canada</option>
+                                        <option>Australia</option>
+                                        <option>Germany</option>
+                                    </select>
+                                    <label for="country"><i class="fas fa-globe me-2"></i>Country</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="floating-label">
+                                    <select class="form-select" style="background-color:white" id="state" required>
+                                        <option value=""></option>
+                                        <option>California</option>
+                                        <option>New York</option>
+                                        <option>Texas</option>
+                                        <option>Florida</option>
+                                        <option>Illinois</option>
+                                    </select>
+                                    <label for="state"><i class="fas fa-map-pin me-2"></i>State</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="floating-label">
+                                    <input type="text" class="form-control" style="background-color:white" id="zip" placeholder=" " required>
+                                    <label for="zip"><i class="fas fa-mail-bulk me-2"></i>ZIP code</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <h3 class="mb-4 fw-bold text-center" style="font-family: 'Playfair Display', serif;">
+                            <i class="far fa-credit-card me-3" style="color: #8E2DE2;"></i>
+                            Payment Method
+                        </h3>
+
+                        <div class="mb-5">
+                            <div class="payment-method active">
+                                <div class="form-check">
+                                    <input class="form-check-input " type="radio" name="paymentMethod" id="credit" checked>
+                                    <label class="form-check-label fw-bold d-flex align-items-center" for="credit">
+                                        <i class="far fa-credit-card me-3 fa-lg" style="color: #8E2DE2;"></i>
+                                        <div>
+                                            <div>Credit Card</div>
+                                            <small class="text-muted d-block">Visa, Mastercard, American Express</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="mt-4" id="credit-card-fields">
+                                    <div class="row g-4">
+                                        <div class="col-12">
+                                            <div class="floating-label">
+                                                <input type="text" class="form-control input-gradient" id="cc-name" placeholder=" " required>
+                                                <label for="cc-name"><i class="far fa-user me-2"></i>Name on card</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="floating-label">
+                                                <input type="text" class="form-control input-gradient" id="cc-number" placeholder=" " required>
+                                                <label for="cc-number"><i class="far fa-credit-card me-2"></i>Card number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="floating-label">
+                                                <input type="text" class="form-control input-gradient" id="cc-expiration" placeholder=" " required>
+                                                <label for="cc-expiration"><i class="far fa-calendar-alt me-2"></i>Expiration date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="floating-label">
+                                                <input type="text" class="form-control input-gradient" id="cc-cvv" placeholder=" " required>
+                                                <label for="cc-cvv"><i class="fas fa-lock me-2"></i>CVV</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-method">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="paypal">
+                                    <label class="form-check-label fw-bold d-flex align-items-center" for="paypal">
+                                        <i class="fab fa-paypal me-3 fa-lg" style="color: #003087;"></i>
+                                        <div>
+                                            <div>PayPal</div>
+                                            <small class="text-muted d-block">Secure online payments</small>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="payment-method">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="crypto">
+                                    <label class="form-check-label fw-bold d-flex align-items-center" for="crypto">
+                                        <i class="fab fa-bitcoin me-3 fa-lg" style="color: #F7931A;"></i>
+                                        <div>
+                                            <div>Cryptocurrency</div>
+                                            <small class="text-muted d-block">Bitcoin, Ethereum, Litecoin</small>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-5">
+                            <input class="form-check-input" type="checkbox" id="save-info" checked>
+                            <label class="form-check-label" for="save-info">
+                                Save this information for faster checkout next time
+                            </label>
+                        </div>
+
+                        <button class="w-100 btn btn-luxury btn-lg py-3 fw-bold text-white" type="submit" id="submitBtn">
+                            <i class="fas fa-lock me-2"></i> Complete Secure Payment - $497.00
+                        </button>
+
+                        <p class="text-center text-muted mt-4 small">
+                            <i class="fas fa-shield-alt me-1"></i> Your transaction is secured with 256-bit SSL encryption and processed in a PCI DSS compliant environment.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="my-5 pt-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="mb-3">LUXURY BRAND</h5>
+                    <p class="text-muted small">Exclusive products for discerning customers</p>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="mb-3">Secure Payment</h5>
+                    <div class="d-flex justify-content-center">
+                        <i class="fab fa-cc-visa fa-2x mx-2" style="color: #1A1F71;"></i>
+                        <i class="fab fa-cc-mastercard fa-2x mx-2" style="color: #EB001B;"></i>
+                        <i class="fab fa-cc-amex fa-2x mx-2" style="color: #016FD0;"></i>
+                        <i class="fab fa-cc-paypal fa-2x mx-2" style="color: #003087;"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="mb-3">Need Help?</h5>
+                    <a href="#" class="text-decoration-none me-3">Contact Us</a>
+                    <a href="#" class="text-decoration-none">FAQ</a>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="small text-muted mb-0">© 2023 Luxury Brand. All rights reserved. <a href="#" class="text-decoration-none ms-2">Privacy Policy</a> <a href="#" class="text-decoration-none ms-2">Terms of Service</a></p>
+        </div>
+    </footer>
+
+
+   
+</body>
+</html>

@@ -100,6 +100,119 @@
     .image-container-headerr:hover .overlay-icon-headerr {
         opacity: 1; /* Üzerine gelindiğinde görünür yap */
     }
+
+    .application-card {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+    }
+
+    .application-header {
+        background: var(--primary-gradient);
+        padding: 1.5rem;
+        text-align: center;
+        color: white;
+    }
+
+        .application-header h3 {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+    .job-title {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+
+    .application-body {
+        padding: 2rem;
+        background-color: #f8f9fa;
+    }
+
+/*     .form-label {
+        font-weight: 600;
+        color: #2b2d42;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .required-field::after {
+        content: "*";
+        color: #e74c3c;
+        margin-left: 4px;
+    } */
+
+/*     .form-control, .form-select, .form-file-input {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+        } */
+
+    .upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+    .upload-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .file-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 1rem;
+    }
+
+    .btn-apply {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.25);
+        font-size: 1rem;
+    }
+
+        .btn-apply:hover {
+            background: var(--hover-gradient);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.35);
+        }
+
+    .privacy-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .form-note {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-style: italic;
+    }
 </style>
 
 @section Scripts {
@@ -127,6 +240,7 @@
                                 <input type="hidden" asp-for="@Model.SecurityStamp" value="@Model.SecurityStamp" />
                                 <input type="hidden" asp-for="@Model.ConcurrencyStamp" value="@Model.ConcurrencyStamp" />
                                 <input type="hidden" asp-for="@Model.RegisteredDate" value="@Model.RegisteredDate" />
+                                <input type="hidden" asp-for="@Model.EmailConfirmed" value="@Model.EmailConfirmed" />
                                 <!-- Profile Header -->
                                 <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
                                     <!-- Cover Image -->
@@ -316,6 +430,20 @@
                                 </div>
                                 <hr class="m-0" style="margin-top:10px" />
 
+                                <!-- CV Information -->
+                                <div class="mb-4 mx-5">
+                                    <label class="form-label required-field">CV Yükleme</label>
+                                    <div class="upload-area" id="uploadArea">
+                                        <div class="upload-icon">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </div>
+                                        <h6>CV'nizi sürükleyip bırakın veya <span class="text-primary">göz atın</span></h6>
+                                        <p class="form-note">PDF, DOC veya DOCX formatları kabul edilmektedir (Max. 5MB)</p>
+                                        <input type="file" id="CVFile" name="CVFile" class="d-none" accept=".pdf,.doc,.docx" required>
+                                        <div id="fileName" class="file-info d-none"></div>
+                                    </div>
+                                </div>
+                                <hr class="m-0" style="margin-top:10px" />
                                 <div class="card-body p-2 text-black">
                                     <!-- Security Information -->
                                     <div class="mb-2">
@@ -620,6 +748,51 @@
             reader.readAsDataURL(file);
 
 
+        }
+    });
+
+
+    // Dosya yükleme alanı için JavaScript
+    document.getElementById('uploadArea').addEventListener('click', function () {
+        document.getElementById('CVFile').click();
+    });
+
+    document.getElementById('CVFile').addEventListener('change', function (e) {
+        const fileNameDiv = document.getElementById('fileName');
+        if (this.files.length > 0) {
+            fileNameDiv.textContent = 'Seçilen dosya: ' + this.files[0].name;
+            fileNameDiv.classList.remove('d-none');
+            document.getElementById('uploadArea').style.borderColor = '#4361ee';
+            document.getElementById('uploadArea').style.backgroundColor = 'rgba(67, 97, 238, 0.05)';
+        } else {
+            fileNameDiv.classList.add('d-none');
+        }
+    });
+
+    // Sürükle bırak fonksiyonelliği
+    const uploadArea = document.getElementById('uploadArea');
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#4361ee';
+        uploadArea.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#dee2e6';
+        uploadArea.style.backgroundColor = '#f8f9fa';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#dee2e6';
+        uploadArea.style.backgroundColor = '#f8f9fa';
+
+        if (e.dataTransfer.files.length) {
+            document.getElementById('CVFile').files = e.dataTransfer.files;
+            const fileNameDiv = document.getElementById('fileName');
+            fileNameDiv.textContent = 'Seçilen dosya: ' + e.dataTransfer.files[0].name;
+            fileNameDiv.classList.remove('d-none');
         }
     });
 </script>
