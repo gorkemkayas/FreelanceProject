@@ -293,7 +293,7 @@
                                                     @* <a href="#" class="btn btn-view-applicants">
                                                         <i class="fas fa-users"></i> View Applicants
                                                     </a> *@
-                                                    <a asp-action="ViewApplicants" asp-route-jobId="@job.Id" class="btn btn-info">View Applicants</a>
+                                                    <a asp-controller="Jobs" asp-action="ViewApplicants" asp-route-jobId="@job.Id" class="btn btn-info">View Applicants</a>
 
                                                     <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-edit">
                                                         <i class="fas fa-edit"></i> Edit

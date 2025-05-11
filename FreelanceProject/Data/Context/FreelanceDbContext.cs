@@ -42,6 +42,11 @@ namespace FreelanceProject.Data.Context
                       .HasPrecision(18, 2); // 18 basamaklı, 2 ondalıklı
             });
 
+            // JobApplicationEntity için benzersiz kısıtlama ekliyoruz
+            builder.Entity<JobApplicationEntity>()
+                .HasIndex(ja => new { ja.ApplicantId, ja.JobId })
+                .IsUnique(); // Aynı kullanıcı aynı işe birden fazla başvuru yapamaz
+
         }
 
 
