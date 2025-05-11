@@ -147,7 +147,7 @@ namespace FreelanceProject.Controllers
         }
 
 
-
+        [Route("Messages")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateJobViewModel model)

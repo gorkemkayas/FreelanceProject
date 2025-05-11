@@ -224,6 +224,23 @@
                             </form>
                         } *@
 
+                        @*  <a href="#" class="btn btn-outline-primary px-4">
+                        <i class="fas fa-envelope me-1"></i> Contact Client
+                        </a>  *@
+
+                        <a asp-action="ViewChat"
+                           asp-controller="Messages"
+                           asp-route-receiverId="@Model.Owner.Id"
+                           asp-route-jobId="@Model.Id"
+                           class="btn btn-outline-primary px-4">
+                            <i class="fas fa-envelope me-1"></i> Contact Client
+                        </a>
+
+
+
+                    </div>
+
+
                         @if (User.Identity.IsAuthenticated)
                         {
                             <form asp-action="ApplyForJob" asp-controller="Jobs" method="post" onsubmit="return checkCVBeforeApply('@User.Identity.Name');">

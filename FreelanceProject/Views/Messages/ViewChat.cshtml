@@ -1,68 +1,475 @@
-﻿@* @* @model FreelanceProject.Models.ViewModels.ChatViewModel
+﻿ @model FreelanceProject.Models.ViewModels.ChatViewModel
 
-@{
-    ViewData["Title"] = "Chat with Client";
-}
+<div class="chat-app">
+    <!-- Chat Header -->
+    <div class="chat-header d-flex align-items-center p-3 bg-gradient-primary text-white position-sticky top-0 z-index-10">
+        <div class="d-flex align-items-center flex-grow-1">
+            <button class="btn btn-sm btn-outline-light rounded-circle me-2 d-lg-none" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="user-avatar me-3">
+                <img src="https://ui-avatars.com/api/?name=@(Model.Messages.FirstOrDefault()?.Receiver?.UserName ?? "User")&background=random&bold=true"
+                     class="rounded-circle shadow-sm" width="50" alt="User Avatar">
+            </div>
+            <div class="user-info">
+                <h5 class="mb-0">@Model.Messages.FirstOrDefault()?.Receiver?.UserName ?? "User"</h5>
+                <small class="opacity-75 d-flex align-items-center">
+                    <span class="status-indicator bg-success me-1"></span>
+                    <span class="status-text">Online</span>
+                </small>
+            </div>
+        </div>
+        <div class="chat-actions">
+            <button class="btn btn-sm btn-light rounded-circle mx-1" title="Voice call">
+                <i class="fas fa-phone"></i>
+            </button>
+            <button class="btn btn-sm btn-light rounded-circle mx-1" title="Video call">
+                <i class="fas fa-video"></i>
+            </button>
+            <div class="dropdown d-inline-block">
+                <button class="btn btn-sm btn-light rounded-circle mx-1 dropdown-toggle" type="button" id="chatMenu" data-bs-toggle="dropdown">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle me-2"></i>View Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-bell-slash me-2"></i>Mute Notifications</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt me-2"></i>Leave Chat</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-<main class="py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3">Messages for Job: @Model.Job.Title</h5>
+    <!-- Chat Messages -->
+    <div class="chat-messages p-4" id="messagesContainer">
+        @{
+            var currentDate = DateTime.MinValue;
+            foreach (var message in Model.Messages)
+            {
+                if (message.SentDate.Date != currentDate.Date)
+                {
+                    currentDate = message.SentDate;
+                    <div class="message-date-divider text-center my-3">
+                        <span class="badge bg-light text-dark fw-normal px-3 py-1 shadow-sm">
+                            @currentDate.ToString("dd MMMM yyyy")
+                        </span>
+                    </div>
+                }
 
-                        <!-- Mesaj Listesi -->
-                        <div class="messages-list">
-                            @foreach (var message in Model.Messages)
+                var isMine = message.SenderId == Model.OwnerId;
+                var messageClass = isMine ? "outgoing" : "incoming";
+
+                <div class="message @messageClass mb-4" data-message-id="@message.Id">
+                    @if (!isMine)
+                    {
+                        <img src="https://ui-avatars.com/api/?name=@message.Sender.UserName&background=random&bold=true"
+                             class="message-avatar rounded-circle shadow-sm" alt="Sender Avatar"
+                             title="@message.Sender.UserName" data-bs-toggle="tooltip">
+                    }
+                    <div class="message-content">
+                        @if (!isMine)
+                        {
+                            <div class="message-header d-flex align-items-center mb-1">
+                                <strong class="me-2">@message.Sender.UserName</strong>
+                                <small class="text-muted ms-auto">@message.SentDate.ToString("HH:mm")</small>
+                            </div>
+                        }
+                        <div class="message-body position-relative">
+                            <p class="mb-0">@message.Content</p>
+                            @if (isMine)
                             {
-                                <div class="message">
-                                    <div class="message-header d-flex justify-content-between">
-                                        <strong>@message.Sender.UserName:</strong> @message.Content <br />
-                                        <small>@message.SentDate.ToString("dd MMMM yyyy, HH:mm")</small>
-                                    </div>
-                                    <p>@message.Content</p>
-                                    
+                                <div class="message-status position-absolute end-0 bottom-0 mb-1 me-2">
+                                    <small class="text-white-50">
+                                        @message.SentDate.ToString("HH:mm")
+                                        <i class="fas @(message.IsRead ? "fa-check-double text-info" : "fa-check") ms-1"></i>
+                                    </small>
                                 </div>
                             }
                         </div>
-                        
-                        <!-- Yeni Mesaj Gönderme -->
-                        <form method="post" asp-action="SendMessage" asp-controller="Messages" asp-route-jobId="@Model.Job.Id ">
-                            <textarea name="newMessageContent" rows="4" cols="50" placeholder="Type your message..." required></textarea>
-                            <button type="submit" class="btn btn-primary mt-2">Send</button>
-                        </form>
+                        @if (isMine)
+                        {
+                            <div class="message-actions mt-1 text-end">
+                                <button class="btn btn-sm btn-link text-muted p-0 me-2" title="Edit">
+                                    <i class="fas fa-edit small"></i>
+                                </button>
+                                <button class="btn btn-sm btn-link text-muted p-0" title="Delete">
+                                    <i class="fas fa-trash-alt small"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Message Input -->
+    <div class="chat-input p-3 border-top bg-light">
+        <form asp-action="SendMessage" asp-controller="Messages" method="post" class="message-form needs-validation" novalidate>
+            <input type="hidden" name="JobId" value="@Model.Job.Id" />
+            <input type="hidden" name="ReceiverId" value="@Model.ReceiverId" />
+            <input type="hidden" name="SenderId" value="@Model.OwnerId" />
+
+            <div class="input-group has-validation">
+                <button type="button" class="btn btn-outline-secondary rounded-start-pill px-3" id="emojiPickerBtn">
+                    <i class="far fa-smile"></i>
+                </button>
+                <div class="form-floating flex-grow-1">
+                    <textarea name="newMessageContent" class="form-control border-start-0 border-end-0 rounded-0 px-3"
+                              placeholder="Write your message..." id="messageInput" style="min-height: 50px" required></textarea>
+                    <label for="messageInput" class="px-3">Write your message...</label>
+                    <div class="invalid-feedback px-3">
+                        Please enter a message
+                    </div>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary" title="Attach file">
+                        <i class="fas fa-paperclip"></i>
+                        <input type="file" class="d-none" id="fileUpload">
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-end-pill px-3" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mt-2" id="filePreview"></div>
+        </form>
+    </div>
+</div>
+
+<!-- Emoji Picker Modal -->
+<div class="modal fade" id="emojiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Emoji</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="emoji-container">
+                    <div class="emoji-category mb-3">
+                        <h6>Smileys</h6>
+                        <div class="emoji-list">
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="😀" style="font-size: 24px;">😀</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="😂" style="font-size: 24px;">😂</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="😍" style="font-size: 24px;">😍</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="😎" style="font-size: 24px;">😎</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="🥳" style="font-size: 24px;">🥳</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="😢" style="font-size: 24px;">😢</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="😡" style="font-size: 24px;">😡</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="👍" style="font-size: 24px;">👍</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="❤️" style="font-size: 24px;">❤️</button>
+                            <button type="button" class="btn btn-link p-0 border-0 emoji-option" data-emoji="🔥" style="font-size: 24px;">🔥</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</main>
- *@
- @model FreelanceProject.Models.ViewModels.ChatViewModel
+</div>
 
-<h2>Chat with @Model.Messages.FirstOrDefault()?.Receiver?.UserName ?? "User"</h2>
-
-<div class="messages-list">
-    @foreach (var message in Model.Messages)
-    {
-        var isMine = message.SenderId == Model.OwnerId;
-
-        <div class="message @(isMine ? "text-end" : "text-start")">
-            <strong>@message.Sender.UserName:</strong>
-            <p>@message.Content</p>
-            <small>@message.SentDate.ToString("g")</small>
-        </div>
+<style>
+    .chat-app {
+        max-width: 800px;
+        margin: 20px auto;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+        background: white;
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
     }
-</div> 
 
-<!-- Yeni Mesaj Gönderme -->
- <form asp-action="SendMessage" asp-controller="Messages" method="post">
-    <input type="hidden" name="JobId" value="@Model.Job.Id" />
-    <input type="hidden" name="ReceiverId" value="@Model.ReceiverId" />
-    <input type="hidden" name="SenderId" value="@Model.OwnerId" />
+    .chat-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        z-index: 10;
+    }
 
-    <textarea name="newMessageContent" rows="3" placeholder="Mesajınızı yazın..." required></textarea>
-    <button type="submit" class="btn btn-primary mt-2">Gönder</button>
-</form>
-  
+    .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        background-image: url('https://www.transparenttextures.com/patterns/light-wool.png');
+        padding-bottom: 20px;
+    }
+
+    .message {
+        display: flex;
+        max-width: 80%;
+        transition: all 0.2s;
+    }
+
+        .message:hover {
+            transform: translateY(-1px);
+        }
+
+        .message.incoming {
+            align-self: flex-start;
+        }
+
+        .message.outgoing {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        align-self: flex-end;
+        margin: 0 10px 5px 0;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .message.outgoing .message-avatar {
+        margin: 0 0 5px 10px;
+    }
+
+    .message-content {
+        max-width: calc(100% - 50px);
+        min-width: 120px;
+    }
+
+    .message-body {
+        padding: 12px 16px;
+        border-radius: 18px;
+        line-height: 1.4;
+        position: relative;
+        word-break: break-word;
+    }
+
+    .message.incoming .message-body {
+        background: white;
+        border-top-left-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .message.outgoing .message-body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-top-right-radius: 4px;
+    }
+
+    .message-actions {
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .message:hover .message-actions {
+        opacity: 1;
+    }
+
+    .chat-input {
+        background: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    #messageInput {
+        resize: none;
+        min-height: 50px;
+        max-height: 150px;
+        overflow-y: auto !important;
+    }
+
+    .emoji-container {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .emoji-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .emoji-option {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+        .emoji-option:hover {
+            transform: scale(1.2);
+        }
+
+    .message-attachment {
+        margin-top: 8px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Custom scrollbar */
+    .chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+    }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+    /* Animations */
+    .message {
+        animation: fadeInUp 0.3s ease-out;
+    }
+
+    .message-date-divider {
+        position: relative;
+    }
+
+        .message-date-divider::before,
+        .message-date-divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .message-date-divider::before {
+            left: 0;
+        }
+
+        .message-date-divider::after {
+            right: 0;
+        }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .chat-app {
+            height: 100vh;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        .message {
+            max-width: 90%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Auto-scroll to bottom
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Auto-resize textarea
+            const textarea = document.getElementById('messageInput');
+            textarea.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Form validation
+            const form = document.querySelector('.needs-validation');
+            form.addEventListener('submit', function (e) {
+                if (!textarea.value.trim()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    form.classList.add('was-validated');
+                }
+            }, false);
+
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Emoji picker functionality
+            const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
+            const emojiPickerBtn = document.getElementById('emojiPickerBtn');
+
+            emojiPickerBtn.addEventListener('click', function () {
+                emojiModal.show();
+            });
+
+            // Insert emoji at cursor position
+            document.querySelectorAll('.emoji-option').forEach(emojiBtn => {
+                emojiBtn.addEventListener('click', function () {
+                    const emoji = this.getAttribute('data-emoji');
+                    const textarea = document.getElementById('messageInput');
+                    const startPos = textarea.selectionStart;
+                    const endPos = textarea.selectionEnd;
+                    const textBefore = textarea.value.substring(0, startPos);
+                    const textAfter = textarea.value.substring(endPos, textarea.value.length);
+
+                    textarea.value = textBefore + emoji + textAfter;
+                    textarea.focus();
+                    textarea.selectionStart = textarea.selectionEnd = startPos + emoji.length;
+
+                    emojiModal.hide();
+                });
+            });
+
+            // File upload handling
+            const fileUpload = document.getElementById('fileUpload');
+            const filePreview = document.getElementById('filePreview');
+
+            fileUpload.addEventListener('change', function (e) {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const fileElement = document.createElement('div');
+                    fileElement.className = 'd-flex align-items-center justify-content-between bg-white p-2 rounded';
+                    fileElement.innerHTML = `
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-alt text-primary me-2"></i>
+                                    <span class="small">${file.name}</span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            `;
+                    filePreview.appendChild(fileElement);
+
+                    // Remove file handler
+                    fileElement.querySelector('button').addEventListener('click', function () {
+                        filePreview.removeChild(fileElement);
+                        fileUpload.value = '';
+                    });
+                }
+            });
+
+            // Mobile sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function () {
+                    // This would toggle a sidebar in a full layout
+                    alert('Sidebar toggle functionality would be implemented here');
+                });
+            }
+        });
+    </script>
+}

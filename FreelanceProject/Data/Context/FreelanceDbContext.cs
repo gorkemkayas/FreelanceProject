@@ -43,6 +43,24 @@ namespace FreelanceProject.Data.Context
                       .HasPrecision(18, 2); // 18 basamaklı, 2 ondalıklı
             });
 
+            builder.Entity<MessageEntity>()
+.HasOne(m => m.Job)
+.WithMany() // Eğer Job → Message ilişkisi tanımlı değilse boş bırak
+.HasForeignKey(m => m.JobId)
+.OnDelete(DeleteBehavior.Restrict); // Silindiğinde mesajlar silinmesin
+
+            // Diğer ilişkiler (opsiyonel)
+            builder.Entity<MessageEntity>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<MessageEntity>()
+                .HasOne(m => m.Receiver)
+                .WithMany()
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // JobApplicationEntity için benzersiz kısıtlama ekliyoruz
             builder.Entity<JobApplicationEntity>()

@@ -1,28 +1,570 @@
-﻿ @model FreelanceProject.Models.ViewModels.ChatViewModel
+﻿@model FreelanceProject.Models.ViewModels.ChatViewModel
+@using Microsoft.AspNetCore.Http
 
-<h2>Message Threads for Job</h2>
+<div class="messages-container">
+    <div class="messages-header">
+        <div class="header-content">
+            <div class="header-title">
+                <i class="fas fa-comments"></i>
+                <h1>Message Threads</h1>
+                <span class="badge bg-gradient">@Model.Threads.Count</span>
+            </div>
+            <p class="job-title">For Job: <strong>@Model.Job.Title</strong></p>
+        </div>
+        <form method="get" asp-action="JobMessageThreads" asp-route-jobId="@Model.JobId">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Search conversations..." class="search-input" />
 
-@foreach (var thread in Model.Threads)
-{
-    <div class="card mb-2 p-3">
-        <strong>@thread.UserName</strong>
-        <p>@thread.LastMessage</p>
-        <small>@thread.LastMessageDate.ToString("g")</small>
+                <div class="search-border"></div>
+            </div>
+        </form>
 
-
-
-      <a asp-action="ViewChat"
-           asp-controller="Messages"
-           asp-route-receiverId="@thread.UserId"
-           asp-route-jobId="@Model.Job.Id"
-           asp-route-senderId="@Model.OwnerId" 
-           asp-route-userName="@thread.UserName" 
-           class="btn btn-sm btn-primary mt-2">
-            View Chat
-       </a>
-
-
-       
     </div>
+
+    <div class="threads-list">
+        @if (Model.Threads.Any())
+        {
+            @foreach (var thread in Model.Threads)
+            {
+                var gradientClass = "gradient-" + (Math.Abs(thread.UserId.GetHashCode()) % 5 + 1);
+
+                <div class="thread-card">
+                    <div class="user-avatar">
+                        <div class="avatar-circle @gradientClass">
+                            @thread.UserName.Substring(0, 1).ToUpper()
+                        </div>
+                       
+                    </div>
+                    <div class="thread-content">
+                        <div class="thread-header">
+                            <h3>@thread.UserName</h3>
+                            <span class="time">@thread.LastMessageDate.ToString("h:mm tt")</span>
+                        </div>
+                        <p class="message-preview">@thread.LastMessage</p>
+                        <div class="thread-footer">
+                            <span class="date">@thread.LastMessageDate.ToString("MMM d")</span>
+                            <a asp-action="ViewChat"
+                               asp-controller="Messages"
+                               asp-route-receiverId="@thread.UserId"
+                               asp-route-jobId="@Model.Job.Id"
+                               asp-route-senderId="@Model.OwnerId"
+                               asp-route-userName="@thread.UserName"
+                               class="view-chat-btn @gradientClass">
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon gradient-bg">
+                    <i class="far fa-comment-dots"></i>
+                </div>
+                <h3>No conversations yet</h3>
+                <p>Start a conversation with your collaborators</p>
+                <button class="btn btn-gradient mt-3">
+                    <i class="fas fa-plus"></i> New Message
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    :root {
+        --gradient-1: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        --gradient-2: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+        --gradient-3: linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%);
+        --gradient-4: linear-gradient(135deg, #7209b7 0%, #560bad 100%);
+        --gradient-5: linear-gradient(135deg, #f8961e 0%, #f3722c 100%);
+        --gradient-light: linear-gradient(135deg, #e0fbfc 0%, #caf0f8 100%);
+        --primary: #4361ee;
+        --primary-light: #e6f0ff;
+        --primary-dark: #3a56d4;
+        --text: #2b2b2b;
+        --text-light: #6c757d;
+        --text-lighter: #adb5bd;
+        --border: #e9ecef;
+        --bg: #f8f9fa;
+        --white: #ffffff;
+        --unread: #f8f4ff;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        background: var(--gradient-light);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        min-height: 100vh;
+    }
+
+    .messages-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .messages-header {
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header-title i {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.25rem;
+        }
+
+        .header-title .badge {
+            margin-left: 0.5rem;
+            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+        }
+
+    .bg-gradient {
+        background: var(--gradient-1);
+        color: white;
+    }
+
+    .job-title {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .search-box {
+        position: relative;
+        width: 100%;
+    }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 2;
+        }
+
+        .search-box .search-input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            background-color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+            .search-box .search-input:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+                background-color: var(--white);
+            }
+
+        .search-box .search-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .search-box .search-input:focus ~ .search-border {
+            transform: scaleX(1);
+        }
+
+    .threads-list {
+        padding: 0.5rem;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+        .threads-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .threads-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+
+        .threads-list::-webkit-scrollbar-thumb {
+            background: var(--gradient-1);
+            border-radius: 10px;
+        }
+
+    .thread-card {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        border-radius: var(--radius-sm);
+        margin-bottom: 0.5rem;
+        transition: var(--transition);
+        cursor: pointer;
+        position: relative;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+    }
+
+        .thread-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .thread-card.unread {
+            background: rgba(248, 244, 255, 0.8);
+            border-left: 3px solid;
+            border-image: var(--gradient-1);
+            border-image-slice: 1;
+        }
+
+            .thread-card.unread .message-preview {
+                font-weight: 500;
+                color: var(--text);
+            }
+
+    .user-avatar {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .avatar-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.1rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Gradient avatar classes */
+    .gradient-1 {
+        background: var(--gradient-1);
+    }
+
+    .gradient-2 {
+        background: var(--gradient-2);
+    }
+
+    .gradient-3 {
+        background: var(--gradient-3);
+    }
+
+    .gradient-4 {
+        background: var(--gradient-4);
+    }
+
+    .gradient-5 {
+        background: var(--gradient-5);
+    }
+
+    .gradient-bg {
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .unread-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .thread-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .thread-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.25rem;
+    }
+
+        .thread-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .thread-header .time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+        }
+
+    .message-preview {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin: 0 0 0.5rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .thread-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .thread-footer .date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+    .view-chat-btn {
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+    }
+
+        .view-chat-btn:hover {
+            color: white;
+            transform: translateX(2px) scale(1.1);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+    .empty-state {
+        padding: 3rem 1rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gradient-1);
+        color: white;
+    }
+
+    .empty-state h3 {
+        font-size: 1.3rem;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .empty-state p {
+        color: var(--text-light);
+        margin: 0 0 1.5rem 0;
+        max-width: 300px;
+    }
+
+    .btn-gradient {
+        background: var(--gradient-1);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: var(--radius-sm);
+        font-weight: 500;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+        .btn-gradient:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+    @@media (max-width: 768px) {
+        .messages-container {
+            margin: 0;
+            border-radius: 0;
+            min-height: 100vh;
+            border: none;
+        }
+
+        .thread-card {
+            padding: 1rem;
+        }
+    }
+
+    /* Animation for new messages */
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .thread-card.new-message {
+        animation: pulse 0.5s ease;
+    }
+
+    /* Floating effect for header */
+    .messages-header {
+        position: relative;
+        z-index: 10;
+    }
+
+        .messages-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .messages-header.scrolled::after {
+            opacity: 1;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Make entire thread card clickable
+            document.querySelectorAll('.thread-card').forEach(card => {
+                const link = card.querySelector('a.view-chat-btn');
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('a.view-chat-btn')) {
+                        window.location.href = link.href;
+                    }
+                });
+            });
+
+            // Add scroll effect to header
+            const header = document.querySelector('.messages-header');
+            const threadsList = document.querySelector('.threads-list');
+
+            if (threadsList) {
+                threadsList.addEventListener('scroll', function () {
+                    if (this.scrollTop > 10) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                });
+            }
+        });
+
+
+
+
+
+
+        document.getElementById("searchInput").addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+            const threads = document.querySelectorAll(".thread-card");
+
+            threads.forEach(thread => {
+                const userName = thread.querySelector("h3")?.textContent.toLowerCase() || "";
+                const lastMessage = thread.querySelector(".message-preview")?.textContent.toLowerCase() || "";
+
+                if (userName.includes(query) || lastMessage.includes(query)) {
+                    thread.style.display = "";
+                } else {
+                    thread.style.display = "none";
+                }
+            });
+        });
+    </script>
 }
- 
