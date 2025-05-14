@@ -5,25 +5,18 @@
 namespace FreelanceProject.Migrations
 {
     /// <inheritdoc />
-    public partial class JobTableImageAdd : Migration
+    public partial class JobApplicationNameupdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ImageUrl",
-                table: "Jobs",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ImageUrl",
-                table: "Jobs");
+
         }
     }
 }

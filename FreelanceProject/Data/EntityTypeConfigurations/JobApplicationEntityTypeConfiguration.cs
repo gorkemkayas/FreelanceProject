@@ -9,6 +9,7 @@ namespace FreelanceProject.Data.EntityTypeConfigurations
         public override void Configure(EntityTypeBuilder<JobApplicationEntity> builder)
         {
             builder.HasKey(ja => ja.Id); // Birincil anahtar
+            builder.ToTable("JobApplications"); // Tablo adı
 
             builder.Property(ja => ja.AppliedDate)
                 .HasColumnType("datetime2")

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreelanceProject.Migrations
 {
     [DbContext(typeof(FreelanceDbContext))]
-    [Migration("20250508122811_AddJobToMessages")]
-    partial class AddJobToMessages
+    [Migration("20250514192340_JobApplicationNameupdate")]
+    partial class JobApplicationNameupdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,9 @@ namespace FreelanceProject.Migrations
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("CVPath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
                         .HasMaxLength(100)
@@ -462,9 +465,10 @@ namespace FreelanceProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicantId");
-
                     b.HasIndex("JobId");
+
+                    b.HasIndex("ApplicantId", "JobId")
+                        .IsUnique();
 
                     b.ToTable("JobApplicationEntity");
                 });
@@ -585,6 +589,12 @@ namespace FreelanceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppUserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -624,6 +634,10 @@ namespace FreelanceProject.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("JobId");
 
@@ -900,7 +914,7 @@ namespace FreelanceProject.Migrations
                         .IsRequired();
 
                     b.HasOne("FreelanceProject.Data.Entities.JobEntity", "Job")
-                        .WithMany("Applications")
+                        .WithMany("JobApplications")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -948,17 +962,28 @@ namespace FreelanceProject.Migrations
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.MessageEntity", b =>
                 {
+                    b.HasOne("FreelanceProject.Data.Entities.AppUser", null)
+                        .WithMany("SentMessages")
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("FreelanceProject.Data.Entities.AppUser", null)
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("AppUserId1");
+
                     b.HasOne("FreelanceProject.Data.Entities.JobEntity", "Job")
                         .WithMany()
-                        .HasForeignKey("JobId");
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FreelanceProject.Data.Entities.AppUser", "Receiver")
-                        .WithMany("ReceivedMessages")
-                        .HasForeignKey("ReceiverId");
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FreelanceProject.Data.Entities.AppUser", "Sender")
-                        .WithMany("SentMessages")
-                        .HasForeignKey("SenderId");
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Job");
 
@@ -1085,7 +1110,7 @@ namespace FreelanceProject.Migrations
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.JobEntity", b =>
                 {
-                    b.Navigation("Applications");
+                    b.Navigation("JobApplications");
                 });
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.PostEntity", b =>

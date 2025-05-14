@@ -5,7 +5,7 @@
 namespace FreelanceProject.Migrations
 {
     /// <inheritdoc />
-    public partial class AddJobApplicationsTable : Migration
+    public partial class JobApplicationNameupdates : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,9 +32,9 @@ namespace FreelanceProject.Migrations
                 newName: "IX_JobApplications_JobId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_JobApplicationEntity_ApplicantId",
+                name: "IX_JobApplicationEntity_ApplicantId_JobId",
                 table: "JobApplications",
-                newName: "IX_JobApplications_ApplicantId");
+                newName: "IX_JobApplications_ApplicantId_JobId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_JobApplications",
@@ -83,9 +83,9 @@ namespace FreelanceProject.Migrations
                 newName: "IX_JobApplicationEntity_JobId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_JobApplications_ApplicantId",
+                name: "IX_JobApplications_ApplicantId_JobId",
                 table: "JobApplicationEntity",
-                newName: "IX_JobApplicationEntity_ApplicantId");
+                newName: "IX_JobApplicationEntity_ApplicantId_JobId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_JobApplicationEntity",

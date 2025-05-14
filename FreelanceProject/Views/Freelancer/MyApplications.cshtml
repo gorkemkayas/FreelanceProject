@@ -370,8 +370,8 @@
                                             <span class="application-status status-pending">
                                                     <i class="fas fa-hourglass-half me-1"></i> @jobApplication.Status
                                             </span>
-                                            <div class="client-info">
-                                                    <img src="/img/userPhotos/@jobApplication.Job.Owner.UserName/@jobApplication.Job.Owner.ProfilePicture" class="client-avatar">
+                                             <div class="client-info">
+                                                    <img src="@((jobApplication.Job.Owner.ProfilePicture == null) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{@jobApplication.Job.Owner.UserName}/{@jobApplication.Job.Owner.ProfilePicture}")" class="client-avatar">
                                                 <div>
                                                     <div class="client-name">@jobApplication.Job.Owner.FullName</div>
                                                     <div class="client-rating">

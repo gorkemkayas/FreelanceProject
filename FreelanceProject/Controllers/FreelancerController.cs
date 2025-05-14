@@ -25,7 +25,13 @@ namespace FreelanceProject.Controllers
         {
             var jobs = await _context.JobApplications.Where(x => x.ApplicantId.ToString() == User.FindFirstValue(ClaimTypes.NameIdentifier) && x.Status == status)
                 .Include(x => x.Applicant)
-                .Include(n => n.Job).ToListAsync();
+                .Include(n => n.Job).ThenInclude(o => o.Owner).ToListAsync();
+
+            if(jobs is null)
+            {
+                var data2 = new JobsAndCurrentTab { Jobs = new(), CurrentTab = status.ToString() };
+                return View(data2);
+            }
             var data = new  JobsAndCurrentTab{Jobs = jobs, CurrentTab = status.ToString() };
             return View(data);
         }

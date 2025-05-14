@@ -467,7 +467,7 @@ namespace FreelanceProject.Migrations
                     b.HasIndex("ApplicantId", "JobId")
                         .IsUnique();
 
-                    b.ToTable("JobApplicationEntity");
+                    b.ToTable("JobApplications", (string)null);
                 });
 
             modelBuilder.Entity("FreelanceProject.Data.Entities.JobEntity", b =>
