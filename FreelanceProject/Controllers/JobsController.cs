@@ -119,6 +119,13 @@ namespace FreelanceProject.Controllers
                 return NotFound();
             }
 
+            bool exists = await _context.JobApplications.AnyAsync(n => n.ApplicantId == user.Id && n.JobId == jobId);
+            if (exists)
+            {
+                TempData["AlreadyApplied"] = "Bu işe birden fazla kez başvuramazsını.";
+                return RedirectToAction("Details", new { id = jobId });
+            }
+
             var jobApplication = new JobApplicationEntity
             {
                 JobId = jobId,

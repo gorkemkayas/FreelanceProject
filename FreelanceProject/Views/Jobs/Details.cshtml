@@ -122,6 +122,13 @@
     }
 </style>
 
+
+@if (TempData["AlreadyApplied"] != null)
+{
+    <div class="">
+        <span class="alert alert-danger">@TempData["AlreadyApplied"]</span>
+    </div>
+}
 <main class="py-5">
     <div class="container">
         <div class="row g-4">
