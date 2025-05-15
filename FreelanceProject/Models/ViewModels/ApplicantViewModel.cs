@@ -18,7 +18,10 @@ namespace FreelanceProject.Models.ViewModels
         public bool IsApprovedByApplicant { get; set; }
         public string Email { get; set; }
         public string CVPath { get; set; }
-
+        public Guid Id { get; internal set; }
+        public string JobTitle { get; internal set; }
+        public Guid JobId { get; internal set; }
+        public string? FileName { get; internal set; }
     }
 
 }

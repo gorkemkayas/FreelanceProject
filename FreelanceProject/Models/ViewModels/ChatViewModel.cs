@@ -8,6 +8,7 @@ namespace FreelanceProject.Models.ViewModels
         public List<MessageEntity> Messages { get; set; } = new List<MessageEntity>(); // İlgili iş için mesajlar
         public string NewMessageContent { get; set; } // Yeni gönderilen mesajın içeriği
         public Guid ReceiverId { get; set; }
+        public AppUser Receiver { get; set; } // Alıcı kullanıcı bilgileri
         public Guid OwnerId { get; set; }
         public Guid UserId { get; set; }
         public string UserName { get; set; }

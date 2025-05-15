@@ -454,6 +454,9 @@ namespace FreelanceProject.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ProjectFile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()

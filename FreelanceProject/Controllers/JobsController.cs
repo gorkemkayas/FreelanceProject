@@ -71,7 +71,15 @@ namespace FreelanceProject.Controllers
                 .Take(3)
                 .ToList();
 
-            return View(job); // Ana model sadece JobEntity nesnesi
+            var isApplied  = _context.JobApplications.Any(ap => ap.Job == job && ap.ApplicantId.ToString() == User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var model = new JobAndApplicationExistsViewModel()
+            {
+                Job = job,
+                Applied = isApplied
+
+            };
+            return View(model); // Ana model sadece JobEntity nesnesi
 
         }
 
@@ -144,7 +152,7 @@ namespace FreelanceProject.Controllers
         }
 
 
-
+        [HttpGet]
         public IActionResult Create() // Yeni iş ilanı  oluşturma
         {
             var categories = new List<string> { "Web Development", "Mobile Development", "Design", "SEO", "Marketing" };  // Sabit Kategoriler
@@ -379,6 +387,7 @@ namespace FreelanceProject.Controllers
             // Başvuranları ApplicantViewModel formatında döndür
             var applicants = job.JobApplications.Select(ja => new ApplicantViewModel
             {
+                Id =ja.Id,
                 ApplicantId = ja.ApplicantId,
                 UserName = ja.Applicant.UserName,
                 FullName = ja.Applicant.FullName,
@@ -387,7 +396,11 @@ namespace FreelanceProject.Controllers
                 IsApprovedByEmployer = ja.IsApprovedByEmployer,
                 IsApprovedByApplicant = ja.IsApprovedByApplicant,
                 Email = ja.Applicant.Email,
-                CVPath = ja.Applicant.CVPath
+                CVPath = ja.Applicant.CVPath,
+                JobTitle = ja.Job.Title,
+                JobId = ja.Job.Id,
+                FileName = ja.ProjectFile
+
 
             }).ToList();
 
@@ -421,7 +434,43 @@ namespace FreelanceProject.Controllers
             }
 
             application.IsApprovedByEmployer = approve;
-            application.Status = approve ? JobApplicationStatus.Accepted : JobApplicationStatus.Rejected;
+            application.Status = approve ? JobApplicationStatus.Ongoing : JobApplicationStatus.Rejected;
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = approve ? "Başvuru onaylandı." : "Başvuru reddedildi.";
+            return RedirectToAction("ViewApplicants", new { jobId = jobId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CompleteApplicationStatus(Guid userId, Guid jobId, bool approve,JobApplicationStatus status)
+        {
+            var application = await _context.JobApplications
+                .FirstOrDefaultAsync(a => a.ApplicantId == userId && a.JobId == jobId);
+
+            if (application == null)
+            {
+                TempData["ErrorMessage"] = "İşlem başarısız: Geçersiz kullanıcı veya iş ID.";
+                return RedirectToAction("ViewApplicants", new { jobId = jobId });
+            }
+
+            //if (approve)
+            //{
+            //    // Eğer onay veriliyorsa, diğer başvuruları reddediyoruz
+            //    var otherApplications = await _context.JobApplications
+            //        .Where(a => a.JobId == jobId && a.ApplicantId != userId)
+            //        .ToListAsync();
+
+            //    foreach (var otherApplication in otherApplications)
+            //    {
+            //        otherApplication.Status = JobApplicationStatus.Rejected;
+            //        otherApplication.IsApprovedByEmployer = false; // Diğer başvuruları reddet
+            //    }
+            //}
+
+
+            application.IsApprovedByEmployer = approve;
+            application.Status = approve ? JobApplicationStatus.Completed : (application.Status == JobApplicationStatus.Ongoing ? JobApplicationStatus.Revise : JobApplicationStatus.Rejected);
 
             await _context.SaveChangesAsync();
 

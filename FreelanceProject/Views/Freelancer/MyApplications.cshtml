@@ -6,6 +6,16 @@
 
 @model JobsAndCurrentTab
 
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
 <style>
     .applications-card {
         border-radius: 12px;
@@ -313,7 +323,7 @@
                                                     <i class="fas fa-spinner me-1"></i> @jobApplication.Status
                                             </span>
                                             <div class="client-info">
-                                                <img src="/img/userPhotos/@jobApplication.Job.Owner.UserName/@jobApplication.Job.Owner.ProfilePicture" class="client-avatar">
+                                                    <img src="@((jobApplication.Job.Owner.ProfilePicture == null) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{@jobApplication.Job.Owner.UserName}/{@jobApplication.Job.Owner.ProfilePicture}")" class="client-avatar">
                                                 <div>
                                                     <div class="client-name">@jobApplication.Job.Owner.FullName</div>
                                                     <div class="client-rating">
@@ -323,10 +333,65 @@
                                             </div>
                                         </div>
                                         <div class="action-buttons">
-                                            <a href="#" class="btn btn-view">
-                                                <i class="fas fa-eye"></i> View Job
-                                            </a>
-                                            <a href="#" class="btn btn-message">
+                                                <a asp-controller="Jobs" asp-action="Details" asp-route-id="@jobApplication.JobId" class="btn btn-sm btn-view">
+                                                    <i class="fas fa-eye"></i> View Job
+                                                </a>
+                                                @* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#projectSubmitModal">
+                                                    Teslim Et
+                                                </button> *@
+                                                <button type="button"
+                                                        class="btn btn-primary"
+                                                        data-toggle="modal"
+                                                        data-target="#projectSubmitModal-@jobApplication.JobId">
+                                                    Teslim Et
+                                                </button>
+
+                                                @* <button type="button"
+                                                        class="btn btn-primary"
+                                                        data-toggle="modal"
+                                                        data-target="#projectSubmitModal"
+                                                        data-job-id="@job.Id"
+                                                        data-applicant-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                                                    Teslim Et
+                                                </button> *@
+
+                                                <!-- Proje Teslim Modal -->
+                                                <div class="modal fade" id="projectSubmitModal-@jobApplication.JobId" tabindex="-1" role="dialog" aria-labelledby="projectSubmitModalLabel-@jobApplication.JobId" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="projectSubmitModalLabel-@jobApplication.JobId">Proje Teslim Formu</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form asp-action="SubmitProject" method="post" enctype="multipart/form-data">
+                                                                <input type="hidden" name="jobId" value="@jobApplication.JobId" />
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="projectFile">Proje Dosyasını Seçin:</label>
+                                                                        <input type="file" class="form-control-file" id="projectFile" name="projectFile" required>
+                                                                        <small class="form-text text-muted">Lütfen proje dosyanızı yükleyin (ZIP, RAR veya proje dosyaları)</small>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="projectNotes">Açıklama (Opsiyonel):</label>
+                                                                        <textarea class="form-control" id="projectNotes" name="projectNotes" rows="3"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                                                    <button type="submit" class="btn btn-primary">Gönder</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <a asp-controller="Messages"
+                                                   asp-action="ViewChat"
+                                                   asp-route-receiverId="@jobApplication.Job.Owner.Id"
+                                                   asp-route-jobId="@jobApplication.Job.Id" class="btn btn-message">
                                                 <i class="fas fa-envelope"></i> Send Message
                                             </a>
                                         </div>
@@ -381,10 +446,13 @@
                                             </div>
                                         </div>
                                         <div class="action-buttons">
-                                            <a href="#" class="btn btn-view">
+                                                <a asp-controller="Jobs" asp-action="Details" asp-route-id="@jobApplication.JobId" class="btn btn-view">
                                                 <i class="fas fa-eye"></i> View Job
                                             </a>
-                                            <a href="#" class="btn btn-message">
+                                                <a asp-controller="Messages"
+                                                   asp-action="ViewChat"
+                                                   asp-route-receiverId="@jobApplication.Job.Owner.Id"
+                                                   asp-route-jobId="@jobApplication.Job.Id" class="btn btn-message">
                                                 <i class="fas fa-envelope"></i> Send Message
                                             </a>
                                         </div>
@@ -429,7 +497,7 @@
                                                 <i class="fas fa-check-circle"></i> @jobApplication.Status
                                             </span>
                                             <div class="client-info">
-                                                    <img src="/img/userPhotos/@jobApplication.Job.Owner.UserName/@jobApplication.Job.Owner.ProfilePicture" class="client-avatar">
+                                                    <img src="@((jobApplication.Job.Owner.ProfilePicture == null) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{@jobApplication.Job.Owner.UserName}/{@jobApplication.Job.Owner.ProfilePicture}")" class="client-avatar">
                                                 <div>
                                                     <div class="client-name">@jobApplication.Job.Owner.FullName</div>
                                                     <div class="client-rating">
@@ -439,10 +507,13 @@
                                             </div>
                                         </div>
                                         <div class="action-buttons">
-                                            <a href="#" class="btn btn-view">
+                                                <a asp-controller="Jobs" asp-action="Details" asp-route-id="@jobApplication.JobId" class="btn btn-view">
                                                 <i class="fas fa-eye"></i> View Job
                                             </a>
-                                            <a href="#" class="btn btn-message">
+                                                <a asp-controller="Messages"
+                                                    asp-action="ViewChat"
+                                                   asp-route-receiverId="@jobApplication.Job.Owner.Id"
+                                                   asp-route-jobId="@jobApplication.Job.Id" class="btn btn-message">
                                                 <i class="fas fa-envelope"></i> Send Message
                                             </a>
                                         </div>
@@ -457,4 +528,22 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // Form gönderim başarılıysa
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Başarılı!',
+                    text: '@TempData["SuccessMessage"]'
+                });
+            </text>
+        }
+    </script>
+}
 

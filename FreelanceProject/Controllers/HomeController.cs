@@ -15,6 +15,7 @@ using System.IO;
 using FreelanceProject.Models;
 using System.Diagnostics;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Security.Claims;
 
 namespace FreelanceProject.Controllers;
 
@@ -23,7 +24,7 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly FreelanceDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger , FreelanceDbContext context)
+    public HomeController(ILogger<HomeController> logger, FreelanceDbContext context)
     {
         _logger = logger;
         _context = context;
@@ -32,8 +33,16 @@ public class HomeController : Controller
     public IActionResult Index(string? query)
     {
 
+        var excludedStatuses = new[] {
+        JobApplicationStatus.Completed,
+        JobApplicationStatus.Ongoing
+    };
 
-        var jobsQuery = _context.Jobs.Include(ý => ý.Owner).AsQueryable();
+        var jobsQuery = _context.Jobs
+            .Where(a => a.IsActive &&
+                        !a.IsDeleted &&
+                        a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status))).Include(a => a.Owner)
+            .AsQueryable();
 
         if (!string.IsNullOrEmpty(query))
         {
@@ -56,7 +65,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    public IActionResult Index2(string? query, string? category)
+    public async Task<IActionResult> Index2(string? query, string? category)
     {
         //// Veritabaný sorgusuna baþla
         //var jobsQuery = _context.Jobs.AsQueryable();
@@ -82,7 +91,16 @@ public class HomeController : Controller
         //// Filtrelenmiþ iþ ilanlarýný view'a gönder
         //return View(jobs);
 
-        var jobsQuery = _context.Jobs.AsQueryable();
+        var excludedStatuses = new[] {
+        JobApplicationStatus.Completed,
+        JobApplicationStatus.Ongoing
+    };
+
+        var jobsQuery = _context.Jobs
+            .Where(a => a.IsActive &&
+                        !a.IsDeleted &&
+                        a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status)))
+            .AsQueryable();
 
         // Arama query parametresine göre filtreleme
         if (!string.IsNullOrEmpty(query))
@@ -100,7 +118,12 @@ public class HomeController : Controller
         }
 
         // Listeyi al ve view'a gönder
-        var jobs = jobsQuery.ToList();
+        var jobs = await jobsQuery.Select(a => new JobAndApplicationExistsViewModel()
+        {
+            Job = a,
+            //Applied= _context.JobApplications.Any(ap => ap.ApplicantId.ToString() == User.FindFirst(ClaimTypes.NameIdentifier)!.Value) }).ToListAsync();
+            Applied = _context.JobApplications.Any(ap => ap.Job == a && ap.ApplicantId.ToString() == User.FindFirst(ClaimTypes.NameIdentifier)!.Value)
+        }).ToListAsync();
 
         return View(jobs);
     }

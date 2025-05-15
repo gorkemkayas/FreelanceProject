@@ -95,6 +95,7 @@ public class MessagesController : Controller
             Job = job,
             Messages = messages,
             ReceiverId = receiverId,
+            Receiver = await _userManager.FindByIdAsync(receiverId.ToString()),
             OwnerId = currentUserId,
             JobId = jobId
         };

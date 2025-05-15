@@ -12,6 +12,8 @@ namespace FreelanceProject.Data.Entities
 
         public DateTime AppliedDate { get; set; } = DateTime.UtcNow; // Başvuru tarihi
 
+        public string? ProjectFile { get; set; }
+
         // Başvuru durumu enum
         public JobApplicationStatus Status { get; set; } = JobApplicationStatus.Pending;
 
@@ -29,6 +31,7 @@ namespace FreelanceProject.Data.Entities
         Accepted = 1, // Başvuru kabul edildi
         Rejected = 2, // Başvuru reddedildi
         Ongoing = 3, // Başvuru devam ediyor
-        Completed = 4 // Başvuru tamamlandı
+        Completed = 4 ,// Başvuru tamamlandı
+        Revise= 5
     }
 }

@@ -176,6 +176,7 @@
 
         .create-new-btn:hover {
             transform: translateY(-2px);
+            color:white;
             box-shadow: 0 8px 25px rgba(67, 97, 238, 0.35);
         }
 
@@ -235,7 +236,7 @@
                         <i class="fas fa-briefcase"></i>
                         My Job Listings
                     </h2>
-                    <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
+                    <a onclick="location.href='/Jobs/Create'" class="create-new-btn text-decoration-none">
                         <i class="fas fa-plus"></i> Create New Job
                     </a>
                 </div>
@@ -293,12 +294,12 @@
                                                     @* <a href="#" class="btn btn-view-applicants">
                                                         <i class="fas fa-users"></i> View Applicants
                                                     </a> *@
-                                                    <a asp-controller="Jobs" asp-action="ViewApplicants" asp-route-jobId="@job.Id" class="btn btn-info">View Applicants</a>
+                                                    <a asp-controller="Jobs" asp-action="ViewApplicants" asp-route-jobId="@job.Id" class="btn btn-sm btn-info">View Applicants</a>
 
-                                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-edit">
+                                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-sm  btn-edit">
                                                         <i class="fas fa-edit"></i> Edit
                                                     </a>
-                                                    <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-delete">
+                                                    <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-sm  btn-delete">
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </a>
                                                     <a asp-controller="Messages" asp-action="JobMessageThreads" asp-route-id="@job.Id" asp-route-id="@job.OwnerId" class="btn btn-edit">
@@ -317,9 +318,7 @@
                                         </div>
                                         <h4>You haven't posted any active jobs yet</h4>
                                         <p class="mb-4">Start creating a job to connect with freelancers</p>
-                                        <a asp-controller="Jobs" asp-action="Create" class="create-new-btn">
-                                            <i class="fas fa-plus"></i> Create New Job
-                                        </a>
+                                        
                                     </div>
                                 }
                             </div>

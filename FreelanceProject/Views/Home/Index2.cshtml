@@ -1,4 +1,4 @@
-﻿@model List<FreelanceProject.Data.Entities.JobEntity>
+﻿@model List<JobAndApplicationExistsViewModel>
 @using Azure.Core
 @{
     Layout = "_Layout";
@@ -133,7 +133,7 @@
             margin: 0 auto 4rem;
         }
 
-        .job-card {
+        .job-card-white {
             background: white;
             border-radius: 12px;
             overflow: hidden;
@@ -143,7 +143,7 @@
             position: relative;
         }
 
-            .job-card::before {
+            .job-card-white::before {
                 content: '';
                 position: absolute;
                 top: 0;
@@ -153,7 +153,32 @@
                 background: var(--primary-gradient);
             }
 
-            .job-card:hover {
+            .job-card-white:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            }
+
+        .job-card-green {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+        }
+
+            .job-card-green::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                background: var(--primary-gradient);
+            }
+
+            .job-card-green:hover {
                 transform: translateY(-10px) scale(1.02);
                 box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
             }
@@ -192,6 +217,17 @@
             font-size: 0.9rem;
             padding-top: 1rem;
             border-top: 1px solid #eee;
+        }
+
+        .applied-job {
+            background-color: rgba(0, 128, 0, 0.1); /* Şeffaf yeşil arka plan */
+            border: 1px solid #4caf50;
+        }
+
+        .applied-label {
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
        
@@ -440,6 +476,29 @@
             .search-container button {
                 margin-left: 0;
             }
+
+        .job-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .applied-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(76, 175, 80, 0.4); /* Şeffaf yeşil */
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            z-index: 1;
+            pointer-events: none; /* Tıklamaya engel olmasın */
+        }
+
             
             .job-categories {
                 gap: 0.8rem;
@@ -490,30 +549,31 @@
             } *@
         @foreach (var job in Model)
         {
-            <div class="job-card" onclick="location.href='@Url.Action("Details", "Jobs", new { id = job.Id })'">
-                <img class="job-image" src="@job.JobImage" alt="Job image">
+            <div class="@((job.Applied == true) ? "job-card-green" : "job-card-white")" onclick="location.href='@Url.Action("Details", "Jobs", new { id = job.Job.Id })'">
+                @if (job.Applied)
+                {
+                    <div class="applied-overlay">Başvuruldu</div>
+                }
+                <img class="job-image" src="@job.Job.JobImage" alt="Job image">
                 <div class="job-info">
-                    <h3 class="job-title">@job.Title</h3>
-                    <p class="job-price">$@job.Budget</p>
+                    <h3 class="job-title">@job.Job.Title</h3>
+                    <p class="job-price">$@job.Job.Budget</p>
                     <div class="job-meta">
-                        @* <span>@(job.StartDate.ToShortDateString())</span> *@
-                        <div class="row d-flex justify-content-between "> 
-                            <div class="col-md-6 d-flex flex-column ">
-                                <span>
-                                    @job.StartDate?.ToString("dd.MM.yyyy")
-                                </span>
-                                <span>@(job.Deadline?.ToString("dd.MM.yyyy"))</span>
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-md-6 d-flex flex-column">
+                                <span>@job.Job.StartDate?.ToString("dd.MM.yyyy")</span>
+                                <span>@(job.Job.Deadline?.ToString("dd.MM.yyyy"))</span>
                             </div>
                             <div class="col-md-6">
-                                <span>@job.Category</span>
+                                <span>@job.Job.Category</span>
                             </div>
-
                         </div>
-                        
                     </div>
                 </div>
             </div>
         }
+
+
         </div>
 
         <!-- Job Details Modal -->

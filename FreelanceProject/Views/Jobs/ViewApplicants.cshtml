@@ -32,9 +32,11 @@
                             <tr>
                                 <th>#</th>
                                 <th>Kullanıcı</th>
-                                <th>Durum</th>
+                                <th>Başvuru Durumu</th>
                                 <th>CV</th>
-                                <th>İşlemler</th>
+                                <th>Teslim Dosyası</th>
+                                <th>Tamamlanma</th>
+                                <th>Başvuru İşlemi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,10 +59,11 @@
                                     </td>
                                     <td>
                                         <span class="badge
-                                                @(applicant.Status == JobApplicationStatus.Accepted ? "bg-success" :
+                                                @(applicant.Status == JobApplicationStatus.Ongoing ? "bg-success" :
                                                 applicant.Status == JobApplicationStatus.Rejected ? "bg-danger" :
+applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                                 "bg-warning text-dark")">
-                                                @applicant.Status.ToString()
+                                            @applicant.Status.ToString()
                                         </span>
                                     </td>
                                     <td>
@@ -74,11 +77,50 @@
                                         }
                                         else
                                         {
-                                            <span class="badge bg-secondary">Yok</span>
+                                            <span class="badge bg-secondary">CV yüklenmedi.</span>
                                         }
                                     </td>
                                     <td>
-                                        @if (applicant.Status == JobApplicationStatus.Pending && !Model.Any(a => a.Status == JobApplicationStatus.Accepted))
+                                        @if (!string.IsNullOrEmpty(applicant.FileName?.ToString()))
+                                        {
+                                            <a asp-controller="Freelancer" asp-action="Download"
+                                               target="_blank"
+                                               asp-route-jobId="@applicant.JobId"
+                                               asp-route-fileName="@applicant.FileName"
+                                               asp-route-appliciantId="@applicant.ApplicantId"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-file-pdf me-1"></i> Proje dosyasını indir
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Proje dosyası yüklenmedi</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (applicant.Status == JobApplicationStatus.Ongoing || applicant.Status == JobApplicationStatus.Revise)
+                                        {
+                                            <form asp-action="CompleteApplicationStatus" method="post" class="d-inline">
+                                                <input type="hidden" name="userId" value="@applicant.ApplicantId" />
+                                                <input type="hidden" name="jobId" value="@jobId" />
+                                                <input type="hidden" name="approve" value="true" />
+                                                <input type="hidden" name="stauus" value="applicant.Status" />
+                                                <button type="submit" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-check"></i> Tamamla
+                                                </button>
+                                            </form>
+                                            <form asp-action="CompleteApplicationStatus" method="post" class="d-inline">
+                                                <input type="hidden" name="userId" value="@applicant.ApplicantId" />
+                                                <input type="hidden" name="jobId" value="@jobId" />
+                                                <input type="hidden" name="approve" value="false" />
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-check"></i> Reddet
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (applicant.Status == JobApplicationStatus.Pending && !Model.Any(a => a.Status == JobApplicationStatus.Ongoing))
                                         {
                                             <form asp-action="UpdateApplicationStatus" method="post" class="d-inline">
                                                 <input type="hidden" name="userId" value="@applicant.ApplicantId" />
@@ -98,7 +140,7 @@
                                                 </button>
                                             </form>
                                         }
-                                        else if (applicant.Status == JobApplicationStatus.Accepted)
+                                        else if (applicant.Status == JobApplicationStatus.Ongoing)
                                         {
                                             <span class="text-muted">Başvuru onaylandı</span>
                                         }
