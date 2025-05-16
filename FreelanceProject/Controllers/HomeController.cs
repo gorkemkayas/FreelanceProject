@@ -117,6 +117,17 @@ public class HomeController : Controller
             jobsQuery = jobsQuery.Where(j => j.Category == category);
         }
 
+        if(User.FindFirst(ClaimTypes.NameIdentifier) is null)
+        {
+            var allJobs = await jobsQuery.Select(a => new JobAndApplicationExistsViewModel()
+            {
+                Job = a,
+                //Applied= _context.JobApplications.Any(ap => ap.ApplicantId.ToString() == User.FindFirst(ClaimTypes.NameIdentifier)!.Value) }).ToListAsync();
+                Applied = false
+            }).ToListAsync();
+
+            return View(allJobs);
+        }
         // Listeyi al ve view'a gönder
         var jobs = await jobsQuery.Select(a => new JobAndApplicationExistsViewModel()
         {
