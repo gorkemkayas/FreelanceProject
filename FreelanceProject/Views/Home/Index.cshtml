@@ -196,7 +196,10 @@ else if (TempData["Failed"] != null)
                 <h2 class="fw-bold">Browse Top Categories</h2>
                 <p class="text-muted">Find professionals in your specific field</p>
             </div>
-
+                @{
+                    var counts = ViewBag.CategoryCounts as Dictionary<string, int> ?? new Dictionary<string, int>();
+                    int totalCount = ViewBag.TotalCount ?? 0;
+                }
             <div class="row g-3">
                 <div class="col-md-4 col-6">
                         <a asp-action="Index2" asp-controller="Home" asp-route-query="Web Development" class="card category-card border-0 shadow-sm text-decoration-none h-100">
@@ -206,7 +209,7 @@ else if (TempData["Failed"] != null)
                                 <i class="fas fa-code text-primary" style="font-size: 1.75rem;"></i>
                             </div>
                             <h5 class="mb-1">Web Development</h5>
-                            <p class="text-muted small mb-0">1,240 freelancers</p>
+                                <p class="text-muted small mb-0">@counts.GetValueOrDefault("Web Development") freelancers</p>
                         </div>
                     </a>
                 </div>
@@ -218,7 +221,7 @@ else if (TempData["Failed"] != null)
                                 <i class="fas fa-paint-brush text-danger" style="font-size: 1.75rem;"></i>
                             </div>
                             <h5 class="mb-1">Design</h5>
-                            <p class="text-muted small mb-0">980 freelancers</p>
+                                <p class="text-muted small mb-0">@counts.GetValueOrDefault("Design") freelancers</p>
                         </div>
                     </a>
                 </div>
@@ -230,7 +233,7 @@ else if (TempData["Failed"] != null)
                                 <i class="fas fa-mobile-alt text-success" style="font-size: 1.75rem;"></i>
                             </div>
                                 <h5 class="mb-1">Mobile Development</h5>
-                            <p class="text-muted small mb-0">750 freelancers</p>
+                                <p class="text-muted small mb-0">@counts.GetValueOrDefault("Mobile Development") freelancers</p>
                         </div>
                     </a>
                 </div>
@@ -242,7 +245,7 @@ else if (TempData["Failed"] != null)
                                 <i class="fas fa-bullhorn text-warning" style="font-size: 1.75rem;"></i>
                             </div>
                             <h5 class="mb-1">Marketing</h5>
-                            <p class="text-muted small mb-0">1,120 freelancers</p>
+                                <p class="text-muted small mb-0">@counts.GetValueOrDefault("Marketing") freelancers</p>
                         </div>
                     </a>
                 </div>
@@ -253,19 +256,19 @@ else if (TempData["Failed"] != null)
                                 <i class="fas fa-pen-fancy text-purple" style="font-size: 1.75rem;"></i>
                             </div>
                             <h5 class="mb-1">SEO</h5>
-                            <p class="text-muted small mb-0">890 freelancers</p>
+                                <p class="text-muted small mb-0">@counts.GetValueOrDefault("SEO") freelancers</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-4 col-6">
-                        <a asp-action="Index2" asp-controller="Home" asp-route-query="Data Analysis" class="card category-card border-0 shadow-sm text-decoration-none h-100">
+                        <a asp-action="Index2" asp-controller="Home"  class="card category-card border-0 shadow-sm text-decoration-none h-100">
 
                         <div class="card-body text-center p-4">
                             <div class="icon-wrapper mb-3" style="width: 60px; height: 60px; background: rgba(6, 182, 212, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
                                 <i class="fas fa-chart-line text-info" style="font-size: 1.75rem;"></i>
                             </div>
-                            <h5 class="mb-1">Data Analysis</h5>
-                            <p class="text-muted small mb-0">650 freelancers</p>
+                            <h5 class="mb-1">All Project</h5>
+                                <p class="text-muted small mb-0">@totalCount freelancers</p>
                         </div>
                     </a>
                 </div>

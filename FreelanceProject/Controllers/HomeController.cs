@@ -40,7 +40,7 @@ public class HomeController : Controller
 
         var jobsQuery = _context.Jobs
             .Where(a => a.IsActive &&
-                        !a.IsDeleted &&
+                        !a.IsDeleted ||
                         a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status))).Include(a => a.Owner)
             .AsQueryable();
 
@@ -56,6 +56,21 @@ public class HomeController : Controller
             .OrderByDescending(j => j.Id)
             .Take(3)
             .ToList();
+
+        // Kategori bazlý iþ sayýsý
+        var categoryCounts = _context.Jobs
+            .Where(j => j.IsActive && !j.IsDeleted)
+            .GroupBy(j => j.Category)
+            .Select(g => new
+            {
+                Category = g.Key,
+                JobCount = g.Count()
+            })
+            .ToList();
+
+        // Dictionary olarak ViewBag'e aktar
+        ViewBag.CategoryCounts = categoryCounts.ToDictionary(x => x.Category, x => x.JobCount);
+        ViewBag.TotalCount = categoryCounts.Sum(x => x.JobCount);
 
         return View(lastThreeJobs);
 
@@ -98,7 +113,7 @@ public class HomeController : Controller
 
         var jobsQuery = _context.Jobs
             .Where(a => a.IsActive &&
-                        !a.IsDeleted &&
+                        !a.IsDeleted ||
                         a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status)))
             .AsQueryable();
 
