@@ -40,7 +40,7 @@ public class HomeController : Controller
 
         var jobsQuery = _context.Jobs
             .Where(a => a.IsActive &&
-                        !a.IsDeleted &&
+                        !a.IsDeleted ||
                         a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status))).Include(a => a.Owner)
             .AsQueryable();
 
@@ -98,7 +98,7 @@ public class HomeController : Controller
 
         var jobsQuery = _context.Jobs
             .Where(a => a.IsActive &&
-                        !a.IsDeleted &&
+                        !a.IsDeleted ||
                         a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status)))
             .AsQueryable();
 

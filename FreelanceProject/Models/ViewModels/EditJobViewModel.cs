@@ -19,17 +19,19 @@ namespace FreelanceProject.Models.ViewModels
         [Range(0, double.MaxValue, ErrorMessage = "Geçerli bir bütçe giriniz.")]
         public decimal Budget { get; set; }
 
-        [Required(ErrorMessage = "Süre zorunludur.")]
-        public int Duration { get; set; }
+        //[Required(ErrorMessage = "Süre zorunludur.")]
+        //public int Duration { get; set; }
 
-        [Required(ErrorMessage = "Süre birimi zorunludur.")]
-        public string DurationUnit { get; set; } = "Gün";
+        //[Required(ErrorMessage = "Süre birimi zorunludur.")]
+        //public string DurationUnit { get; set; } = "Gün";
+
+        [Required(ErrorMessage = "Bitiş tarihi zorunludur.")]
+        [DataType(DataType.Date)]
+        public DateTime? Deadline { get; set; }
 
         [Required(ErrorMessage = "Başlama tarihi zorunludur.")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
-
-        public DateTime? Deadline { get; set; }
 
 
         // Kategori adını string olarak alacağız.

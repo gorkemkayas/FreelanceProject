@@ -270,7 +270,7 @@
                                                     <div class="job-meta">
                                                         <div class="meta-item">
                                                             <i class="fas fa-calendar-alt"></i>
-                                                            <span>Start Date: @job.StartDate</span>
+                                                            <span>Start Date: @job.StartDate?.ToString("dd MMM yyyy")</span>
                                                         </div>
                                                         <div class="meta-item">
                                                             <i class="fas fa-money-bill-wave"></i>
@@ -278,7 +278,7 @@
                                                         </div>
                                                         <div class="meta-item">
                                                             <i class="fas fa-calendar-check"></i>
-                                                            <span>Deadline: @job.Deadline</span>
+                                                            <span>Deadline: @job.Deadline?.ToString("dd MMM yyyy")</span>
                                                         </div>
                                                         <div class="meta-item">
                                                             <i class="fas fa-tags"></i>

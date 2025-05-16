@@ -49,20 +49,20 @@ namespace FreelanceProject.Services.Concrete
 
         public async Task<ServiceResult<JobEntity>> AddNewJobAsync(AppUser user, CreateJobViewModel request)
         {
-            int calcUnit = 0;
-            switch (request.DurationUnit)
-            {
-                case "Gün":
-                    calcUnit = 1;
-                    break;
-                case "Hafta":
-                    calcUnit = 7;
-                    break;
-                case "Ay":
-                    calcUnit = 30;
-                    break;
-            }
-            var deadLine = request.Duration * calcUnit;
+            //int calcUnit = 0;
+            //switch (request.DurationUnit)
+            //{
+            //    case "Gün":
+            //        calcUnit = 1;
+            //        break;
+            //    case "Hafta":
+            //        calcUnit = 7;
+            //        break;
+            //    case "Ay":
+            //        calcUnit = 30;
+            //        break;
+            //}
+            //var deadLine = request.Duration * calcUnit;
 
             var result = await _dbContext.AddAsync(new JobEntity()
             {
@@ -71,7 +71,8 @@ namespace FreelanceProject.Services.Concrete
                 Requirements = request.Requirements,
                 Budget = request.Budget,
                 StartDate = request.StartDate,
-                Deadline = request.StartDate.AddDays(deadLine),
+                //Deadline = request.StartDate.AddDays(deadLine),
+                Deadline = request.Deadline,
                 Category = request.Category,
                 JobImage = await ConfigureJobImage(user, request.ImageFile, request.Title),
                 OwnerId = user.Id
@@ -92,20 +93,20 @@ namespace FreelanceProject.Services.Concrete
 
         public async Task<ServiceResult<JobEntity>> EditJobAsync(AppUser user, EditJobViewModel request)
         {
-            int calcUnit = 0;
-            switch (request.DurationUnit)
-            {
-                case "Gün":
-                    calcUnit = 1;
-                    break;
-                case "Hafta":
-                    calcUnit = 7;
-                    break;
-                case "Ay":
-                    calcUnit = 30;
-                    break;
-            }
-            var deadLine = request.Duration * calcUnit;
+            //int calcUnit = 0;
+            //switch (request.DurationUnit)
+            //{
+            //    case "Gün":
+            //        calcUnit = 1;
+            //        break;
+            //    case "Hafta":
+            //        calcUnit = 7;
+            //        break;
+            //    case "Ay":
+            //        calcUnit = 30;
+            //        break;
+            //}
+            //var deadLine = request.Duration * calcUnit;
             var job = await _dbContext.Jobs.FindAsync(request.Id);
 
             if(job is null)
@@ -124,7 +125,9 @@ namespace FreelanceProject.Services.Concrete
             job.Description = request.Description;
             job.Requirements = request.Requirements;
             job.Budget = request.Budget;
-            job.Deadline = request.StartDate.AddDays(deadLine);
+            //job.Deadline = request.StartDate.AddDays(deadLine);
+            job.Deadline = request.Deadline;
+            job.StartDate = request.StartDate;
             job.Category = request.Category;
             job.ModifiedDate = DateTime.Now;
             if(request.ImageFile != null) job.JobImage = await ConfigureJobImage(user, request.ImageFile, request.Title);
