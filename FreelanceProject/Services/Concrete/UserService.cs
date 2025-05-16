@@ -9,6 +9,7 @@ using FreelanceProject.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using static FreelanceProject.Models.ViewModels.ExtendedProfileViewModel;
+using System.Threading.Tasks;
 
 namespace FreelanceProject.Services.Concrete
 {
@@ -154,14 +155,26 @@ namespace FreelanceProject.Services.Concrete
             return postCount;
         }
 
-        public ExtendedProfileViewModel GetExtendedProfileViewModel(AppUser user)
+        public async Task<ExtendedProfileViewModel> GetExtendedProfileViewModel(AppUser user)
         {
             var extendedProfile = _mapper.Map<ExtendedProfileViewModel>(user);
+
+            var createdJobs = await _dbContext.Jobs.Where(o => o.OwnerId == user.Id).ToListAsync();
+            var completedJobs = await _dbContext.Jobs.Where(a => a.JobApplications.Any(b => b.ApplicantId == user.Id && b.Status == JobApplicationStatus.Completed)).ToListAsync();
+
+            extendedProfile.CreatedJobs = createdJobs;
+            extendedProfile.CompletedJobs = completedJobs;
             return extendedProfile;
         }
-        public VisitorProfileViewModel GetVisitorProfileViewModel(AppUser user)
+        public async Task<VisitorProfileViewModel> GetVisitorProfileViewModel(AppUser user)
         {
             var visitorProfile = _mapper.Map<VisitorProfileViewModel>(user);
+
+            var createdJobs = await _dbContext.Jobs.Where(o => o.OwnerId == user.Id).ToListAsync();
+            var completedJobs = await _dbContext.Jobs.Where(a => a.JobApplications.Any(b => b.ApplicantId == user.Id && b.Status == JobApplicationStatus.Completed)).ToListAsync();
+
+            visitorProfile.CreatedJobs = createdJobs;
+            visitorProfile.CompletedJobs = completedJobs;
             return visitorProfile;
         }
         public async Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type)

@@ -25,8 +25,8 @@ namespace FreelanceProject.Services.Abstract
         Task<AppUser> FindByNameAsync(string userName);
         Task<int> GetCommentCountByUserAsync(AppUser user);
         Task<int> GetPostCountByUserAsync(AppUser user);
-        ExtendedProfileViewModel GetExtendedProfileViewModel(AppUser user);
-        VisitorProfileViewModel GetVisitorProfileViewModel(AppUser user);
+        Task<ExtendedProfileViewModel> GetExtendedProfileViewModel(AppUser user);
+        Task<VisitorProfileViewModel> GetVisitorProfileViewModel(AppUser user);
         Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request);
 
     }

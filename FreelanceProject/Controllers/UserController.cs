@@ -142,11 +142,11 @@ namespace FreelanceProject.Controllers
             {
                 ViewBag.IsOwner = true;
 
-                var extendedUser = _userService.GetExtendedProfileViewModel(currentUser);
+                var extendedUser = await _userService.GetExtendedProfileViewModel(currentUser);
                 return View(extendedUser);
             }
 
-            var visitorUser = _userService.GetVisitorProfileViewModel(visitedUser);
+            var visitorUser = await _userService.GetVisitorProfileViewModel(visitedUser);
             return View(visitorUser);
         }
 
