@@ -642,6 +642,18 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
 
 <script>
+
+        document.getElementById('saveChangesButton').addEventListener('click', function(e) {
+        e.preventDefault(); // First prevent default to check
+
+        // Validate form fields here if needed
+
+        console.log('Form submission triggered'); // Check if this logs
+
+        // Manually submit the form
+        document.querySelector('form').submit();
+    });
+
         document.addEventListener('DOMContentLoaded', function () {
         const uploadIcon = document.getElementById('uploadIconProfile');
         const fileInput = document.getElementById('fileInputProfile');
