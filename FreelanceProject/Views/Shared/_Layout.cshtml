@@ -35,7 +35,7 @@
 <body>
     <style>
         header div {
-           box-sizing:content-box;
+        box-sizing: content-box;
         }
     </style>
     <header class="py-2">
@@ -66,7 +66,7 @@
                 </ul>
 
                 <!-- Premium Search -->
-   @*              <div class="d-flex align-items-center ms-auto ms-lg-0">
+                @*              <div class="d-flex align-items-center ms-auto ms-lg-0">
                     <div class="position-relative me-2 d-none d-md-block">
                         <i class="fas fa-search position-absolute ps-1" style="left: 1px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
                         <input type="search" class="search-box ps-4 ps-lg-4" placeholder="Search projects, clients...">
@@ -78,59 +78,66 @@
                     <input type="search" name="query" class="search-box ps-4 ps-lg-4" placeholder="Search projects, clients..." value="@Context.Request.Query["query"]">
                 </form>
 
-                    <!-- Premium Notifications -->
-                    <button class="btn btn-link position-relative me-2 text-muted p-1">
-                        <i class="fas fa-bell fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                            3
-                        </span>
-                    </button>
+                <!-- Premium Notifications -->
+                <button class="btn btn-link position-relative me-2 text-muted p-1">
+                    <i class="fas fa-bell fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                        3
+                    </span>
+                </button>
 
 
-                    @if (User.Identity.IsAuthenticated)
-                    {
+                @if (User.Identity.IsAuthenticated)
+                {
 
-                        <!-- Premium Profile -->
-                        <div class="dropdown ms-1">
-                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                @await Component.InvokeAsync("NavProfilePhoto",User)
-                                @* <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="user" class="profile-img rounded-circle"> *@
+                    <!-- Premium Profile -->
+                    <div class="dropdown ms-1">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            @await Component.InvokeAsync("NavProfilePhoto", User)
+                            @* <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="user" class="profile-img rounded-circle"> *@
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-wallet"></i> ₺ : @await Component.InvokeAsync("UserWallet", User.FindFirstValue(ClaimTypes.NameIdentifier))</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            @if(User.IsInRole("Admin"))
+                            {
+                            <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="UserList">
+                                <i class="fas fa-user-tie me-2"></i>Admin Panel
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name"><i class="fas fa-user"></i> Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-wallet"></i> Billing</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
-                            </ul>
-                        </div>
-                        @* <!-- Premium CTA Button -->
+                            }
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
+                        </ul>
+                    </div>
+                    @* <!-- Premium CTA Button -->
                         <button onclick="location.href='/Jobs/Create'" class="btn btn-premium ms-3 d-none d-lg-block">
                             New Project
                         </button> *@
 
-                     <!--Custom Tag Helper-->
+                    <!--Custom Tag Helper-->
                     <new-project-button text="New Project" url="/Jobs/Create"></new-project-button>
 
 
-                    }
-                    else
-                    {
+                }
+                else
+                {
 
-                        <!-- Premium CTA Button -->
-                        <a class="btn text-white btn-premium ms-3 d-none d-lg-block" asp-controller="User" asp-action="SignUp">
-                            Sign Up
-                        </a>
-                        <a class="btn text-white btn-premium ms-1 d-none d-lg-block" asp-controller="User" asp-action="SignIn">
-                            Sign In
-                        </a>
-                    }
-                </div>
+                    <!-- Premium CTA Button -->
+                    <a class="btn text-white btn-premium ms-3 d-none d-lg-block" asp-controller="User" asp-action="SignUp">
+                        Sign Up
+                    </a>
+                    <a class="btn text-white btn-premium ms-1 d-none d-lg-block" asp-controller="User" asp-action="SignIn">
+                        Sign In
+                    </a>
+                }
             </div>
+        </div>
         </div>
     </header>
 
-    
+
     @* <div class="container"> *@
     <div class="full-width-container">
         <main role="main" class="pb-3">

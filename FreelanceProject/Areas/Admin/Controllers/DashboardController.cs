@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreelanceProject.Areas.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Policy ="Admin")]
     [Area("Admin")]
     public class DashboardController : Controller
     {
