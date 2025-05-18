@@ -37,6 +37,9 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item user-info me-3">
                         @await Component.InvokeAsync("NavProfilePhoto")
+                        <a class="gradient-text2 fs-5">
+                        System Wallet : @await Component.InvokeAsync("SystemWallet")
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link logout"  asp-area="" asp-controller="User" asp-action="SignOut">
@@ -63,15 +66,15 @@
             </a>
             <div class="collapse show" id="usersSubmenu">
                 <nav class="nav flex-column">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Add">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Users" asp-action="UserList">
                         <i class="fas fa-list"></i> List Users
                     </a>
-                    <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Edit">
+@*                     <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Edit">
                         <i class="fas fa-user-edit"></i> Edit User
                     </a>
                     <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Delete">
                         <i class="fas fa-user-times"></i> Delete User
-                    </a>
+                    </a> *@
                 </nav>
             </div>
 
@@ -84,12 +87,12 @@
                     <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="AddRole">
                         <i class="fas fa-plus-circle"></i> Add Role
                     </a>
-                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Edit">
+@*                     <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Edit">
                         <i class="fas fa-edit"></i> Edit Role
                     </a>
                     <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleDelete">
                         <i class="fas fa-trash-alt"></i> Delete Role
-                    </a>
+                    </a> *@
                     <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleList">
                         <i class="fas fa-list-ul"></i> Role List
                     </a>

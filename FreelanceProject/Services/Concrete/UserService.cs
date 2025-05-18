@@ -9,6 +9,7 @@ using FreelanceProject.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using static FreelanceProject.Models.ViewModels.ExtendedProfileViewModel;
+using FreelanceProject.Areas.Admin.Models;
 
 namespace FreelanceProject.Services.Concrete
 {
@@ -302,6 +303,37 @@ namespace FreelanceProject.Services.Concrete
         public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<ItemPagination<UserViewModel>> GetPagedUsersAsync(int page, int pageSize, bool includeDeleted = false)
+        {
+            var itemsQuery = _userManager.Users;
+            if (!includeDeleted)
+            {
+                itemsQuery = itemsQuery.Where(p => p.IsDeleted == false);
+            }
+
+            var pagedUsers = new ItemPagination<UserViewModel>()
+            {
+                PageSize = pageSize,
+                CurrentPage = page,
+                TotalCount = (includeDeleted is true) ? _userManager.Users.Count() : _userManager.Users.Where(p => p.IsDeleted == false).Count(),
+                Items = await itemsQuery
+                                    .Skip((page - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .Select(user => new UserViewModel
+                                    {
+                                        Id = user.Id,
+                                        Name = user.Name!,
+                                        Surname = user.Surname!,
+                                        Username = user.UserName,
+                                        IsDeleted = user.IsDeleted,
+                                        Email = user.Email,
+                                        PhoneNumber = user.PhoneNumber
+                                    }).ToListAsync()
+            };
+
+            return pagedUsers;
         }
     }
 }

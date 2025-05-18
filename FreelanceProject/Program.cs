@@ -15,7 +15,25 @@ builder.Services.AddDbContext<FreelanceDbContext>(options => { options.UseSqlSer
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddIdentityWithExtension();
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+    opt.Cookie.Name = "BlogCookie";
+
+    opt.ExpireTimeSpan = TimeSpan.FromDays(30);
+    opt.SlidingExpiration = true;
+
+    opt.LoginPath = new PathString("/User/SignIn");
+    opt.LogoutPath = new PathString("/User/Logout");
+    opt.AccessDeniedPath = new PathString("/User/AccessDenied");
+});
 builder.Services.AddServicesWithExtension();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+        policy.RequireRole("Admin"));
+});
+
 
 var app = builder.Build();
 

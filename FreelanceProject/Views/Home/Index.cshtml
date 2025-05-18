@@ -17,6 +17,12 @@ else if (TempData["Failed"] != null)
         <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
     </div>
 }
+@if (TempData["AccessDeniedDescription"] != null)
+{
+    <div div id="errorAlert" class="custom-alert alert-danger">
+        @TempData["AccessDeniedDescription"]
+    </div>
+}
 
 @section Scripts {
     <script>

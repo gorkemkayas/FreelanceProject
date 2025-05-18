@@ -15,7 +15,7 @@ namespace FreelanceProject.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Summary(Guid jobId, Guid userId)
+        public async Task<IActionResult> Summary(Guid jobId, Guid userId, string receiverId)
         {
             var job = await _context.Jobs.FirstOrDefaultAsync(x => x.Id == jobId);
             if (job == null)
@@ -63,23 +63,41 @@ namespace FreelanceProject.Controllers
         //    return RedirectToAction("Success");
         //}
 
-       [HttpPost]
-public async Task<IActionResult> CompleteAsync(Guid jobId, Guid userId, decimal amount, bool approve, JobApplicationStatus status)
-{
+        [HttpPost]
+        public async Task<IActionResult> Complete(Guid jobId, Guid userId, decimal amount, bool approve, JobApplicationStatus status)
+        {
             // İş durumunu güncelle
             //var job = _context.Jobs.FirstOrDefault(j => j.Id == jobId);
+            var systemUser = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == "c583f39c-6e40-4e34-b852-08dd9633dfd1");
+            if (systemUser == null)
+            {
+                TempData["UserNotFound"] = "Kullanıcı bulunamadı.";
+                return View();
+            }
+            var receiverUser = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId.ToString());
+            if (receiverUser == null)
+            {
+                TempData["ReceiverNotFound"] = "Alıcı bulunamadı.";
+                return View();
+            }
+            systemUser.Wallet += (float)(amount / 10) ;
+            receiverUser.Wallet += (float)((amount / 10) * 9);
+
+            await _context.SaveChangesAsync();
+
+
             var application = await _context.JobApplications
                        .FirstOrDefaultAsync(a => a.ApplicantId == userId && a.JobId == jobId);
 
             if (application != null)
-                {
-                    application.Status = status; // "Completed"
-                        _context.SaveChanges();
-                }
+            {
+                application.Status = status; // "Completed"
+                _context.SaveChanges();
+            }
 
-    // Ana sayfaya yönlendir
-    return RedirectToAction("Index", "Home");
-}
+            // Ana sayfaya yönlendir
+            return RedirectToAction("Index", "Home");
+        }
 
         public IActionResult Success()
         {

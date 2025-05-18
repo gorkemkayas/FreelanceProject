@@ -1,4 +1,5 @@
-﻿using FreelanceProject.Data.Entities;
+﻿using FreelanceProject.Areas.Admin.Models;
+using FreelanceProject.Data.Entities;
 using FreelanceProject.Models.ViewModels;
 using FreelanceProject.Utilities;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,8 @@ namespace FreelanceProject.Services.Abstract
     {
         Task<ServiceResult<AppUser>> CreateUserAsync(SignUpViewModel request);
         Task<ServiceResult<AppUser>> SignInAsync(SignInViewModel request);
+
+        Task<ItemPagination<UserViewModel>> GetPagedUsersAsync(int page, int pageSize, bool includeDeleted = false);
         Task<ServiceResult<AppUser>> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt, IFormFile? CVFile);
         public Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
 
