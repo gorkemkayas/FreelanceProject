@@ -25,10 +25,12 @@ namespace FreelanceProject.Services.Concrete
             // wwwroot yolunu al
             var wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
-            var JobTitle = jobTitle.Replace(" ", "-");
+            //var JobTitle = jobTitle.Replace(" ", "-");
+
+            var JobTitle = jobTitle.Trim().Replace(" ", "-");
 
             // Hedef klasör
-            var uploadPath = Path.Combine(wwwRootPath, "Users",$"{user.UserName}", "CreatedJobs", $"{jobTitle}");
+            var uploadPath = Path.Combine(wwwRootPath, "Users",$"{user.UserName}", "CreatedJobs", $"{JobTitle}");
 
             // Klasör yoksa oluştur
             if (!Directory.Exists(uploadPath))
@@ -43,7 +45,7 @@ namespace FreelanceProject.Services.Concrete
                 await jobImage.CopyToAsync(stream);
             }
 
-            var fileUrl = $"/Users/{user.UserName}/CreatedJobs/{jobTitle}/{fileName}";
+            var fileUrl = $"/Users/{user.UserName}/CreatedJobs/{JobTitle}/{fileName}";
             return fileUrl;
         }
 
@@ -66,7 +68,8 @@ namespace FreelanceProject.Services.Concrete
 
             var result = await _dbContext.AddAsync(new JobEntity()
             {
-                Title = request.Title,
+                //Title = request.Title,
+                Title = request.Title.TrimEnd(),  // Sondaki boşluklar silindi
                 Description = request.Description,
                 Requirements = request.Requirements,
                 Budget = request.Budget,
@@ -121,7 +124,9 @@ namespace FreelanceProject.Services.Concrete
             {
                 var result = CustomMethods.CustomMethods.ChangeFolderName(user, job.Title, request.Title);
             }
-            job.Title = request.Title;
+
+            //job.Title = request.Title();
+            job.Title = request.Title.Trim();
             job.Description = request.Description;
             job.Requirements = request.Requirements;
             job.Budget = request.Budget;

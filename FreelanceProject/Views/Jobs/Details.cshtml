@@ -486,13 +486,21 @@
 
 @section Scripts {
     <script>
-        window.onload = function () {
-            var showModal = '@TempData["ErrorMessage"]' !== '';
-            if (showModal) {
-                var myModal = new bootstrap.Modal(document.getElementById('cvWarningModal'));
-                myModal.show();
+        // window.onload = function () {
+        //     var showModal = '@TempData["ErrorMessage"]' !== '';
+        //     if (showModal) {
+        //         var myModal = new bootstrap.Modal(document.getElementById('cvWarningModal'));
+        //         myModal.show();
+        //     }
+        // }
+
+        $(document).ready(function () {
+            var hasError = '@TempData["ErrorMessage"]';
+            if (hasError) {
+                var modal = new bootstrap.Modal(document.getElementById('cvWarningModal'));
+                modal.show();
             }
-        }
+        });
     </script>
     <script>
         window.onload = function () {

@@ -168,9 +168,9 @@ namespace FreelanceProject.Controllers
         public async Task<IActionResult> Create(CreateJobViewModel model)
         {
             ViewBag.Categories = new List<string>
-                {
+            {
                      "Web Development", "Mobile Development", "Design", "SEO", "Marketing"
-                 };
+            };
 
             if (!ModelState.IsValid)
             {

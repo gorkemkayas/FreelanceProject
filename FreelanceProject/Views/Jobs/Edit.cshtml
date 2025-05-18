@@ -138,7 +138,7 @@
                     <h4><i class="fas fa-plus-circle me-2"></i> İŞ İLANI Güncelle</h4>
                 </div>
                 <div class="form-body">
-                    <form asp-action="Edit" asp-controller="Jobs" method="post" enctype="multipart/form-data">
+                    @* <form asp-action="Edit" asp-controller="Jobs" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
 
                         <!-- 🔐 İşin ID'si (gizli alan) -->
@@ -241,11 +241,123 @@
                             </button>
                         </div>
 
+                    </form> *@
+                    <form asp-action="Edit" asp-controller="Jobs" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <!-- İşin ID'si (gizli alan) -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Job Title -->
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label required-field"></label>
+                            <input asp-for="Title" class="form-control" placeholder="Örnek: Profesyonel E-ticaret Sitesi Tasarımı" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label required-field"></label>
+                            <textarea asp-for="Description" class="form-control" rows="6" placeholder="İşin detaylarını, beklentilerinizi ve gereksinimleri açıklayın..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Requirements -->
+                        <div class="mb-4">
+                            <label asp-for="Requirements" class="form-label required-field"></label>
+                            <input asp-for="Requirements" class="form-control" placeholder="Örnek: HTML, CSS, JavaScript bilgisi" />
+                            <span asp-validation-for="Requirements" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Budget -->
+                            <div class="col-md-4 mb-4">
+                                <label asp-for="Budget" class="form-label required-field"></label>
+                                <div class="input-group">
+                                    <input asp-for="Budget" class="form-control" placeholder="5000" type="number" step="0.01" min="0" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" />
+                                    <span class="input-group-text">₺</span>
+                                </div>
+                                <span asp-validation-for="Budget" class="text-danger"></span>
+                            </div>
+
+                            <!-- Start Date -->
+                            <div class="col-md-4 mb-4">
+                                <label asp-for="StartDate" class="form-label required-field"></label>
+                                <input asp-for="StartDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+
+                            <!-- Deadline -->
+                            <div class="col-md-4 mb-4">
+                                <label asp-for="Deadline" class="form-label required-field"></label>
+                                <input asp-for="Deadline" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="Deadline" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-4">
+                            <label asp-for="Category" class="form-label required-field">Kategori</label>
+                            @if (ViewBag.Categories is List<string> categories)
+                            {
+                                <select asp-for="Category" class="form-select">
+                                    <option value="">Kategori Seçin</option>
+                                    @foreach (var category in categories)
+                                    {
+                                        <option value="@category" selected="@(category == Model.Category)">
+                                            @category
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <p class="text-danger">Kategori listesi yüklenemedi.</p>
+                            }
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+
+                        <div class="row align-items-center mb-4">
+                            <!-- Mevcut resmi göster -->
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl?.ToString()))
+                            {
+                                <div class="col-md-6">
+                                    <label>Mevcut Resim:</label><br />
+                                    <img src="@Model.ImageUrl.ToString()" alt="Yüklenen Resim" style="max-width: 100%; height: auto; border-radius: 6px;" />
+                                </div>
+                            }
+
+                            <!-- Yeni resim yükleme -->
+                            <div class="col-md-6">
+                                <label for="ImageFile" class="form-label">Yeni Resim Yükle (Opsiyonel)</label>
+                                <input asp-for="ImageFile" class="form-control" type="file" />
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-premium py-3">
+                                <i class="fas fa-paper-plane me-1"></i> İLANI YAYINLA
+                            </button>
+                            <button type="button" class="btn btn-cancel py-3" onclick="window.history.back();">
+                                <i class="fas fa-times me-1"></i> İPTAL
+                            </button>
+                        </div>
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const budgetInput = document.querySelector('input[name="Budget"]');
+        if (budgetInput) {
+            budgetInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+        }
+    });
+</script>

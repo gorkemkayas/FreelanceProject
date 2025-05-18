@@ -160,7 +160,7 @@
                     <h4><i class="fas fa-plus-circle me-2"></i>YENİ İŞ İLANI OLUŞTUR</h4>
                 </div>
                 <div class="form-body">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                   @*  <form asp-action="Create" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
 
                         <!-- Job Title -->
@@ -242,7 +242,91 @@
                             </button>
                         </div>
 
+                    </form> *@
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Job Title -->
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label required-field"></label>
+                            <input asp-for="Title" class="form-control" placeholder="Örnek: Profesyonel E-ticaret Sitesi Tasarımı" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label required-field"></label>
+                            <textarea asp-for="Description" class="form-control" rows="6" placeholder="İşin detaylarını, beklentilerinizi ve gereksinimleri açıklayın..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Job Requirements -->
+                        <div class="mb-4">
+                            <label asp-for="Requirements" class="form-label required-field"></label>
+                            <input asp-for="Requirements" class="form-control" placeholder="Örnek: Mobil uyumlu olması, Hızlı olması vb." />
+                            <span asp-validation-for="Requirements" class="text-danger"></span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Budget -->
+                            <div class="col-md-6">
+                                <label asp-for="Budget" class="form-label required-field"></label>
+                                <div class="input-group">
+                                    <input asp-for="Budget" class="form-control" placeholder="5000" />
+                                    <span class="input-group-text" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">₺</span>
+                                </div>
+                                <span asp-validation-for="Budget" class="text-danger"></span>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6">
+                                <label asp-for="Category" class="form-label required-field">Kategori</label>
+                                <select asp-for="Category" class="form-select">
+                                    <option value="">Kategori Seçin</option>
+                                    @foreach (var category in ViewBag.Categories as List<string>)
+                                    {
+                                        <option value="@category">@category</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-3">
+                            <!-- Start Date -->
+                            <div class="col-md-6">
+                                <label asp-for="StartDate" class="form-label required-field"></label>
+                                <input asp-for="StartDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+
+                            <!-- Deadline -->
+                            <div class="col-md-6">
+                                <label asp-for="Deadline" class="form-label required-field"></label>
+                                <input asp-for="Deadline" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="Deadline" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-4 mt-4">
+                            <label for="ImageFile" class="form-label">Resim Yükleyin</label>
+                            <input type="file" asp-for="ImageFile" class="form-control" required />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-3 mt-5">
+                            <button type="submit" class="btn btn-premium py-3">
+                                <i class="fas fa-paper-plane me-1"></i> İLANI YAYINLA
+                            </button>
+                            <button type="button" class="btn btn-cancel py-3" onclick="window.history.back();">
+                                <i class="fas fa-times me-1"></i> İPTAL
+                            </button>
+                        </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -259,6 +343,22 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('StartDate').value = today;
             document.querySelector('select[name="DurationUnit"]').value = 'Hafta';
+            const budgetInput = document.querySelector('input[name="Budget"]');
+            if (budgetInput) {
+                budgetInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+                });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const budgetInput = document.querySelector('input[name="Budget"]');
+            if (budgetInput) {
+                budgetInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+                });
+            }
         });
     </script>
 }

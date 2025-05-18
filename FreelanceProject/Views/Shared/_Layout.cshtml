@@ -106,10 +106,14 @@
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
                             </ul>
                         </div>
-                        <!-- Premium CTA Button -->
+                        @* <!-- Premium CTA Button -->
                         <button onclick="location.href='/Jobs/Create'" class="btn btn-premium ms-3 d-none d-lg-block">
                             New Project
-                        </button>
+                        </button> *@
+
+                     <!--Custom Tag Helper-->
+                    <new-project-button text="New Project" url="/Jobs/Create"></new-project-button>
+
 
                     }
                     else
