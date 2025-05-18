@@ -35,13 +35,20 @@ public class HomeController : Controller
 
         var excludedStatuses = new[] {
         JobApplicationStatus.Completed,
-        JobApplicationStatus.Ongoing
+        JobApplicationStatus.Ongoing,
+         JobApplicationStatus.Revise
     };
 
+        //var jobsQuery = _context.Jobs
+        //    .Where(a => a.IsActive &&
+        //                !a.IsDeleted ||
+        //                a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status))).Include(a => a.Owner)
+        //    .AsQueryable();
         var jobsQuery = _context.Jobs
-            .Where(a => a.IsActive &&
-                        !a.IsDeleted ||
-                        a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status))).Include(a => a.Owner)
+            .Where(a => a.IsActive
+                   && !a.IsDeleted
+                   && !a.JobApplications.Any(p => excludedStatuses.Contains(p.Status))).Include(a => a.Owner)
+
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(query))
@@ -108,14 +115,22 @@ public class HomeController : Controller
 
         var excludedStatuses = new[] {
         JobApplicationStatus.Completed,
-        JobApplicationStatus.Ongoing
+        JobApplicationStatus.Ongoing,
+         JobApplicationStatus.Revise
     };
 
+        //var jobsQuery = _context.Jobs
+        //    .Where(a => a.IsActive &&
+        //                !a.IsDeleted ||
+        //                a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status)))
+        //    .AsQueryable();
+
         var jobsQuery = _context.Jobs
-            .Where(a => a.IsActive &&
-                        !a.IsDeleted ||
-                        a.JobApplications.Any(p => !excludedStatuses.Contains(p.Status)))
-            .AsQueryable();
+        .Where(a => a.IsActive
+                      && !a.IsDeleted
+                      && !a.JobApplications.Any(p => excludedStatuses.Contains(p.Status)))
+        
+        .AsQueryable();
 
         // Arama query parametresine göre filtreleme
         if (!string.IsNullOrEmpty(query))

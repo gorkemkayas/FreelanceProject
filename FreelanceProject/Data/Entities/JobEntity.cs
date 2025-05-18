@@ -36,5 +36,6 @@ namespace FreelanceProject.Data.Entities
 
             // Bu ilana yapılan başvurular
             public virtual ICollection<JobApplicationEntity> JobApplications { get; set; } = new List<JobApplicationEntity>();
-        }
+        //public string Status { get; internal set; }
+    }
     }

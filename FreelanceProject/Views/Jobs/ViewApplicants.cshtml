@@ -100,7 +100,7 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                     <td>
                                         @if (applicant.Status == JobApplicationStatus.Ongoing || applicant.Status == JobApplicationStatus.Revise)
                                         {
-                                            <form asp-action="CompleteApplicationStatus" method="post" class="d-inline">
+                                            @* <form asp-action="CompleteApplicationStatus" method="post" class="d-inline">
                                                 <input type="hidden" name="userId" value="@applicant.ApplicantId" />
                                                 <input type="hidden" name="jobId" value="@jobId" />
                                                 <input type="hidden" name="approve" value="true" />
@@ -108,7 +108,15 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                                 <button type="submit" class="btn btn-success btn-sm">
                                                     <i class="fas fa-check"></i> Tamamla
                                                 </button>
+                                            </form> *@
+                                            <form asp-controller="Payment" asp-action="Summary" method="get" class="d-inline">
+                                                <input type="hidden" name="userId" value="@applicant.ApplicantId" />
+                                                <input type="hidden" name="jobId" value="@jobId" />
+                                                <button type="submit" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-check"></i> Tamamla
+                                                </button>
                                             </form>
+
                                             <form asp-action="CompleteApplicationStatus" method="post" class="d-inline">
                                                 <input type="hidden" name="userId" value="@applicant.ApplicantId" />
                                                 <input type="hidden" name="jobId" value="@jobId" />

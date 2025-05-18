@@ -278,6 +278,14 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
+                            <a class="nav-link @(Model.CurrentTab == "Revise" ? "active" : "")"
+                               id="Revise-tab"
+                               role="tab"
+                               href="@Url.Action("MyApplications", "Freelancer", new { status = JobApplicationStatus.Revise })">
+                                <i class="fas fa-clock me-1"></i> Revise
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <a class="nav-link @(Model.CurrentTab == "Completed" ? "active" : "")"
                                id="completed-tab"
                                role="tab"
@@ -340,12 +348,19 @@
                                                 @* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#projectSubmitModal">
                                                     Teslim Et
                                                 </button> *@
-                                                <button type="button"
+                                             @*    <button type="button"
                                                         class="btn btn-primary"
                                                         data-toggle="modal"
                                                         data-target="#projectSubmitModal-@jobApplication.JobId">
                                                     Teslim Et
-                                                </button>
+                                                </button> *@
+                                                <a href="javascript:void(0);"
+                                                   class="btn btn-view rounded-pill px-30 py-1"
+                                                   data-toggle="modal"
+                                                   data-target="#projectSubmitModal-@jobApplication.JobId">
+                                                    <i class="fas fa-upload"></i> Teslim Et
+                                                </a>
+
 
                                                 @* <button type="button"
                                                         class="btn btn-primary"
@@ -462,6 +477,121 @@
                             }
                             }
                         </div>
+
+
+
+
+                        <!-- Revise Jobs Tab Content -->
+                        <div class="tab-pane fade @(Model.CurrentTab == "Revise" ? "show active" : "")" id="Revise" role="tabpanel" aria-labelledby="Revise-tab">
+                            @if (Model.CurrentTab != "Revise")
+                            {
+                                <div class="no-applications">
+                                    <i class="fas fa-clock no-applications-icon"></i>
+                                    <p>No pending applications</p>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var jobApplication in Model.Jobs)
+                                {
+                                    <!-- Example Job 1 -->
+                                    <div class="job-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h3 class="job-title">@jobApplication.Job.Title</h3>
+                                                <div class="job-meta">
+                                                    <div class="meta-item">
+                                                        <i class="fas fa-calendar-alt"></i>
+                                                        <span>Start: @jobApplication.Job.StartDate</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <i class="fas fa-money-bill-wave"></i>
+                                                        <span>Budget: ₺@jobApplication.Job.Budget</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <i class="fas fa-clock"></i>
+                                                        <span>Estimated Deadline: @jobApplication.Job.Deadline</span>
+                                                    </div>
+                                                </div>
+                                                <span class="application-status status-pending">
+                                                    <i class="fas fa-hourglass-half me-1"></i> @jobApplication.Status
+                                                </span>
+                                                <div class="client-info">
+                                                    <img src="@((jobApplication.Job.Owner.ProfilePicture == null) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{@jobApplication.Job.Owner.UserName}/{@jobApplication.Job.Owner.ProfilePicture}")" class="client-avatar">
+                                                    <div>
+                                                        <div class="client-name">@jobApplication.Job.Owner.FullName</div>
+                                                        <div class="client-rating">
+                                                            <i class="fas fa-star"></i> 4.8 (12 reviews)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-buttons">
+                                                <a asp-controller="Jobs" asp-action="Details" asp-route-id="@jobApplication.JobId" class="btn btn-view">
+                                                    <i class="fas fa-eye"></i> View Job
+                                                </a>
+
+                                                <a href="javascript:void(0);"
+                                                   class="btn btn-view rounded-pill px-30 py-1"
+                                                   data-toggle="modal"
+                                                   data-target="#projectSubmitModal-@jobApplication.JobId">
+                                                    <i class="fas fa-upload"></i> Teslim Et
+                                                </a>
+
+
+                                               @*  <button type="button"
+                                                        class="btn btn-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#projectSubmitModal-@jobApplication.JobId">
+                                                    Teslim Et
+                                                </button> *@
+
+
+                                                <!-- Proje Teslim Modal -->
+                                                <div class="modal fade" id="projectSubmitModal-@jobApplication.JobId" tabindex="-1" role="dialog" aria-labelledby="projectSubmitModalLabel-@jobApplication.JobId" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="projectSubmitModalLabel-@jobApplication.JobId">Proje Teslim Formu</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form asp-action="SubmitProject" method="post" enctype="multipart/form-data">
+                                                                <input type="hidden" name="jobId" value="@jobApplication.JobId" />
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="projectFile">Proje Dosyasını Seçin:</label>
+                                                                        <input type="file" class="form-control-file" id="projectFile" name="projectFile" required>
+                                                                        <small class="form-text text-muted">Lütfen proje dosyanızı yükleyin (ZIP, RAR veya proje dosyaları)</small>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="projectNotes">Açıklama (Opsiyonel):</label>
+                                                                        <textarea class="form-control" id="projectNotes" name="projectNotes" rows="3"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                                                    <button type="submit" class="btn btn-primary">Gönder</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <a asp-controller="Messages"
+                                                   asp-action="ViewChat"
+                                                   asp-route-receiverId="@jobApplication.Job.Owner.Id"
+                                                   asp-route-jobId="@jobApplication.Job.Id" class="btn btn-message">
+                                                    <i class="fas fa-envelope"></i> Send Message
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
                         <!-- Completed Jobs Tab Content -->
                         <div class="tab-pane fade @(Model.CurrentTab == "Completed" ? "show active" : "")" id="completed" role="tabpanel" aria-labelledby="completed-tab">
                             @if (Model.CurrentTab != "Completed")
@@ -532,6 +662,9 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         // Form gönderim başarılıysa
