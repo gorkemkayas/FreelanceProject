@@ -300,69 +300,6 @@ namespace FreelanceProject.Controllers
         }
 
 
-        //public async Task<IActionResult> ViewApplicants(Guid jobId)
-        //{
-        //    var job = await _context.Jobs
-        //        .Include(j => j.JobApplications)
-        //            .ThenInclude(ja => ja.Applicant)
-        //        .FirstOrDefaultAsync(j => j.Id == jobId);
-
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Giriş yapan kişinin bu ilana sahip olup olmadığını kontrol et
-        //    var currentUser = await _userManager.GetUserAsync(User);
-        //    if (job.OwnerId != currentUser.Id)
-        //    {
-        //        return Forbid(); // Başkasının ilanına erişemezsin
-        //    }
-
-        //    ViewBag.JobId = jobId;
-        //    var applicants = job.JobApplications.Select(ja => ja.Applicant).ToList();
-
-        //    return View(applicants);
-        //}
-
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateApplicationStatus(Guid userId, Guid jobId, bool approve)
-        //{
-        //    var application = await _context.JobApplications
-        //        .FirstOrDefaultAsync(a => a.ApplicantId == userId && a.JobId == jobId);
-
-        //    if (application == null)
-        //    {
-        //        TempData["ErrorMessage"] = "İşlem başarısız: Geçersiz kullanıcı veya iş ID.";
-        //        return RedirectToAction("ViewApplicants", new { jobId = jobId });
-        //    }
-
-        //    if (approve)
-        //    {
-        //        // Eğer onay veriliyorsa, diğer başvuruları reddediyoruz
-        //        var otherApplications = await _context.JobApplications
-        //            .Where(a => a.JobId == jobId && a.ApplicantId != userId)
-        //            .ToListAsync();
-
-        //        foreach (var otherApplication in otherApplications)
-        //        {
-        //            otherApplication.Status = JobApplicationStatus.Rejected;
-        //            otherApplication.IsApprovedByEmployer = false; // Diğer başvuruları reddet
-        //        }
-        //    }
-
-        //    application.IsApprovedByEmployer = approve;
-        //    application.Status = approve ? JobApplicationStatus.Accepted : JobApplicationStatus.Rejected;
-
-        //    await _context.SaveChangesAsync();
-
-        //    TempData["SuccessMessage"] = approve ? "Başvuru onaylandı." : "Başvuru reddedildi.";
-        //    return RedirectToAction("ViewApplicants", new { jobId = jobId });
-        //}
-
-
         public async Task<IActionResult> ViewApplicants(Guid jobId)
         {
             var job = await _context.Jobs
