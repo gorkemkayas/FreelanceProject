@@ -158,11 +158,24 @@ namespace FreelanceProject.Services.Concrete
         public ExtendedProfileViewModel GetExtendedProfileViewModel(AppUser user)
         {
             var extendedProfile = _mapper.Map<ExtendedProfileViewModel>(user);
+
+            var createdJobs = _dbContext.Jobs.Where(o => o.OwnerId == user.Id).ToList();
+            var completedJobs = _dbContext.Jobs.Where(a => a.JobApplications.Any(b => b.ApplicantId == user.Id && b.Status == JobApplicationStatus.Completed)).ToList();
+
+            extendedProfile.CreatedJobs = createdJobs;
+            extendedProfile.CompletedJobs = completedJobs;
             return extendedProfile;
         }
         public VisitorProfileViewModel GetVisitorProfileViewModel(AppUser user)
         {
             var visitorProfile = _mapper.Map<VisitorProfileViewModel>(user);
+
+            var createdJobs = _dbContext.Jobs.Where(o => o.OwnerId == user.Id).ToList();
+            var completedJobs = _dbContext.Jobs.Where(a => a.JobApplications.Any(b => b.ApplicantId == user.Id && b.Status == JobApplicationStatus.Completed)).ToList();
+
+            visitorProfile.CreatedJobs = createdJobs;
+            visitorProfile.CompletedJobs = completedJobs;
+
             return visitorProfile;
         }
         public async Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type)
