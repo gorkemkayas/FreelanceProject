@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FreelanceProject.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace FreelanceProject.Models.ViewModels
 {
@@ -29,7 +30,9 @@ namespace FreelanceProject.Models.ViewModels
         public string? City { get; set; }
         public string? Address { get; set; }
 
-        
+        public List<JobEntity> CreatedJobs { get; set; } = new List<JobEntity>();
+        public List<JobEntity> CompletedJobs { get; set; } = new List<JobEntity>();
+
         public string? XAddress { get; set; }
         
         public string? LinkedinAddress { get; set; }
