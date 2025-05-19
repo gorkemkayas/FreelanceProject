@@ -9,6 +9,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1585435465945-bef5a93f8849?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
         }
 
         .text-gradient {
@@ -17,6 +18,124 @@
             color: transparent; /* Metnin rengini şeffaf yapar, sadece gradient görünür */
             transition: all 0.4s ease-in-out;
         }
+
+        .job-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .job-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            }
+
+        .job-card-image-container {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .job-card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .job-card:hover .job-card-image {
+            transform: scale(1.05);
+        }
+
+        .job-card-category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .job-card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .job-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .job-card-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .job-card-meta-item {
+            display: flex;
+            align-items: center;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+            .job-card-meta-item i {
+                margin-right: 5px;
+                font-size: 0.9rem;
+            }
+
+        .job-card-price {
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+        }
+
+        .status-inactive {
+            background: rgba(235, 87, 87, 0.1);
+            color: #eb5757;
+        }
+
+        .job-card-footer {
+            padding: 0 20px 20px;
+        }
+
+        .btn-view-job {
+            width: 100%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .btn-view-job:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(71, 118, 230, 0.3);
+            }
     </style>
 }
 
@@ -25,7 +144,7 @@
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center">
             <div class="col col-lg-8 col-xl-0">
-                <div class="card shadow-lg">
+                <div class="card shadow-lg" style="border:none">
                     <!-- Profile Header -->
                     <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
                         <!-- Cover Image -->
@@ -194,63 +313,126 @@
                     <div class="card-body p-4 text-black">
                         <!-- Featured Posts Section -->
                         <div class="mb-2">
-                            <h4 class="fw-bold ms-4 mb-3">Featured Posts</h4>
+                            <h4 class="fw-bold ms-4 mb-3">Completed Posts</h4>
                             <div class="row g-3 px-2">
-                                <div class="col-md-6">
-                                    <div class="p-3 rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                                             alt="Post Image"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
-                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
-                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="p-3  rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                                             alt="Post Image"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">Another post title</h5>
-                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
-                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
-                                    </div>
-                                </div>
+                                @if (Model.CompletedJobs.Count == 0)
+                                {
+                                    <div class="text-muted text-center mt-4">Kullanıcı henüz bir işi bitirmedi.</div>
+                                }
+                                else
+                                {
+
+
+                                    @foreach (var post in Model.CompletedJobs.Take(2))
+                                    {
+                                        <div class="col-md-6 mb-4">
+                                            <div class="job-card h-100">
+                                                <!-- Üst kısım - Resim -->
+                                                <div class="job-card-image-container">
+                                                    <img src="@post.JobImage"
+                                                         alt="@post.Title"
+                                                         class="job-card-image">
+                                                    <div class="job-card-category-badge">@post.Category</div>
+                                                </div>
+
+                                                <!-- Orta kısım - İçerik -->
+                                                <div class="job-card-content">
+                                                    <h3 class="job-card-title">@post.Title</h3>
+
+                                                    <div class="job-card-meta">
+                                                        <div class="job-card-meta-item">
+                                                            <i class="fas fa-wallet text-primary"></i>
+                                                            <span class="job-card-price">@post.Budget?.ToString("N0") ₺</span>
+                                                        </div>
+
+                                                        <div class="job-card-meta-item">
+                                                            <i class="fas fa-calendar-day text-primary"></i>
+                                                            <span>@post.CreatedDate.ToString("dd MMM yyyy")</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="job-card-status">
+                                                        <span class="status-badge @(post.IsActive ? "status-active" : "status-inactive")">
+                                                            <i class="fas fa-check-circle me-1"></i>
+                                                            Completed
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Alt kısım - Buton -->
+                                                <div class="job-card-footer">
+                                                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary btn-view-job">
+                                                        <i class="fas fa-eye me-2"></i>View Details
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
                     <hr />
                     <div class="card-body p-4 text-black">
-                        <!-- Recent Posts Section -->
+                        <!-- Published Posts Section -->
                         <div class="mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4 class="fw-bold ms-4 mb-0">Recent Posts</h4>
+                                <h4 class="fw-bold ms-4 mb-0">Published Jobs</h4>
                                 <a href="#!" class="text-muted text-decoration-none pe-4">Show all</a>
                             </div>
                             <div class="row g-3 px-2">
-                                <!-- Post 1 -->
-                                <div class="col-md-6">
-                                    <div class="p-3  rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                                             alt="Post Image 1"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
-                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
-                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
-                                    </div>
-                                </div>
+                                @if (Model.CreatedJobs.Count == 0)
+                                {
+                                    <div class="text-muted text-center mt-4">Kullanıcı henüz bir işi bitirmedi.</div>
+                                }
+                                else
+                                {
+                                    @foreach (var post in Model.CreatedJobs.Take(2))
+                                    {
+                                        <div class="col-md-6 mb-4">
+                                            <div class="job-card h-100">
+                                                <!-- Üst kısım - Resim -->
+                                                <div class="job-card-image-container">
+                                                    <img src="@post.JobImage"
+                                                         alt="@post.Title"
+                                                         class="job-card-image">
+                                                    <div class="job-card-category-badge">@post.Category</div>
+                                                </div>
 
-                                <!-- Post 2 -->
-                                <div class="col-md-6">
-                                    <div class="p-3  rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                                             alt="Post Image 2"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">Another post title</h5>
-                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
-                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
-                                    </div>
-                                </div>
+                                                <!-- Orta kısım - İçerik -->
+                                                <div class="job-card-content">
+                                                    <h3 class="job-card-title">@post.Title</h3>
+
+                                                    <div class="job-card-meta">
+                                                        <div class="job-card-meta-item">
+                                                            <i class="fas fa-wallet text-primary"></i>
+                                                            <span class="job-card-price">@post.Budget?.ToString("N0") ₺</span>
+                                                        </div>
+
+                                                        <div class="job-card-meta-item">
+                                                            <i class="fas fa-calendar-day text-primary"></i>
+                                                            <span>@post.CreatedDate.ToString("dd MMM yyyy")</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="job-card-status">
+                                                        <span class="status-badge @(post.IsActive ? "status-active" : "status-inactive")">
+                                                            <i class="fas @(post.IsActive ? "fa-check-circle" : "fa-times-circle") me-1"></i>
+                                                            @(post.IsActive ? "Active" : "Inactive")
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Alt kısım - Buton -->
+                                                <div class="job-card-footer">
+                                                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary btn-view-job">
+                                                        <i class="fas fa-eye me-2"></i>View Details
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -285,14 +467,14 @@
                             <div class="px-4 mt-4 d-flex justify-content-center flex-column  align-items-center">
                                 <div class="d-flex">
 
-                                    <p class="mb-3"><i>"Great post!"</i> - John Doe</p> <img class="ms-2" src="/img/profile3.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                    <p class="mb-3"><i>"Great post!"</i> - John Doe</p> <img class="ms-2" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
                                 </div>
                                 <div class="d-flex">
 
-                                    <p class="mb-3"><i>"Very insightful."</i> - Jane Smith</p> <img class="ms-2" src="/img/profile2.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                    <p class="mb-3"><i>"Very insightful."</i> - Jane Smith</p> <img class="ms-2" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
                                 </div>
                                 <div class="d-flex">
-                                    <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p> <img class="ms-2" src="/img/profile1.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                    <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p> <img class="ms-2" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
 
                                 </div>
                             </div>
