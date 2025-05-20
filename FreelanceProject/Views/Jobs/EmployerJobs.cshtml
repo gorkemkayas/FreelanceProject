@@ -1,10 +1,21 @@
 ﻿ @model List<FreelanceProject.Data.Entities.JobEntity>
+ @using FreelanceProject.Data.Entities
+
 @{
     ViewData["Title"] = "My Job Listings";
     // Aktif ilanlar: IsDeleted false ve IsActive true olanlar
-    var activeJobs = Model.Where(job => !job.IsDeleted && job.IsActive).ToList();
+    // var activeJobs = Model.Where(job => !job.IsDeleted && job.IsActive).ToList();
+    var activeJobs = Model.Where(job => !job.IsDeleted &&
+                                         !job.JobApplications.Any(app => app.Status == JobApplicationStatus.Completed))
+                           .ToList();
     // Silinmiş/aktif olmayan ilanlar
     var deletedJobs = Model.Where(job => job.IsDeleted || !job.IsActive).ToList();
+
+
+    // Completed olanlar: JobApplication'larından herhangi birinde Status = Completed ise
+    var completedJobs = Model
+        .Where(job => job.JobApplications.Any(app => app.Status == JobApplicationStatus.Completed))
+        .ToList();
 }
 
 <style>
@@ -253,6 +264,11 @@
                                 <i class="fas fa-trash-alt me-1"></i> Deleted Jobs
                             </button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completedJobs" type="button" role="tab">
+                                <i class="fas fa-check me-1"></i> Completed Jobs
+                            </button>
+                        </li>
                     </ul>
 
                     <div class="tab-content" id="jobPostsTabContent">
@@ -376,6 +392,76 @@
                                 }
                             </div>
                         </div>
+
+
+
+                        <!-- Completed Jobs Tab -->
+                        <div class="tab-pane fade show" id="completedJobs" role="tabpanel">
+                            <div class="job-list">
+                                @if (completedJobs.Any())
+                                {
+                                    foreach (var job in completedJobs)
+                                    {
+                                        <div class="job-item">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h3 class="job-title">@job.Title</h3>
+                                                    <div class="job-meta">
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-calendar-alt"></i>
+                                                            <span>Start Date: @job.StartDate?.ToString("dd MMM yyyy")</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-money-bill-wave"></i>
+                                                            <span>Budget: ₺@job.Budget</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-calendar-check"></i>
+                                                            <span>Deadline: @job.Deadline?.ToString("dd MMM yyyy")</span>
+                                                        </div>
+                                                        <div class="meta-item">
+                                                            <i class="fas fa-tags"></i>
+                                                            <span>Category: @job.Category</span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="job-status status-completed">
+                                                        <i class="fas fa-check-circle"></i> Completed
+                                                    </span>
+                                                </div>
+                                                <div class="action-buttons">
+                                                    <a asp-controller="Jobs" asp-action="ViewApplicants" asp-route-jobId="@job.Id" class="btn btn-sm btn-info">
+                                                        <i class="fas fa-users"></i> View Applicants
+                                                    </a>
+
+                                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-sm btn-edit">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a asp-controller="Jobs" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-sm btn-delete">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </a>
+                                                    <a asp-controller="Messages" asp-action="JobMessageThreads" asp-route-jobId="@job.Id" asp-route-userId="@job.OwnerId" class="btn btn-edit">
+                                                        <i class="fas fa-envelope"></i> Messages
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="no-jobs text-center">
+                                        <div class="no-jobs-icon mb-3">
+                                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                                        </div>
+                                        <h4>You have no completed jobs</h4>
+                                        <p class="mb-4">When a job is marked as completed, it will appear here.</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>
