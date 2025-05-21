@@ -1,6 +1,6 @@
 ﻿@model FreelanceProject.Data.Entities.JobEntity
 @{
-    ViewData["Title"] = "İş İlanını Sil";
+    ViewData["Title"] = "Delete Job Post";
 }
 
 <style>
@@ -217,7 +217,7 @@
         <div class="col-lg-8">
             <div class="delete-card">
                 <div class="delete-header">
-                    <h3><i class="fas fa-exclamation-triangle me-2"></i>İLAN SİLME ONAYI</h3>
+                    <h3><i class="fas fa-exclamation-triangle me-2"></i>JOB POST DELETION CONFIRMATION</h3>
                 </div>
                 <div class="delete-body">
                     <div class="job-media">
@@ -228,7 +228,7 @@
                         else
                         {
                             <div class="no-image">
-                                <i class="fas fa-image me-2"></i> İlan görseli bulunamadı
+                                <i class="fas fa-image me-2"></i> Job post image not found
                             </div>
                         }
                     </div>
@@ -240,26 +240,26 @@
                             <i class="fas fa-exclamation-circle"></i>
                         </div>
                         <div class="warning-text">
-                            Bu ilanı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz ve tüm başvuru bilgileri de silinecektir.
+                            You are about to permanently delete this job post. This action cannot be undone, and all application information will also be deleted.
                         </div>
                     </div>
 
                     <div class="job-details">
                         <div class="detail-grid">
                             <div class="detail-card">
-                                <div class="detail-label">Kategori</div>
+                                <div class="detail-label">Category</div>
                                 <div class="detail-value">@Model.Category</div>
                             </div>
                             <div class="detail-card">
-                                <div class="detail-label">Başlangıç Tarihi</div>
+                                <div class="detail-label">Start Date</div>
                                 <div class="detail-value">@Model.StartDate?.ToString("dd MMMM yyyy")</div>
                             </div>
                             <div class="detail-card">
-                                <div class="detail-label">Bütçe</div>
+                                <div class="detail-label">Budget</div>
                                 <div class="detail-value">₺@Model.Budget?.ToString("N0")</div>
                             </div>
                             <div class="detail-card">
-                                <div class="detail-label">SON TARİH:</div>
+                                <div class="detail-label">Deadline:</div>
                                 <div class="detail-value">@Model.Deadline?.ToString("dd MMMM yyyy") </div>
                             </div>
                         </div>
@@ -269,10 +269,10 @@
                         <input type="hidden" asp-for="Id" />
                         <div class="action-buttons">
                             <a asp-action="EmployerJobs" class="btn-cancel">
-                                <i class="fas fa-arrow-left btn-icon"></i> Vazgeç
+                                <i class="fas fa-arrow-left btn-icon"></i> Cancel
                             </a>
                             <button type="submit" class="btn-delete">
-                                <i class="fas fa-trash-alt btn-icon"></i> Silmeyi Onayla
+                                <i class="fas fa-trash-alt btn-icon"></i> Confirm Deletion
                             </button>
                         </div>
                     </form>

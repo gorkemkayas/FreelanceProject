@@ -1,5 +1,6 @@
 ﻿ @model List<FreelanceProject.Data.Entities.JobEntity>
  @using FreelanceProject.Data.Entities
+ @using System.Globalization
 
 @{
     ViewData["Title"] = "My Job Listings";
@@ -286,7 +287,9 @@
                                                     <div class="job-meta">
                                                         <div class="meta-item">
                                                             <i class="fas fa-calendar-alt"></i>
-                                                            <span>Start Date: @job.StartDate?.ToString("dd MMM yyyy")</span>
+                                                            @* <span>Start Date: @job.StartDate?.ToString("dd MMM yyyy")</span> *@
+                                                            <span>Start Date: @job.StartDate?.ToString("MMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US"))</span>
+
                                                         </div>
                                                         <div class="meta-item">
                                                             <i class="fas fa-money-bill-wave"></i>
@@ -294,7 +297,9 @@
                                                         </div>
                                                         <div class="meta-item">
                                                             <i class="fas fa-calendar-check"></i>
-                                                            <span>Deadline: @job.Deadline?.ToString("dd MMM yyyy")</span>
+                                                           @*  <span>Deadline: @job.Deadline?.ToString("dd MMM yyyy")</span> *@
+                                                            <span>Deadline: @job.Deadline?.ToString("MMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US"))</span>
+
                                                         </div>
                                                         <div class="meta-item">
                                                             <i class="fas fa-tags"></i>

@@ -2,7 +2,7 @@
 @using FreelanceProject.Data.Entities
 
 @{
-    ViewData["Title"] = "Başvuran Kullanıcılar";
+    ViewData["Title"] = "Applicants";
     var jobId = ViewBag.JobId;
 }
 
@@ -10,8 +10,8 @@
     <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mb-0"><i class="fas fa-users me-2"></i> Başvuran Kullanıcılar</h3>
-                <span class="badge bg-white text-primary">@Model.Count Başvuru</span>
+                <h3 class="mb-0"><i class="fas fa-users me-2"></i> Applicants</h3>
+                <span class="badge bg-white text-primary">@Model.Count Applications</span>
             </div>
         </div>
 
@@ -20,8 +20,8 @@
             {
                 <div class="empty-state text-center py-5">
                     <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Bu ilana henüz kimse başvurmadı</h5>
-                    <p class="text-muted">İlanınızı paylaşmaya devam edin, başvurular zamanla gelecektir.</p>
+                    <h5 class="text-muted">No one has applied to this job yet.</h5>
+                    <p class="text-muted">Keep sharing your listing; applications will come over time.</p>
                 </div>
             }
             else
@@ -31,12 +31,12 @@
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>Kullanıcı</th>
-                                <th>Başvuru Durumu</th>
+                                <th>User</th>
+                                <th>Application Status</th>
                                 <th>CV</th>
-                                <th>Teslim Dosyası</th>
-                                <th>Tamamlanma</th>
-                                <th>Başvuru İşlemi</th>
+                                <th>Submission File</th>
+                                <th>Completion</th>
+                                <th>Application Process </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,12 +72,12 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                             <a href="/img/userPhotos/@applicant.UserName/@applicant.CVPath#toolbar=0&navpanes=0&scrollbar=0"
                                                target="_blank"
                                                class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-file-pdf me-1"></i> CV'yi Gör
+                                                <i class="fas fa-file-pdf me-1"></i> View CV
                                             </a>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-secondary">CV yüklenmedi.</span>
+                                            <span class="badge bg-secondary">CV not uploaded.</span>
                                         }
                                     </td>
                                     <td>
@@ -94,7 +94,7 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                         }
                                         else
                                         {
-                                            <span class="badge bg-secondary">Proje dosyası yüklenmedi</span>
+                                            <span class="badge bg-secondary">Project file has not been uploaded</span>
                                         }
                                     </td>
                                     <td>
@@ -113,7 +113,7 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                                 <input type="hidden" name="userId" value="@applicant.ApplicantId" />
                                                 <input type="hidden" name="jobId" value="@jobId" />
                                                 <button type="submit" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-check"></i> Tamamla
+                                                    <i class="fas fa-check"></i> Complete
                                                 </button>
                                             </form>
 
@@ -122,7 +122,7 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                                 <input type="hidden" name="jobId" value="@jobId" />
                                                 <input type="hidden" name="approve" value="false" />
                                                 <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-check"></i> Reddet
+                                                    <i class="fas fa-check"></i> Reject
                                                 </button>
                                             </form>
                                         }
@@ -135,7 +135,7 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                                 <input type="hidden" name="jobId" value="@jobId" />
                                                 <input type="hidden" name="approve" value="true" />
                                                 <button type="submit" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-check"></i> Onayla
+                                                    <i class="fas fa-check"></i> Approve
                                                 </button>
                                             </form>
 
@@ -144,17 +144,17 @@ applicant.Status == JobApplicationStatus.Completed ? "bg-success" :
                                                 <input type="hidden" name="jobId" value="@jobId" />
                                                 <input type="hidden" name="approve" value="false" />
                                                 <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-times"></i> Reddet
+                                                    <i class="fas fa-times"></i> Reject
                                                 </button>
                                             </form>
                                         }
                                         else if (applicant.Status == JobApplicationStatus.Ongoing)
                                         {
-                                            <span class="text-muted">Başvuru onaylandı</span>
+                                            <span class="text-muted"> Application approved</span>
                                         }
                                         else
                                         {
-                                            <span class="text-muted">İşlem yapılmış</span>
+                                            <span class="text-muted">Action performed</span>
                                         }
                                     </td>
                                 </tr>
