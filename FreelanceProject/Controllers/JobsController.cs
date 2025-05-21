@@ -105,7 +105,7 @@ namespace FreelanceProject.Controllers
                 //// Kullanıcının profil sayfasına yönlendir
                 //return RedirectToAction("Profile", "User", new { userName = user.UserName });
 
-                TempData["ErrorMessage"] = "CV’nizi doldurmanız gerekmektedir. Lütfen profilinizi güncelleyiniz.";
+                TempData["ErrorMessage"] = "You need to complete your CV. Please update your profile.";
                 return RedirectToAction("Details", new { id = jobId });
 
             }
@@ -130,7 +130,7 @@ namespace FreelanceProject.Controllers
             bool exists = await _context.JobApplications.AnyAsync(n => n.ApplicantId == user.Id && n.JobId == jobId);
             if (exists)
             {
-                TempData["AlreadyApplied"] = "Bu işe birden fazla kez başvuramazsını.";
+                TempData["AlreadyApplied"] = "You cannot apply to a job you created yourself!";
                 return RedirectToAction("Details", new { id = jobId });
             }
 
@@ -242,7 +242,7 @@ namespace FreelanceProject.Controllers
 
             if (job == null || job.IsDeleted || !job.IsActive)
             {
-                TempData["ErrorMessage"] = "Bu ilan zaten silinmiş veya aktif değil.";
+                TempData["ErrorMessage"] = "This job post has already been deleted or is not active.";
                 return RedirectToAction("EmployerJobs");
             }
 
@@ -263,7 +263,7 @@ namespace FreelanceProject.Controllers
 
             if (job == null || job.IsDeleted || !job.IsActive)
             {
-                TempData["ErrorMessage"] = "İlan zaten silinmiş.";
+                TempData["ErrorMessage"] = "This job post has already been deleted";
                 return RedirectToAction("EmployerJobs");
             }
 
@@ -352,7 +352,7 @@ namespace FreelanceProject.Controllers
 
             if (application == null)
             {
-                TempData["ErrorMessage"] = "İşlem başarısız: Geçersiz kullanıcı veya iş ID.";
+                TempData["ErrorMessage"] = "Operation failed: Invalid user or job ID.";
                 return RedirectToAction("ViewApplicants", new { jobId = jobId });
             }
 
@@ -375,7 +375,7 @@ namespace FreelanceProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = approve ? "Başvuru onaylandı." : "Başvuru reddedildi.";
+            TempData["SuccessMessage"] = approve ? "Application approved." : "Application rejected";
             return RedirectToAction("ViewApplicants", new { jobId = jobId });
         }
 
@@ -387,7 +387,7 @@ namespace FreelanceProject.Controllers
 
             if (application == null)
             {
-                TempData["ErrorMessage"] = "İşlem başarısız: Geçersiz kullanıcı veya iş ID.";
+                TempData["ErrorMessage"] = "Operation failed: Invalid user or job ID.";
                 return RedirectToAction("ViewApplicants", new { jobId = jobId });
             }
 
@@ -411,7 +411,7 @@ namespace FreelanceProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = approve ? "Başvuru onaylandı." : "Başvuru reddedildi.";
+            TempData["SuccessMessage"] = approve ? "Application approved." : "Application rejected";
             return RedirectToAction("ViewApplicants", new { jobId = jobId });
         }
 

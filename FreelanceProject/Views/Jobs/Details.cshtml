@@ -1,6 +1,7 @@
 ﻿@using FreelanceProject.Data.Entities
 @using System.Security.Claims
 @model JobAndApplicationExistsViewModel
+@using System.Globalization
 
 @{
     ViewData["Title"] = "Job Details";
@@ -172,7 +173,7 @@
                                     </div>
                                     <div>
                                         <span class="d-block text-muted small mb-1">Budget</span>
-                                        <span class="h4 fw-bold mb-0" style="color: var(--dark);">$@Model.Job.Budget</span>
+                                        <span class="h4 fw-bold mb-0" style="color: var(--dark);">₺@Model.Job.Budget</span>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +184,10 @@
                                     </div>
                                     <div>
                                         <span class="d-block text-muted small mb-1">Start Date</span>
-                                        <span class="h4 fw-bold mb-0" style="color: var(--dark);">@Model.Job.StartDate?.ToString("dd MMM yyyy")</span>
+                                       @*  <span class="h4 fw-bold mb-0" style="color: var(--dark);">@Model.Job.StartDate?.ToString("dd MMM yyyy")</span> *@
+                                        <span class="h4 fw-bold mb-0" style="color: var(--dark);">
+                                            @Model.Job.StartDate?.ToString("MMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US"))
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -194,7 +198,10 @@
                                     </div>
                                     <div>
                                         <span class="d-block text-muted small mb-1">Deadline</span>
-                                        <span class="h4 fw-bold mb-0" style="color: var(--dark);">@Model.Job.Deadline?.ToString("dd MMM yyyy")</span>
+                                        @* <span class="h4 fw-bold mb-0" style="color: var(--dark);">@Model.Job.Deadline?.ToString("dd MMM yyyy")</span> *@
+                                        <span class="h4 fw-bold mb-0" style="color: var(--dark);">
+                                            @Model.Job.Deadline?.ToString("MMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US"))
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -342,7 +349,7 @@
                                                 <h6 class="fw-semibold mb-1" style="color: var(--dark);">@similar.Title</h6>
                                                 <div class="d-flex align-items-center">
                                                     <span class="badge bg-primary bg-opacity-10 text-primary small rounded-pill">@similar.Category</span>
-                                                    <span class="text-muted small ms-2">$@similar.Budget</span>
+                                                    <span class="text-muted small ms-2">₺@similar.Budget</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -373,9 +380,9 @@
                 <div class="modal-header text-white" style="background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); border-bottom: none;">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        <h5 class="modal-title mb-0" id="cvWarningModalLabel">Dikkat Gerekli</h5>
+                        <h5 class="modal-title mb-0" id="cvWarningModalLabel">Attention Required</h5>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cancel"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="d-flex align-items-start">
@@ -383,17 +390,17 @@
                             <i class="fas fa-file-alt fa-2x"></i>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <h6 class="fw-bold mb-3">CV Bilgisi Eksik</h6>
+                            <h6 class="fw-bold mb-3">Incomplete CV Information</h6>
                             <p class="mb-0">@TempData["ErrorMessage"]</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0">
                     <a href="@Url.Action("Profile", "User", new { userName = User.Identity.Name })" class="btn btn-light rounded-pill px-4">
-                        <i class="fas fa-user-edit me-2"></i> Profili Düzenle
+                        <i class="fas fa-user-edit me-2"></i> Edit Profile
                     </a>
                     <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i> Kapat
+                        <i class="fas fa-times me-2"></i> Cancel
                     </button>
                 </div>
             </div>
@@ -416,8 +423,8 @@
                         <div class="info-icon me-3" style="background: rgba(255,255,255,0.2);">
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
-                        <h5 class="modal-title mb-0 fw-bold">Dikkat Gerekli</h5>
-                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Kapat" style="filter: brightness(0) invert(1);"></button>
+                        <h5 class="modal-title mb-0 fw-bold">Attention Required</h5>
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Cancel" style="filter: brightness(0) invert(1);"></button>
                     </div>
                 </div>
 
@@ -430,7 +437,7 @@
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <h6 class="fw-bold mb-3 text-gradient">Kendi oluşturduğun işe başvuramazsın.</h6>
+                            <h6 class="fw-bold mb-3 text-gradient">You cannot apply to a job you created yourself.</h6>
                             <p class="mb-0 text-muted">@TempData["OwnJobError"]</p>
                         </div>
                     </div>
